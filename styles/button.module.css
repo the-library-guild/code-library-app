@@ -1,0 +1,38 @@
+.google-button {
+  --prim: #222;
+  --sec: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 3rem;
+  padding: 0 1rem;
+
+  transition-duration: 0.1s;
+  cursor: pointer;
+  border: none;
+  border-radius: 3px;
+
+  background: var(--prim);
+
+  width: 100%;
+}
+.google-button:hover {
+  transform: scale(1.02);
+}
+.google-button:active {
+  transform: scale(0.98);
+}
+/* font awesome <i/> get replaced by svg */
+.google-button svg {
+  margin-right: 1rem;
+
+  font-size: 1rem;
+  color: var(--sec);
+}
+.google-button__text {
+  font-family: Avenir;
+  font-size: 1rem;
+  color: var(--sec);
+}

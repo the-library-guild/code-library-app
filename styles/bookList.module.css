@@ -1,0 +1,52 @@
+.bookList {
+  width: 20rem;
+
+  padding: 0 1rem 2rem 1rem;
+
+  font-family: Avenir;
+  background: white;
+}
+.bookList__header {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+  height: 3.6rem;
+}
+.bookList__header h2 {
+  font-size: 1.2rem;
+}
+.bookList__header,
+.book:not(:last-child) {
+  border-bottom: 1px solid var(--almostWhite);
+}
+.book {
+  position: relative;
+  display: flex;
+
+  width: 100%;
+  height: 5rem;
+}
+.book--available {
+  border-left: 0.5rem solid var(--green);
+}
+.book--unAvailable {
+  border-left: 0.5rem solid var(--red);
+}
+.book__title {
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+
+  font-size: 1rem;
+  color: var(--gray);
+}
+.book__subTitle {
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+
+  font-size: 0.8rem;
+  color: var(--lightGray);
+}
