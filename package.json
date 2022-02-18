@@ -1,6 +1,9 @@
 {
   "name": "code-library-client",
-  "private": true,
+  "version": "1.0.0",
+  "description": "The NextJs Client of the CODE University of Applied Sciences Library Management System",
+  "main": "dist/index",
+  "typings": "dist/index",
   "scripts": {
     "updatePerms": "npm uninstall code-library-perms && npm i --S https://github.com/LinusBolls/code-library-perms.git",
     "dev": "next dev",
@@ -8,6 +11,16 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LinusBolls/code-library-client.git/"
+  },
+  "author": "https://github.com/LinusBolls/",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LinusBolls/code-library-client/issues"
+  },
+  "homepage": "https://github.com/LinusBolls/code-library-client#readme",
   "dependencies": {
     "@apollo/client": "^3.5.8",
     "code-library-perms": "github:LinusBolls/code-library-perms",

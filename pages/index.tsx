@@ -6,6 +6,19 @@ import { Perm } from "code-library-perms";
 import ProtectComponent from "../hoc/ProtectComponent";
 import style from "../styles/bookList.module.css";
 
+interface Book {
+  name: string;
+  rentable: {
+    ownershipStateTags: string[];
+  };
+  media: {
+    contentTags: string[];
+    subTitle: string;
+    publishedDate: Date;
+    contentDesc: string;
+  };
+}
+
 const GET_BOOKS = gql`
   query GetBooks {
     getAllBooks {
@@ -25,7 +38,7 @@ const GET_BOOKS = gql`
 const shorten = (str: string, maxLength: number) =>
   str.length > maxLength ? str.slice(0, maxLength) + "..." : str;
 
-function BookCard({ book }: any) {
+function BookCard({ book }: { book: Book }) {
   const { name, media, rentable } = book;
 
   const isAvailable = rentable.ownershipStateTags.includes("Available");
@@ -66,7 +79,7 @@ function Page() {
     );
   if (error) return <div>{`Error! ${error.message}`}</div>;
 
-  const booklist = data.getAllBooks;
+  const booklist: Book[] = data.getAllBooks;
 
   return (
     <ProtectComponent permsInt={Perm.VIEW_BOOKS}>
@@ -77,7 +90,7 @@ function Page() {
           <h2>Anbei die Bibliothek</h2>
         </div>
         <ul>
-          {booklist.map((book: any, idx: number) => (
+          {booklist.map((book, idx) => (
             <BookCard book={book} key={idx} />
           ))}
         </ul>

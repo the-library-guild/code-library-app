@@ -1,3 +1,4 @@
+import type { FunctionComponent } from "react";
 import { useSession } from "next-auth/react";
 
 import { hasPerms } from "code-library-perms";
@@ -11,12 +12,9 @@ or its protected content if neither condition is met
 
 interface Props {
   permsInt: number;
-  // children: jsx.Element
-  // UnAuthenticatedFallback: jsx.Element
-  // UnAuthorizedFallback: jsx.Element
-  children?: any;
-  UnAuthenticatedFallback?: any;
-  UnAuthorizedFallback?: any;
+  children?: JSX.Element[];
+  UnAuthenticatedFallback?: FunctionComponent;
+  UnAuthorizedFallback?: FunctionComponent;
 }
 function RequirePerms({
   permsInt,
@@ -36,7 +34,7 @@ function RequirePerms({
   if (!isAuthenticated) return <UnAuthenticatedFallback />;
   if (!isAuthorized) return <UnAuthorizedFallback />;
 
-  return children;
+  return children?.length ? <>{children}</> : null;
 }
 function DefaultUnAuthenticatedFallback() {
   return <div>You need to be logged in to access this feature</div>;

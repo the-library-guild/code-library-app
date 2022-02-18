@@ -1,11 +1,11 @@
 // More on how NextAuth.js middleware works: https://next-auth.js.org/configuration/nextjs#middleware
 
-import type { NextFetchEvent, NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 import { Perm, hasPerms } from "code-library-perms/dist";
 
-import extractToken from "../extractToken";
+import { tokenFromRequest } from "../token";
 
 /*
 on any request:
@@ -31,10 +31,10 @@ async function middleware(req: NextRequest) {
 
   if (pathname.startsWith("/api/")) return NextResponse.next();
 
-  const session = extractToken(req);
+  const userData = tokenFromRequest(req);
 
-  const isAuthenticated = session != null;
-  const userPermsInt = (session as any)?.permsInt || 0;
+  const isAuthenticated = userData != null;
+  const userPermsInt = userData?.permsInt || 0;
 
   if (pathname === "/login") {
     return isAuthenticated ? NextResponse.redirect("/") : NextResponse.next();

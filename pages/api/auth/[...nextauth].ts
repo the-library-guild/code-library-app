@@ -1,10 +1,10 @@
 import jwt from "jsonwebtoken";
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import jsonwebtoken from "jsonwebtoken";
 import { gql } from "@apollo/client";
 
 import client from "../../../apollo-client";
+import { signToken, verifyToken } from "../../../token";
 
 // https://next-auth.js.org/configuration/options
 
@@ -55,7 +55,9 @@ export default NextAuth({
       */
     encode: async ({ token }) => {
       if (token == null) return "";
-      if (token.state) return jwt.sign(token, process.env.JWT_SECRET);
+
+      // the first token created after sign in only contains one key called state
+      if (token.state) return signToken(token);
 
       const { name, email, picture } = token;
       const userData = { name, email, picture };
@@ -64,15 +66,11 @@ export default NextAuth({
 
       return error ? "" : data.mintJwt;
     },
-    decode: ({ token }) => {
-      const result = jsonwebtoken.verify(token || "", process.env.JWT_SECRET);
-
-      return result as any;
-    },
+    decode: ({ token }) => verifyToken(token),
   },
   callbacks: {
     session: async ({ session, token }) => {
-      (session.user as any).permsInt = token.permsInt;
+      session.user.permsInt = token.permsInt;
       return session;
     },
   },
