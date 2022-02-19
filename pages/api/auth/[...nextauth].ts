@@ -53,16 +53,12 @@ export default NextAuth({
       if (token == null) return "";
 
       // the first token created after sign in only contains one key called state
-      if (token.state) {
-        console.log("minting state token:", token);
-        return signToken(token);
-      }
+      if (token.state) return signToken(token);
+
       const { name, email, picture } = token;
       const userData = { name, email, picture };
 
       const { data, error } = await client.query(mintJwt(userData));
-
-      console.log("mintJwt query response:", { data, error });
 
       return error ? "" : data.mintJwt;
     },

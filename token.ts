@@ -1,7 +1,6 @@
 import type { NextApiRequest } from "next";
 import type { NextRequest } from "next/server";
 import type { JWT } from "next-auth/jwt";
-import { getToken } from "next-auth/jwt";
 import jwt from "jsonwebtoken";
 
 function signToken(tokenData: any) {
@@ -17,6 +16,10 @@ function verifyToken(tokenStr: unknown) {
   }
 }
 async function tokenFromRequest(req: NextRequest | NextApiRequest) {
+  /* 
+  some-fucking-thing in our production env changes the name of the next-auth jwt cookie
+  next-auth themselves are probably not at fault, as this breaks their own getToken function
+  */
   const cookieName =
     process.env.NODE_ENV === "production"
       ? "__Secure-next-auth.session-token"
@@ -25,11 +28,6 @@ async function tokenFromRequest(req: NextRequest | NextApiRequest) {
   const { cookies } = req;
   const tokenStr = cookies[cookieName];
 
-  console.log("cookieName:", cookieName);
-  console.log("cookie:", tokenStr);
-
   return verifyToken(tokenStr);
-
-  // return await getToken({ req: req as any, secret: process.env.JWT_SECRET });
 }
 export { signToken, verifyToken, tokenFromRequest };
