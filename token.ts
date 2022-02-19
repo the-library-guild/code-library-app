@@ -17,10 +17,19 @@ function verifyToken(tokenStr: unknown) {
   }
 }
 async function tokenFromRequest(req: NextRequest | NextApiRequest) {
-  const { cookies } = req;
-  const tokenStr = cookies["next-auth.session-token"];
-  console.log(tokenStr);
+  const cookieName =
+    process.env.NODE_ENV === "production"
+      ? "__Secure-next-auth.session-token"
+      : "next-auth.session-token";
 
-  return await getToken({ req: req as any, secret: process.env.JWT_SECRET });
+  const { cookies } = req;
+  const tokenStr = cookies[cookieName];
+
+  console.log("cookieName:", cookieName);
+  console.log("cookie:", tokenStr);
+
+  return verifyToken(tokenStr);
+
+  // return await getToken({ req: req as any, secret: process.env.JWT_SECRET });
 }
 export { signToken, verifyToken, tokenFromRequest };
