@@ -32,6 +32,13 @@ async function middleware(req: NextRequest) {
   const isAuthenticated = userData != null;
   const userPermsInt = userData?.permsInt || 0;
 
+  console.log("middleware:", {
+    pathname,
+    userData,
+    isAuthenticated,
+    userPermsInt,
+  });
+
   if (pathname === "/login") {
     return isAuthenticated ? NextResponse.redirect("/") : NextResponse.next();
   }
