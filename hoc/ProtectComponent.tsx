@@ -2,14 +2,12 @@ import type { FunctionComponent } from "react";
 import { useSession } from "next-auth/react";
 
 import { hasPerms } from "code-library-perms";
-
 /*
 this higher order component returns
 UnAuthenticatedFallback if the user is not logged in
 UnAuthorizedFallback if permsInt !== 0 and the user is missing the permission
 or its protected content if neither condition is met
 */
-
 interface Props {
   permsInt: number;
   children?: JSX.Element[];
@@ -24,8 +22,8 @@ function RequirePerms({
 }: Props) {
   const { data, status } = useSession();
 
-  const user = data?.user as any;
-  const userPermsInt = user?.permsInt as any;
+  const user = data?.user;
+  const userPermsInt = user?.permsInt || 0;
 
   const isAuthenticated = status === "authenticated";
   const isAuthorized = hasPerms(userPermsInt, permsInt);

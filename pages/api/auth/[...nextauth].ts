@@ -1,4 +1,3 @@
-import jwt from "jsonwebtoken";
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { gql } from "@apollo/client";
@@ -6,13 +5,9 @@ import { gql } from "@apollo/client";
 import client from "../../../apollo-client";
 import { signToken, verifyToken } from "../../../token";
 
-// https://next-auth.js.org/configuration/options
-
 const validTimeInSeconds = parseInt(process.env.MAX_SESSION_DURATION_SECONDS);
 
-/*
-graphQl queries require keys to not be surrounded by quotes, but JSON.stringify() produces quoted keys
-*/
+// graphQl queries require keys to not be surrounded by quotes, but JSON.stringify() produces quoted keys
 const graphqlStringify = (obj: { [key: string]: any }) => {
   const sache = Object.entries(obj).map(([key, value]) => `${key}: "${value}"`);
   return "{" + sache.join(", ") + "}";
@@ -26,6 +21,7 @@ const mintJwt = (userData: { [key: string]: any }) => ({
     }
   `,
 });
+// https://next-auth.js.org/configuration/options
 export default NextAuth({
   secret: process.env.JWT_SECRET,
   providers: [

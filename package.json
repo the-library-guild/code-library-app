@@ -23,7 +23,7 @@
   "homepage": "https://github.com/LinusBolls/code-library-client#readme",
   "dependencies": {
     "@apollo/client": "^3.5.8",
-    "code-library-perms": "github:LinusBolls/code-library-perms",
+    "code-library-perms": "github:linusbolls/code-library-perms",
     "jsonwebtoken": "^8.5.1",
     "next": "12.0.10",
     "next-auth": "^4.2.1",

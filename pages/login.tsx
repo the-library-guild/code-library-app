@@ -1,8 +1,10 @@
-import { getProviders, signIn } from "next-auth/react";
+import { getProviders, signIn, useSession } from "next-auth/react";
 
 import style from "../styles/button.module.css";
 
 function LoginButton({ provider, text, providerIcon, ...rest }: any) {
+  const { data: session, status } = useSession();
+
   return (
     <button
       onClick={() => {

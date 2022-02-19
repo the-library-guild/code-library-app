@@ -18,7 +18,6 @@ interface Book {
     contentDesc: string;
   };
 }
-
 const GET_BOOKS = gql`
   query GetBooks {
     getAllBooks {
