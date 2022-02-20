@@ -22,8 +22,15 @@ const getRequiredPermsInt = (pathname: string) =>
     return pathname.startsWith(route) ? t + permsInt : t;
   }, 0);
 
+const makeRedirect = (url: any) => (pathname: string) => {
+  // https://nextjs.org/docs/messages/middleware-relative-urls
+  url.pathname = pathname;
+  return NextResponse.rewrite(url);
+};
 async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+
+  const redirect = makeRedirect(req.nextUrl.clone());
 
   if (pathname.startsWith("/api/")) return NextResponse.next();
 
@@ -33,12 +40,12 @@ async function middleware(req: NextRequest) {
   const userPermsInt = userData?.permsInt || 0;
 
   if (pathname === "/login") {
-    return isAuthenticated ? NextResponse.redirect("/") : NextResponse.next();
+    return isAuthenticated ? redirect("/") : NextResponse.next();
   }
   const isAuthorized = hasPerms(userPermsInt, getRequiredPermsInt(pathname));
 
-  if (!isAuthenticated) return NextResponse.redirect("/login");
-  if (!isAuthorized) return NextResponse.redirect("/auth-error");
+  if (!isAuthenticated) return redirect("/login");
+  if (!isAuthorized) return redirect("/auth-error");
 
   return NextResponse.next();
 }
