@@ -13,6 +13,12 @@ function App({ Component, pageProps }: AppProps) {
     <SessionProvider session={pageProps.session} refetchInterval={0}>
       <ApolloProvider client={client}>
         <Head>
+          <link rel="shortcut icon" href="/libraryLogo.svg" />
+          <title>CODE Library</title>
+          <meta
+            name="description"
+            content="CODE University of Applied Sciences Library Management System"
+          />
           <script
             defer
             src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"

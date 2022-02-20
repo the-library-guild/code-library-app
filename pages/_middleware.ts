@@ -24,6 +24,7 @@ const getRequiredPermsInt = (pathname: string) =>
 
 const makeRedirect = (url: any) => (pathname: string) => {
   // https://nextjs.org/docs/messages/middleware-relative-urls
+
   url.pathname = pathname;
   return NextResponse.rewrite(url);
 };
