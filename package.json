@@ -5,6 +5,8 @@
   "main": "dist/index",
   "typings": "dist/index",
   "scripts": {
+    "dockerBuild": "docker build -t code-library-client .",
+    "dockerStart": "docker run -e NODE_ENV=development -p 3000:3000 --network=host code-library-client",
     "updatePerms": "npm uninstall code-library-perms && npm i --S https://github.com/LinusBolls/code-library-perms.git",
     "dev": "next dev",
     "build": "next build",
@@ -23,6 +25,7 @@
   "homepage": "https://github.com/LinusBolls/code-library-client#readme",
   "dependencies": {
     "@apollo/client": "^3.5.8",
+    "chalk": "^5.0.0",
     "code-library-perms": "github:LinusBolls/code-library-perms",
     "jsonwebtoken": "^8.5.1",
     "next": "12.0.10",

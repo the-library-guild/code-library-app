@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  client:
+    restart: always
+    build: .
+    ports:
+      - 3000:3000
+    networks:
+      - my-network 
+    depends_on:
+      - api
+  mongo:
+    image: mongo
+    volumes:
+      - mongo-store:/data/db
+    networks:
+      - my-network 
+  api:
+    restart: always
+    build: ../code-library-server
+    ports:
+      - 4000:4000
+    volumes:
+      - ./:/code
+    networks:
+      - my-network
+    depends_on:
+      - mongo
+
+volumes:
+  mongo-store:
+
+networks:
+  my-network:
+    driver: bridge

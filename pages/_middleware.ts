@@ -27,7 +27,7 @@ async function middleware(req: NextRequest) {
 
   if (pathname.startsWith("/api/")) return NextResponse.next();
 
-  const userData = await tokenFromRequest(req);
+  const userData = tokenFromRequest(req);
 
   const isAuthenticated = userData != null;
   const userPermsInt = userData?.permsInt || 0;
