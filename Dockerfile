@@ -1,6 +1,6 @@
 FROM node:16
 
-WORKDIR /app/src
+WORKDIR /app
 
 COPY package*.json ./
 
@@ -11,4 +11,4 @@ RUN npm install
 RUN npx next build
 
 EXPOSE 3000
-CMD [ "npm", "start" ]
+CMD [ "npm", "run", "dev" ]

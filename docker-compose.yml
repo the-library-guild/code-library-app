@@ -8,8 +8,14 @@ services:
       - 3000:3000
     networks:
       - my-network 
+    volumes:
+      - ./:/app 
+      - /app/node_modules/
+      - /app/.next/
     depends_on:
       - api
+    env_file:
+      - .env.local
   mongo:
     image: mongo
     volumes:
@@ -22,7 +28,7 @@ services:
     ports:
       - 4000:4000
     volumes:
-      - ./:/code
+      - ../code-library-server/:/app
     networks:
       - my-network
     depends_on:
