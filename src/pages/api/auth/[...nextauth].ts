@@ -30,14 +30,6 @@ export default NextAuth({
       clientSecret: process.env.GOOGLE_SECRET,
     }),
   ],
-  pages: {
-    signIn: "/login",
-    signOut: "/logout",
-    // we are not using these but lets keep them in anyway
-    error: "/auth-error", // error code passed in query string as ?error=
-    verifyRequest: "/auth-verify-request", // used to check email magic link message
-    newUser: "/auth-new-user",
-  },
   session: {
     strategy: "jwt",
     maxAge: validTimeInSeconds,
@@ -59,6 +51,8 @@ export default NextAuth({
       const userData = { name, email, picture };
 
       const { data, error } = await client.query(mintJwt(userData));
+
+      console.log(error);
 
       return error ? "" : data.mintJwt;
     },

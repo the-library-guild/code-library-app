@@ -1,9 +1,13 @@
 import { gql, useQuery } from "@apollo/client";
 import { signOut } from "next-auth/react";
-
-import { Perm } from "code-library-perms";
+import { Button, Icon } from "@chakra-ui/react";
+import { FaSignOutAlt } from 'react-icons/fa';
 
 import ProtectComponent from "../hoc/ProtectComponent";
+import { Perm } from "code-library-perms";
+
+import { InternalPageLayout } from "../layout/InternalPageLayout";
+
 import style from "../styles/bookList.module.css";
 
 interface Book {
@@ -82,28 +86,37 @@ function Page() {
 
   return (
     <ProtectComponent permsInt={Perm.VIEW_BOOKS}>
-      <button onClick={() => signOut()}>Sign Out</button>
+      <InternalPageLayout>
+        <SignOutButton />
 
-      <div className={style.bookList}>
-        <div className={style.bookList__header}>
-          <h2>Anbei die Bibliothek</h2>
+        <div className={style.bookList}>
+          <div className={style.bookList__header}>
+            <h2>Anbei die Bibliothek</h2>
+          </div>
+          <ul>
+            {booklist.map((book, idx) => (
+              <BookCard book={book} key={idx} />
+            ))}
+          </ul>
         </div>
-        <ul>
-          {booklist.map((book, idx) => (
-            <BookCard book={book} key={idx} />
-          ))}
-        </ul>
-      </div>
+      </InternalPageLayout>
     </ProtectComponent>
   );
 }
 export default Page;
 
-// we can take advantage of ssr if needed:
-
-// export async function getServerSideProps(ctx: any) {
-//   const res = await client.query({ query: GET_BOOKS });
-//   return {
-//     props: { books: res.data.getAllBooks },
-//   };
-// }
+function SignOutButton() {
+  return (
+    <Button
+      onClick={() => signOut()}
+      bg={"primary.100"}
+      color={"gray.900"}
+      _hover={{
+        bg: "primary.200"
+      }}
+    >
+      <Icon as={FaSignOutAlt} marginRight={2} />
+      Sign Out
+  </Button>
+  )
+}
