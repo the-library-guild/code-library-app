@@ -42,7 +42,7 @@ export function BookList({ books }: BookListProps) {
       justify={"center"}
       bg={useColorModeValue("gray.50", "gray.800")}
     >
-      <Stack spacing={8} mx={"auto"} maxW={"lg"} py={20} px={8}>
+      <Stack spacing={8} mx={"auto"} maxW={"lg"} py={20} px={8} wordBreak={"break-all"}>
         <Stack align={"center"}>
           <Heading fontSize={"4xl"}>All Books</Heading>
         </Stack>
