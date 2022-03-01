@@ -1,4 +1,6 @@
+import { Flex } from '@chakra-ui/react';
 import React, { ReactNode } from 'react';
+import { Navbar } from '../components/Navbar';
 
 interface InternalPageLayoutProps {
   children: ReactNode;
@@ -6,12 +8,17 @@ interface InternalPageLayoutProps {
 
 export function InternalPageLayout({ children }: InternalPageLayoutProps) {
   return (
-    <div style={{
-      maxWidth: "1480px",
-      margin: "0 auto",
-      padding: ".75rem"
-    }}>
-      {children}
-    </div>
+    <Flex
+      as="header"
+      w="100vw"
+      h="100vh"
+      m="0"
+      direction="column"
+    >
+      <Navbar />
+      <Flex maxW="1480px">
+        {children}
+      </Flex>
+    </Flex>
   )
 }
