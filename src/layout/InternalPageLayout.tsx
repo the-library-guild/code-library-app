@@ -1,4 +1,4 @@
-import { Flex } from '@chakra-ui/react';
+import { Box, Flex, useColorModeValue } from '@chakra-ui/react';
 import React, { ReactNode } from 'react';
 import { Navbar } from '../components/Navbar';
 
@@ -16,8 +16,15 @@ export function InternalPageLayout({ children }: InternalPageLayoutProps) {
       direction="column"
     >
       <Navbar />
-      <Flex maxW="1480px">
-        {children}
+      <Flex
+        w={"100%"}
+        align={"center"}
+        justify={"center"}
+        bg={useColorModeValue("gray.50", "gray.800")}
+      >
+        <Flex maxW={"1480"} m={"0 auto"}>
+          {children}
+        </Flex>
       </Flex>
     </Flex>
   )

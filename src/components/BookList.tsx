@@ -1,5 +1,4 @@
 import {
-  Flex,
   Box,
   Stack,
   Heading,
@@ -35,22 +34,14 @@ const shorten = (str: string, maxLength: number): string => {
 
 export function BookList({ books }: BookListProps) {
   return (
-    <Flex
-      w="100%"
-      minH={"100vh"}
-      align={"center"}
-      justify={"center"}
-      bg={useColorModeValue("gray.50", "gray.800")}
-    >
-      <Stack spacing={8} mx={"auto"} maxW={"lg"} py={20} px={8} wordBreak={"break-all"}>
-        <Stack align={"center"}>
-          <Heading fontSize={"4xl"}>All Books</Heading>
-        </Stack>
-        {books.map((book) => (
-          <BookCard key={book._id} book={book} />
-        ))}
+    <Stack spacing={8} mx={"auto"} maxW={"1480"} py={20} px={8} wordBreak={"break-all"}>
+      <Stack align={"center"}>
+        <Heading fontSize={"4xl"}>All Books</Heading>
       </Stack>
-    </Flex>
+      {books.map((book) => (
+        <BookCard key={book._id} book={book} />
+      ))}
+    </Stack>
   );
 }
 
