@@ -7,6 +7,7 @@ import {
     Text,
     useColorModeValue
   } from "@chakra-ui/react";
+import { ToggleColorModeButton } from "./Navbar";
 import { LoginButton } from "./SignInButton";
 import LibraryLogo from "./svgs/LibraryLogo";
 
@@ -34,6 +35,9 @@ export function SignIn() {
         >
           <LoginButton />
         </Box>
+        <Flex align="end" justify={"center"}>
+          <ToggleColorModeButton w={"2"} bg={"none"} />
+        </Flex>
       </Stack>
     </Flex>
   );
