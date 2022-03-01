@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { gql } from "@apollo/client";
 
-import client from "../../../apollo-client";
+import client from "../../../services/apollo-client";
 import { signToken, verifyToken } from "../../../token";
 
 const validTimeInSeconds = parseInt(process.env.MAX_SESSION_DURATION_SECONDS);
@@ -51,8 +51,6 @@ export default NextAuth({
       const userData = { name, email, picture };
 
       const { data, error } = await client.query(mintJwt(userData));
-
-      console.log(error);
 
       return error ? "" : data.mintJwt;
     },

@@ -3,7 +3,7 @@ import Head from "next/head";
 import { SessionProvider } from "next-auth/react";
 import { ApolloProvider } from "@apollo/client";
 
-import client from "../apollo-client";
+import client from "../services/apollo-client";
 
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 
