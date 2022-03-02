@@ -5,8 +5,6 @@ import { FullPageSpinner } from "../components/FullPageSpinner";
 
 import { BookList } from "../components/BookList";
 import { Perm } from "code-library-perms";
-
-import ProtectComponent from "../hoc/ProtectComponent";
 interface Book {
   _id: string;
   name: string;
@@ -39,7 +37,7 @@ const GET_BOOKS = gql`
   }
 `;
 
-export default function BooksPage() {
+function BooksPage() {
   const { loading, error, data } = useQuery(GET_BOOKS);
 
   if (loading) return <FullPageSpinner />;
@@ -49,10 +47,12 @@ export default function BooksPage() {
   const booklist: Book[] = data.getAllBooks;
 
   return (
-    <ProtectComponent permsInt={Perm.VIEW_BOOKS}>
-      <InternalPage>
-        <BookList books={booklist} />
-      </InternalPage>
-    </ProtectComponent>
+    <InternalPage>
+      <BookList books={booklist} />
+    </InternalPage>
   );
 }
+
+BooksPage.permissions = Perm.VIEW_BOOKS;
+
+export default BooksPage;

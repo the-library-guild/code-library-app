@@ -3,10 +3,14 @@ import Head from "next/head";
 import type { AppProps } from "next/app";
 
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
+
 import { SessionProvider } from "next-auth/react";
+
 import { ApolloProvider } from "@apollo/client";
 
 import client from "../services/apollo-client";
+
+import { PageAuthorizer } from "../components/authorization/PageAuthorizer";
 
 const theme = extendTheme({
   initialColorMode: 'dark',
@@ -20,9 +24,13 @@ const theme = extendTheme({
       200: "#6577b2"
     }
   }
-})
+});
 
-function App({ Component, pageProps }: AppProps) {
+interface CustomAppProps extends Omit<AppProps, "Component"> {
+  Component: AppProps["Component"] & { permissions: number };
+}
+
+function App({ Component, pageProps }: CustomAppProps) {
   return (
     <SessionProvider session={pageProps.session} refetchInterval={0}>
       <ApolloProvider client={client}>
@@ -34,10 +42,17 @@ function App({ Component, pageProps }: AppProps) {
           />
         </Head>
         <ChakraProvider theme={theme}>
-          <Component {...pageProps} />
+          {Component.permissions ? (
+            <PageAuthorizer requiredPermissions={Component.permissions}>
+              <Component {...pageProps} />
+            </PageAuthorizer>
+          ) : (
+            <Component {...pageProps} />
+          )}
         </ChakraProvider>
       </ApolloProvider>
     </SessionProvider>
   );
 }
+
 export default App;
