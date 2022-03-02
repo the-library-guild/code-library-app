@@ -15,13 +15,14 @@ export function SignInButton({ ...rest }: SignInButtonProps) {
       onClick={() => signIn('google')}
       bg={"primary.100"}
       color={"gray.700"}
+      px="8"
       _hover={{
         bg: "primary.200"
       }}
       {...rest}
     >
       <Icon as={FaGoogle} marginRight={2} />
-      Sign in with your @code email
+      Sign in with @code.berlin
   </Button>
   );
 }
