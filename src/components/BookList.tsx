@@ -8,6 +8,7 @@ import {
   StatHelpText,
   StatNumber
 } from "@chakra-ui/react";
+import { Content } from "../layout/Content";
 
 interface Book {
   _id: string;
@@ -34,14 +35,16 @@ const shorten = (str: string, maxLength: number): string => {
 
 export function BookList({ books }: BookListProps) {
   return (
-    <Stack spacing={8} mx={"auto"} maxW={"1480"} py={20} px={8} wordBreak={"break-all"}>
-      <Stack align={"center"}>
-        <Heading fontSize={"4xl"}>All Books</Heading>
+    <Content>
+      <Stack spacing={6} py={20} px={8} wordBreak={"break-all"}>
+        <Stack align={"center"}>
+          <Heading fontSize={"4xl"}>All Books</Heading>
+        </Stack>
+        {books.map((book) => (
+          <BookCard key={book._id} book={book} />
+        ))}
       </Stack>
-      {books.map((book) => (
-        <BookCard key={book._id} book={book} />
-      ))}
-    </Stack>
+    </Content>
   );
 }
 

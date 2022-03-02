@@ -1,13 +1,13 @@
 import React from 'react';
 
-import { SignIn } from "../components/SignIn";
+import { SignInCard } from "../components/SignInCard";
 
-import { SignInPageLayout } from "../layout/SignInPageLayout";
+import { ExternalPage } from "../layout/ExternalPage";
 
 export default function Page() {
   return (
-    <SignInPageLayout>
-      <SignIn />
-    </SignInPageLayout>
+    <ExternalPage>
+      <SignInCard />
+    </ExternalPage>
   );
 }

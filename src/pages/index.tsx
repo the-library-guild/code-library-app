@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 
-import { InternalPageLayout } from "../layout/InternalPageLayout";
+import { InternalPage } from "../layout/InternalPage";
 import { FullPageSpinner } from "../components/FullPageSpinner";
 
 import { BookList } from "../components/BookList";
@@ -50,9 +50,9 @@ export default function BooksPage() {
 
   return (
     <ProtectComponent permsInt={Perm.VIEW_BOOKS}>
-      <InternalPageLayout>
+      <InternalPage>
         <BookList books={booklist} />
-      </InternalPageLayout>
+      </InternalPage>
     </ProtectComponent>
   );
 }

@@ -1,7 +1,6 @@
 import { ReactNode } from 'react';
 import {
   Box,
-  Flex,
   Avatar,
   Link,
   Button,
@@ -21,6 +20,7 @@ import {
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 
 import { signOut } from "next-auth/react";
+import { Content } from '../layout/Content';
 
 export const NavLink = ({ children }: { children: ReactNode }) => (
   <Link
@@ -50,21 +50,21 @@ export function Navbar() {
   return (
     <>
       <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4} w="100%">
-        <Flex h='16' alignItems='center' justifyContent={"space-between"} maxW={"1480"} p={"8"} m={"0 auto"}>
+        <Content h='16' alignItems='center' justifyContent={"space-between"} p={"8"}>
           <Box>
             <Heading size="lg">
               CODE Library
             </Heading>
           </Box>
 
-          <Flex alignItems={'center'}>
+          <Center>
             <Stack direction={'row'} spacing={7}>
               <ToggleColorModeButton />
               <SideMenu />
 
             </Stack>
-          </Flex>
-        </Flex>
+          </Center>
+        </Content>
       </Box>
     </>
   );
