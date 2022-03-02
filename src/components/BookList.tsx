@@ -8,6 +8,7 @@ import {
   StatHelpText,
   StatNumber
 } from "@chakra-ui/react";
+
 import { Content } from "../layout/Content";
 
 interface Book {

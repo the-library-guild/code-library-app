@@ -9,18 +9,12 @@ import { hasPerms } from "code-library-perms";
 
 import { FullPageSpinner } from '../FullPageSpinner';
 
-/*
-this higher order component returns
-UnAuthenticatedFallback if the user is not logged in
-UnAuthorizedFallback if permsInt !== 0 and the user is missing the permission
-or its protected content if neither condition is met
-*/
 interface Props {
   requiredPermissions: number;
   children: ReactElement;
 }
 
-function PageAuthorizer({
+export function PageAuthorizer({
   requiredPermissions,
   children,
 }: Props) {
@@ -50,5 +44,3 @@ function PageAuthorizer({
 
   return children;
 }
-
-export { PageAuthorizer };

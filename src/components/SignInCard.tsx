@@ -1,15 +1,16 @@
 import {
-    Flex,
-    Box,
-    Stack,
-    Heading,
-    Text,
-    useColorModeValue
-  } from "@chakra-ui/react";
+  Flex,
+  Box,
+  Stack,
+  Heading,
+  Text,
+  useColorModeValue
+} from "@chakra-ui/react";
 
-  import { ToggleColorModeButton } from "./Navbar";
 import { SignInButton } from "./SignInButton";
 import { LibraryLogo } from "./LibraryLogo";
+
+import { ToggleColorModeButton } from "../layout/ToggleColorMode";
 
 export function SignInCard() {
   return (
