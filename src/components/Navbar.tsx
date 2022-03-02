@@ -15,12 +15,16 @@ import {
   Center,
   Heading,
   ButtonProps,
+  Text,
 } from '@chakra-ui/react';
 
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 
-import { signOut } from "next-auth/react";
+import { FaSignOutAlt } from 'react-icons/fa';
+
+import { signOut, useSession } from "next-auth/react";
 import { Content } from '../layout/Content';
+import { User } from 'next-auth';
 
 export const NavLink = ({ children }: { children: ReactNode }) => (
   <Link
@@ -47,6 +51,10 @@ export const ToggleColorModeButton = ({...props}: ButtonProps) => {
 }
 
 export function Navbar() {
+  const { data: session } = useSession();
+
+  const user: UserInfo = session!.user!;
+
   return (
     <>
       <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4} w="100%">
@@ -60,7 +68,7 @@ export function Navbar() {
           <Center>
             <Stack direction={'row'} spacing={7}>
               <ToggleColorModeButton />
-              <SideMenu />
+              <SideMenu user={user} />
 
             </Stack>
           </Center>
@@ -70,7 +78,19 @@ export function Navbar() {
   );
 }
 
-const SideMenu = () => {
+interface UserInfo {
+  name?: string | undefined;
+  image?: string | undefined;
+  email: string;
+}
+
+interface SideMenuProps {
+  user: UserInfo;
+}
+
+const SideMenu = ({ user }: SideMenuProps) => {
+  console.log(user);
+
   return (
     <Menu>
       <MenuButton
@@ -80,25 +100,30 @@ const SideMenu = () => {
         cursor={'pointer'}
         minW={0}>
         <Avatar
+          name={user.name}
           size={'sm'}
-          src={'https://avatars.dicebear.com/api/male/username.svg'}
+          src={user.image}
         />
       </MenuButton>
       <MenuList alignItems={'center'}>
         <br />
         <Center>
           <Avatar
+            name={user.name}
             size={'2xl'}
-            src={'https://avatars.dicebear.com/api/male/username.svg'}
+            src={user.image}
           />
         </Center>
         <br />
         <Center>
-          <p>Username</p>
+          <Stack justify={'center'} align={'center'} p={'4'}>
+            <Text fontWeight={'bold'} fontSize={['md', 'lg']}>{user.name}</Text>
+            <Text fontSize={['sm', 'md']}>{user.email}</Text>
+          </Stack>
         </Center>
         <br />
         <MenuDivider />
-        <MenuItem onClick={() => signOut()}>Logout</MenuItem>
+        <MenuItem icon={<FaSignOutAlt />} onClick={() => signOut()}>Logout</MenuItem>
       </MenuList>
     </Menu>
   );
