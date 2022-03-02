@@ -1,14 +1,12 @@
-import type { AppProps } from "next/app";
 import Head from "next/head";
+
+import type { AppProps } from "next/app";
+
+import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import { SessionProvider } from "next-auth/react";
 import { ApolloProvider } from "@apollo/client";
 
 import client from "../services/apollo-client";
-
-import { ChakraProvider, extendTheme } from '@chakra-ui/react';
-
-import "../styles/reset.css";
-import "../styles/globals.css";
 
 const theme = extendTheme({
   initialColorMode: 'dark',
