@@ -11,7 +11,7 @@ declare module "next-auth" {
     user: {
       email: string;
       name?: string;
-      picture?: string;
+      image?: string;
       permsInt: number;
       bookingLimit: number;
     } & DefaultSession["user"];
