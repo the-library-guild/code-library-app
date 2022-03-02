@@ -6,9 +6,9 @@ import { FaGoogle } from 'react-icons/fa';
 
 import { Button, Icon } from "@chakra-ui/react";
 
-type LoginButtonProps = ButtonHTMLAttributes<HTMLButtonElement>;
+type SignInButtonProps = ButtonHTMLAttributes<HTMLButtonElement>;
 
-export function LoginButton({ ...rest }: LoginButtonProps) {
+export function SignInButton({ ...rest }: SignInButtonProps) {
 
   return (
     <Button

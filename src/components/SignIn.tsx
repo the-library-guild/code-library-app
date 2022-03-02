@@ -2,14 +2,14 @@ import {
     Flex,
     Box,
     Stack,
-    Button,
     Heading,
     Text,
     useColorModeValue
   } from "@chakra-ui/react";
-import { ToggleColorModeButton } from "./Navbar";
-import { LoginButton } from "./SignInButton";
-import LibraryLogo from "./svgs/LibraryLogo";
+
+  import { ToggleColorModeButton } from "./Navbar";
+import { SignInButton } from "./SignInButton";
+import { LibraryLogo } from "./LibraryLogo";
 
 export function SignIn() {
   return (
@@ -21,9 +21,12 @@ export function SignIn() {
     >
       <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
         <Stack align={"center"} p={"8"}>
-          <LibraryLogo style={{ width: "100%", fill: "#222" }} />
+          <LibraryLogo />
           <Heading fontSize={"4xl"}>CODE Library</Heading>
-          <Text fontSize={"lg"} color={"gray.600"}>
+          <Text
+            fontSize={"lg"}
+            color={useColorModeValue("gray.600", "gray.300")}
+          >
             Sign in to your account
           </Text>
         </Stack>
@@ -33,7 +36,7 @@ export function SignIn() {
           boxShadow={"lg"}
           p={8}
         >
-          <LoginButton />
+          <SignInButton />
         </Box>
         <Flex align="end" justify={"center"}>
           <ToggleColorModeButton w={"2"} bg={"none"} />
