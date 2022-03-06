@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { gql } from "@apollo/client";
 
-import client from "../../../services/apollo-client";
+import { apiClientFromServer } from "../../../services/apollo-client";
 import { signToken, verifyToken } from "../../../token";
 
 const validTimeInSeconds = parseInt(process.env.MAX_SESSION_DURATION_SECONDS);
@@ -15,9 +15,10 @@ const graphqlStringify = (obj: { [key: string]: any }) => {
 const mintJwt = (userData: { [key: string]: any }) => ({
   query: gql`
     query GetUserData {
-    mintJwt(userData: ${graphqlStringify(userData)}, secret: "${
-    process.env.JWT_SECRET
-  }")
+      mintJwt(
+        userData: ${graphqlStringify(userData)},
+        secret: "${process.env.JWT_SECRET}"
+      )
     }
   `,
 });
@@ -30,6 +31,10 @@ export default NextAuth({
       clientSecret: process.env.GOOGLE_SECRET,
     }),
   ],
+  pages: {
+    signIn: '/login',
+    error: '/login', // Error code is passed in as a query string i.e., ?error=Callaback
+  },
   session: {
     strategy: "jwt",
     maxAge: validTimeInSeconds,
@@ -50,7 +55,7 @@ export default NextAuth({
       const { name, email, picture } = token;
       const userData = { name, email, picture };
 
-      const { data, error } = await client.query(mintJwt(userData));
+      const { data, error } = await apiClientFromServer.query(mintJwt(userData));
 
       return error ? "" : data.mintJwt;
     },

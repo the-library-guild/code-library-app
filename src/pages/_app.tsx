@@ -8,7 +8,7 @@ import { SessionProvider } from "next-auth/react";
 
 import { ApolloProvider } from "@apollo/client";
 
-import client from "../services/apollo-client";
+import { apiClient } from "../services/apollo-client";
 
 import { PageAuthorizer } from "../components/authorization/PageAuthorizer";
 
@@ -33,7 +33,7 @@ interface CustomAppProps extends Omit<AppProps, "Component"> {
 function App({ Component, pageProps }: CustomAppProps) {
   return (
     <SessionProvider session={pageProps.session} refetchInterval={0}>
-      <ApolloProvider client={client}>
+      <ApolloProvider client={apiClient}>
         <Head>
           <title>CODE Library</title>
           <meta

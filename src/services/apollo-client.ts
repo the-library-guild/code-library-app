@@ -6,7 +6,7 @@ import {
   from,
 } from "@apollo/client";
 
-const uriLink = createHttpLink({
+const defaultApiUrl = createHttpLink({
   uri: process.env.GRAPHQL_URL,
 });
 const fetchOptionLink = new ApolloLink((operation, forward) => {
@@ -16,8 +16,18 @@ const fetchOptionLink = new ApolloLink((operation, forward) => {
   }));
   return forward(operation);
 });
-const client = new ApolloClient({
+
+export const apiClient = new ApolloClient({
   cache: new InMemoryCache(),
-  link: from([fetchOptionLink, uriLink]),
+  link: from([fetchOptionLink, defaultApiUrl]),
 });
-export default client;
+
+// This hack is not cool at all but I can't solve this issue in a better way now :(
+const apiUrlFromDocker = createHttpLink({
+  uri: process.env.APP_ENV === 'docker' ? 'http://api:4000/graphql/' : process.env.GRAPHQL_URL,
+});
+
+export const apiClientFromServer = new ApolloClient({
+  cache: new InMemoryCache(),
+  link: from([fetchOptionLink, apiUrlFromDocker]),
+});

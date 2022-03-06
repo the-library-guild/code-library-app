@@ -1,21 +1,23 @@
 version: '3'
 
 services:
-  # client:
-  #   restart: always
-  #   build: .
-  #   ports:
-  #     - 3000:3000
-  #   networks:
-  #     - my-network
-  #   volumes:
-  #     - ./:/app
-  #     - /app/node_modules/
-  #     - /app/.next/
-  #   depends_on:
-  #     - api
-  #   env_file:
-  #     - .env.local
+  client:
+    build: .
+    restart: always
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    ports:
+      - 3000:3000
+    networks:
+      - my-network
+    depends_on:
+      - api
+    environment:
+      - APP_ENV=docker
+    env_file:
+      - .env.local
   mongo:
     image: mongo
     volumes:
@@ -39,4 +41,3 @@ volumes:
 
 networks:
   my-network:
-    driver: bridge
