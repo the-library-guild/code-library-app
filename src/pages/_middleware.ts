@@ -1,9 +1,9 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
 
-import { Perm, hasPerms } from "code-library-perms/dist";
+import { verifyToken } from "../token";
 
-import { tokenFromRequest } from "../token";
 /*
 on any request:
   if the route is an api endpoint, don't do anything
@@ -13,14 +13,6 @@ on any request:
 
 More on how NextAuth.js middleware works: https://next-auth.js.org/configuration/nextjs#middleware
 */
-const PROTECTED_ROUTES = {
-  "/view-users": Perm.VIEW_USERS,
-  "/view-books": Perm.VIEW_BOOKS,
-};
-const getRequiredPermsInt = (pathname: string) =>
-  Object.entries(PROTECTED_ROUTES).reduce((t, [route, permsInt]) => {
-    return pathname.startsWith(route) ? t + permsInt : t;
-  }, 0);
 
 const makeRedirect = (url: any) => (pathname: string) => {
   // https://nextjs.org/docs/messages/middleware-relative-urls
@@ -28,26 +20,31 @@ const makeRedirect = (url: any) => (pathname: string) => {
   url.pathname = pathname;
   return NextResponse.rewrite(url);
 };
-async function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl;
 
+const secret = process.env.JWT_SECRET;
+
+const checkIfUserIsAuthenticated = async (req: NextRequest): Promise<boolean> => {
+  const token = await getToken({ req, secret, raw: true });
+
+  const userInfo = verifyToken(token);
+
+  return userInfo != null;
+}
+
+async function middleware(req: NextRequest) {
   const redirect = makeRedirect(req.nextUrl.clone());
+
+  const { pathname } = req.nextUrl;
 
   if (pathname.startsWith("/api/")) return NextResponse.next();
 
-  const userData = tokenFromRequest(req);
-
-  const isAuthenticated = userData != null;
-  const userPermsInt = userData?.permsInt || 0;
-
-  if (pathname === "/login") {
-    return isAuthenticated ? redirect("/") : NextResponse.next();
-  }
-  const isAuthorized = hasPerms(userPermsInt, getRequiredPermsInt(pathname));
+  const isAuthenticated = await checkIfUserIsAuthenticated(req);
 
   if (!isAuthenticated) return redirect("/login");
-  if (!isAuthorized) return redirect("/auth-error");
+
+  if (pathname === "/login") return redirect("/");
 
   return NextResponse.next();
 }
+
 export default middleware;
