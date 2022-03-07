@@ -8,7 +8,7 @@
     "dockerBuild": "docker build -t code-library-client .",
     "dockerStart": "docker run -e NODE_ENV=development -p 3000:3000 --network=host code-library-client",
     "updatePerms": "npm uninstall code-library-perms && npm i --S https://github.com/LinusBolls/code-library-perms.git",
-    "dev": "next dev",
+    "dev": "NODE_ENV=development next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
