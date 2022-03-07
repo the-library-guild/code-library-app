@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 
 import { verifyToken } from "../token";
+import { NextApiRequest } from "next";
 
 /*
 on any request:
@@ -23,7 +24,7 @@ const makeRedirect = (url: any) => (pathname: string) => {
 
 const secret = process.env.JWT_SECRET;
 
-const checkIfUserIsAuthenticated = async (req: NextRequest): Promise<boolean> => {
+const checkIfUserIsAuthenticated = async (req: NextApiRequest): Promise<boolean> => {
   const token = await getToken({ req, secret, raw: true });
 
   const userInfo = verifyToken(token);
@@ -31,7 +32,7 @@ const checkIfUserIsAuthenticated = async (req: NextRequest): Promise<boolean> =>
   return userInfo != null;
 }
 
-async function middleware(req: NextRequest) {
+async function middleware(req: NextApiRequest & NextRequest) {
   const redirect = makeRedirect(req.nextUrl.clone());
 
   const { pathname } = req.nextUrl;
