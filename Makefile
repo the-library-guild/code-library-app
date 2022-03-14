@@ -1,5 +1,5 @@
 .PHONY: start
-start: clean
+start: .env.local clean
 	docker-compose up -d
 
 .PHONY: init-on-mac
@@ -21,6 +21,9 @@ trust-on-mac:
 trust-on-linux:
 	sudo cp docker/openssl/certs/root-ca.pem /usr/share/ca-certificates/root-ca.pem \
 	&& sudo update-ca-certificates --fresh
+
+.env.local:
+	cp .env.dist .env.local
 
 .PHONY: clean
 clean:
