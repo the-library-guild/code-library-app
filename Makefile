@@ -3,10 +3,10 @@ start: .env.local clean
 	docker-compose up -d
 
 .PHONY: init-on-mac
-init-on-mac: generate-certificates trust-on-mac start
+init-on-mac: generate-certificates trust-on-mac add-localhost-aliases start
 
 .PHONY: init-on-linux
-init-on-linux: generate-certificates trust-on-linux start
+init-on-linux: generate-certificates trust-on-linux add-localhost-aliases start
 
 .PHONY: generate-certificates
 generate-certificates:
@@ -24,6 +24,9 @@ trust-on-linux:
 
 .env.local:
 	cp .env.dist .env.local
+
+add-localhost-aliases:
+	echo "127.0.0.1 codelibrary.dev api.codelibrary.dev client.codelibrary.dev" | sudo tee -a /etc/hosts
 
 .PHONY: clean
 clean:
