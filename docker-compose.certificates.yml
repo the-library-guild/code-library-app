@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  openssl:
+    build:
+      context: .
+      dockerfile: ./docker/openssl/Dockerfile
+    volumes:
+      - ./docker/openssl/certs:/root/certs
+

@@ -6,14 +6,10 @@ import {
   from,
 } from "@apollo/client";
 
-import getConfig from "next/config";
-
-const { serverRuntimeConfig, publicRuntimeConfig } = getConfig()
-
-
 const defaultApiUrl = createHttpLink({
-  uri: serverRuntimeConfig.GRAPHQL_URL ?? publicRuntimeConfig.GRAPHQL_URL
+  uri: process.env.GRAPHQL_URL
 });
+
 const fetchOptionLink = new ApolloLink((operation, forward) => {
   operation.setContext(({ headers = {} }) => ({
     credentials: "include",

@@ -1,9 +1,27 @@
 version: '3'
 
 services:
+  proxy:
+    image: caddy:latest
+    container_name: app_proxy
+    volumes:
+      - ./docker/caddy/Caddyfile:/etc/caddy/Caddyfile
+      - ./docker/openssl/certs:/etc/caddy/certs
+    networks:
+      codelibrary_network:
+        aliases:
+          - "api.codelibrary.dev"
+          - "client.codelibrary.dev"
+    extra_hosts:
+      - "api.codelibrary.dev:127.0.0.1"
+      - "client.codelibrary.dev:127.0.0.1"
+    ports:
+      - "80:80"
+      - "443:443"
   client:
     build: .
     restart: always
+    container_name: app_client
     volumes:
       - .:/app
       - /app/node_modules
@@ -11,7 +29,7 @@ services:
     ports:
       - 3000:3000
     networks:
-      - my-network
+      - codelibrary_network
     depends_on:
       - api
     environment:
@@ -20,19 +38,21 @@ services:
       - .env.local
   mongo:
     image: mongo
+    container_name: app_db
     volumes:
       - mongo-store:/data/db
     networks:
-      - my-network
+      - codelibrary_network
   api:
     restart: always
     build: ../code-library-server
+    container_name: app_backend
+    networks:
+      - codelibrary_network
     ports:
       - 4000:4000
     volumes:
       - ../code-library-server/:/app
-    networks:
-      - my-network
     depends_on:
       - mongo
 
@@ -40,4 +60,4 @@ volumes:
   mongo-store:
 
 networks:
-  my-network:
+  codelibrary_network:

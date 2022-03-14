@@ -1,0 +1,13 @@
+{
+  debug
+}
+
+api.codelibrary.dev  {
+  tls /etc/caddy/certs/server.crt /etc/caddy/certs/server.key
+  reverse_proxy http://api:4000
+}
+
+client.codelibrary.dev  {
+  tls /etc/caddy/certs/server.crt /etc/caddy/certs/server.key
+  reverse_proxy http://client:3000
+}
