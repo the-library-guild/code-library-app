@@ -32,7 +32,7 @@ jobs:
           run: docker build . -t $IMAGE_NAME
 
         - name: Test Docker image
-          run: echo "Run health check..."
+          run: echo "Run health check in production..."
 
         - name: Push Docker image
           run: docker push $IMAGE_NAME
