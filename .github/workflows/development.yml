@@ -38,8 +38,18 @@ jobs:
         - name: Test Docker image
           run: echo "Run health check..."
 
+        - name: Debug image name
+          run: echo $IMAGE_NAME
+
+        - name: Debug github_ref
+          run: echo ${{ github.ref }}
+
+        - name: Debug steps.meta.outputs.tags
+          run: echo ${{ steps.meta.outputs.tags }}
+
         - name: Push Docker image
           run: docker push $IMAGE_NAME
+
 
         - name: Deploy Docker image
           run: gcloud run deploy ${{ secrets.GCP_PROJECT_ID }} --image $IMAGE_NAME --region europe-west3-a --platform managed
