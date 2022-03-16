@@ -12,7 +12,7 @@ jobs:
         name: Setup Gcloud Account
         runs-on: ubuntu-latest
         env:
-          IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}
+          IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}/$GITHUB_REF
         steps:
 
         - name: Login
@@ -32,7 +32,7 @@ jobs:
           run: docker build . -t $IMAGE_NAME
 
         - name: Test Docker image
-          run: docker run $IMAGE_NAME sh -c "go test -v"
+          run: echo "Run health check..."
 
         - name: Push Docker image
           run: docker push $IMAGE_NAME
