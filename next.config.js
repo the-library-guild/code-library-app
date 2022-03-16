@@ -15,4 +15,7 @@ module.exports = {
     GRAPHQL_URL: process.env.GRAPHQL_URL,
     CLIENT_URL: process.env.CLIENT_URL,
   },
+  experimental: {
+    outputStandalone: true,
+  },
 };
