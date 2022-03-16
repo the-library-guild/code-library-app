@@ -25,8 +25,13 @@ trust-on-linux:
 .env.local:
 	cp .env.dist .env.local
 
+.PHONY: add-localhost-aliases
 add-localhost-aliases:
 	echo "127.0.0.1 codelibrary.dev api.codelibrary.dev client.codelibrary.dev" | sudo tee -a /etc/hosts
+
+.PHONY: health-check
+health-check:
+	sh -c "if [ $(curl -LI http://localhost:3000/api/health-check -o /dev/null -w '%{http_code}\n' -s) == \"200\" ]; then exit 0; fi; exit 1"
 
 .PHONY: clean
 clean:
