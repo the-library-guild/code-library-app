@@ -13,6 +13,8 @@ CMD [ "npm", "run", "dev" ]
 
 FROM node:16-alpine AS builder
 
+ARG NEXT_PUBLIC_GRAPHQL_URL
+
 WORKDIR /app
 
 COPY --from=development /app/node_modules ./node_modules
@@ -21,10 +23,13 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED 1
 ENV NODE_TLS_REJECT_UNAUTHORIZED 1
+ENV NEXT_PUBLIC_GRAPHQL_URL=${NEXT_PUBLIC_GRAPHQL_URL}
 
 RUN npm run build
 
 FROM node:16-slim as production
+
+ARG NEXT_PUBLIC_GRAPHQL_URL
 
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
