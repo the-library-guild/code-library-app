@@ -19,7 +19,9 @@ services:
       - "80:80"
       - "443:443"
   client:
-    build: .
+    build:
+      context: .
+      target: development
     restart: always
     container_name: app_client
     volumes:
