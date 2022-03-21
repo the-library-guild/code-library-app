@@ -1,5 +1,5 @@
 export default {
-    parser: "babel-eslint",
+    "parser": "babel-eslint",
     "env": {
         "browser": true,
         "es2021": true

@@ -1,0 +1,46 @@
+name: Build and deploy The Library app
+
+on: [push]
+
+jobs:
+  build-container:
+    needs: build-and-test
+    runs-on: ubuntu-20.04
+    env:
+      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0.2.1
+        with:
+          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+          export_default_credentials: true
+
+      - name: Authorize Docker push
+        run: gcloud auth configure-docker gcr.io
+
+      - name: Build and Push Container
+        run: |
+          docker build --tag $IMAGE_NAME:${{ github.sha }} .
+          docker build --tag $IMAGE_NAME:latest .
+          docker push $IMAGE_NAME:${{ github.sha }}
+          docker push $IMAGE_NAME:latest
+  test-run:
+    needs: build-container
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Deploy to Google Cloud Run
+        id: deploy-run
+        uses: google-github-actions/deploy-cloudrun@main
+        with:
+          service: code-library-client
+          image: $IMAGE_NAME:latest
+          region: europe-west3
+          flags: --allow-unauthenticated
+          credentials: ${{ secrets.GCP_CREDENTIALS }}
+      - name: Test Google Run deployment
+        run: curl "${{ steps.deploy-run.outputs.url }}"
