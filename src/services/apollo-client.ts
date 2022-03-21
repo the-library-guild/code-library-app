@@ -6,6 +6,10 @@ import {
   from,
 } from "@apollo/client";
 
+const url = process.env.GRAPHQL_URL;
+
+console.log(`Hey there, this is the URL: ${url}`);
+
 const defaultApiUrl = createHttpLink({
   uri: process.env.GRAPHQL_URL
 });
