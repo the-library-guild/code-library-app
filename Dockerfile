@@ -21,6 +21,8 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED 1
 ENV NODE_TLS_REJECT_UNAUTHORIZED 1
+ENV NEXT_PUBLIC_CLIENT_URL https://client.codelibrary.dev
+ENV NEXT_PUBLIC_GRAPHQL_URL https://api.codelibrary.dev/graphql/
 
 RUN npm run build
 
@@ -28,6 +30,8 @@ FROM node:16-slim as production
 
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_PUBLIC_CLIENT_URL https://client.codelibrary.dev
+ENV NEXT_PUBLIC_GRAPHQL_URL https://api.codelibrary.dev/graphql/
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
@@ -39,9 +43,6 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 USER nextjs
-
-ENV NEXT_PUBLIC_CLIENT_URL https://client.codelibrary.dev
-ENV NEXT_PUBLIC_GRAPHQL_URL https://api.codelibrary.dev/graphql/
 
 EXPOSE $PORT
 
