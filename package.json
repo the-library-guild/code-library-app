@@ -8,9 +8,9 @@
     "dockerBuild": "docker build -t code-library-client .",
     "dockerStart": "docker run -e NODE_ENV=development -p 3000:3000 --network=host code-library-client",
     "updatePerms": "npm uninstall code-library-perms && npm i --S https://github.com/LinusBolls/code-library-perms.git",
-    "dev": "NODE_ENV=development next dev",
+    "dev": "NODE_ENV=development node server.js",
     "build": "next build",
-    "start": "next start",
+    "start": "node server.js",
     "lint": "next lint"
   },
   "repository": {
@@ -31,6 +31,7 @@
     "@emotion/styled": "^11.8.1",
     "chalk": "^5.0.0",
     "code-library-perms": "github:LinusBolls/code-library-perms",
+    "dotenv": "^16.0.0",
     "framer-motion": "^6.2.8",
     "jsonwebtoken": "^8.5.1",
     "next": "12.0.10",
