@@ -40,6 +40,9 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 USER nextjs
 
+ENV NEXT_PUBLIC_CLIENT_URL https://client.codelibrary.dev
+ENV NEXT_PUBLIC_GRAPHQL_URL https://api.codelibrary.dev/graphql/
+
 EXPOSE $PORT
 
 CMD ["node", "server.js"]
