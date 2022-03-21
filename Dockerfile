@@ -21,8 +21,8 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED 1
 ENV NODE_TLS_REJECT_UNAUTHORIZED 1
-ENV NEXT_PUBLIC_CLIENT_URL https://client.codelibrary.dev
-ENV NEXT_PUBLIC_GRAPHQL_URL https://api.codelibrary.dev/graphql/
+ENV NEXT_PUBLIC_CLIENT_URL https://code-library-client-swguw3y6sa-ey.a.run.app
+ENV NEXT_PUBLIC_GRAPHQL_URL https://code-library-api.herokuapp.com/graphql/
 
 RUN npm run build
 
@@ -30,8 +30,8 @@ FROM node:16-slim as production
 
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
-ENV NEXT_PUBLIC_CLIENT_URL https://client.codelibrary.dev
-ENV NEXT_PUBLIC_GRAPHQL_URL https://api.codelibrary.dev/graphql/
+ENV NEXT_PUBLIC_CLIENT_URL https://code-library-client-swguw3y6sa-ey.a.run.app
+ENV NEXT_PUBLIC_GRAPHQL_URL https://code-library-api.herokuapp.com/graphql/
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
