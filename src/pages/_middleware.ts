@@ -19,7 +19,7 @@ const makeRedirect = (url: any) => (pathname: string) => {
   // https://nextjs.org/docs/messages/middleware-relative-urls
 
   url.pathname = pathname;
-  return NextResponse.rewrite(url);
+  return NextResponse.redirect(url);
 };
 
 const secret = process.env.JWT_SECRET;
@@ -41,9 +41,9 @@ async function middleware(req: NextApiRequest & NextRequest) {
 
   const isAuthenticated = await checkIfUserIsAuthenticated(req);
 
-  if (!isAuthenticated) return redirect("/login");
+  if (!isAuthenticated && pathname !== "/login") return redirect("/login");
 
-  if (pathname === "/login") return redirect("/");
+  if (isAuthenticated && pathname === "/login") return redirect("/");
 
   return NextResponse.next();
 }
