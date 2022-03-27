@@ -1,12 +1,13 @@
-name: Build and deploy The Library app
+name: Build and deploy The Library App UI
 
 on: [push]
+
+env:
+  IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}
 
 jobs:
   build-container:
     runs-on: ubuntu-20.04
-    env:
-      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -40,7 +41,7 @@ jobs:
         uses: 'google-github-actions/deploy-cloudrun@v0'
         with:
           service: code-library-client
-          image: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}:${{ github.sha }}
+          image: ${{ env.IMAGE_NAME }}:${{ github.sha }}
           region: europe-west3
           flags: --allow-unauthenticated
       - name: Test Deployment
