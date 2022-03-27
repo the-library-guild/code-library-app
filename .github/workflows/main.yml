@@ -35,9 +35,6 @@ jobs:
         with:
           credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
 
-      - name: Checkout
-        uses: actions/checkout@v2
-
       - name: Deploy to Cloud Run
         id: deploy-run
         uses: 'google-github-actions/deploy-cloudrun@v0'
