@@ -2,6 +2,8 @@ FROM node:16 as development
 
 WORKDIR /app
 
+VOLUME [ "/app/node_modules", "/app/.next" ]
+
 COPY package*.json ./
 RUN npm install
 

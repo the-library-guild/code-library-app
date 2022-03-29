@@ -36,3 +36,9 @@ health-check:
 .PHONY: clean
 clean:
 	docker-compose down --remove-orphans
+
+.PHONY: npm_install
+npm_install:
+	docker-compose exec client npm install $(package) $(flags)
+	docker-compose build client
+	docker-compose restart
