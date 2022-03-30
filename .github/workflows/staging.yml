@@ -1,9 +1,13 @@
-name: Build and deploy The Library App UI
+name: Deployment of The Library App UI to staging (pre-production)
 
-on: [push]
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 env:
-  IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}
+  IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}-staging
 
 jobs:
   build-container:
@@ -40,7 +44,7 @@ jobs:
         id: deploy-run
         uses: 'google-github-actions/deploy-cloudrun@v0'
         with:
-          service: code-library-client
+          service: code-library-client-staging
           image: ${{ env.IMAGE_NAME }}:${{ github.sha }}
           region: europe-west3
           flags: --allow-unauthenticated

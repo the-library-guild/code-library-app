@@ -23,3 +23,11 @@ make init-on-linux
 
 
 By now you should be able to open [https://client.codelibrary.dev](https://client.codelibrary.dev) with your browser to see the application running.
+
+## Deployment workflows
+We have two environments for deployment on GCP: staging and production. Each one is triggered based on the name of the branch being pushed to the repository.
+
+- Pushes to master will trigger a deployment to the staging environment.
+- Creating or updating a pull requests will also trigger a deployment to the staging environment.
+- Tags prefixed with a "v" (i.e., v1.0.0) will trigger a deployment to the production environment.
+
