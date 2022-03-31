@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 env:
-  IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}-staging
+  IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}
 
 jobs:
   build-container:
@@ -44,7 +44,7 @@ jobs:
         id: deploy-run
         uses: 'google-github-actions/deploy-cloudrun@v0'
         with:
-          service: code-library-client-staging
+          service: code-library-client
           image: ${{ env.IMAGE_NAME }}:${{ github.sha }}
           region: europe-west3
           flags: --allow-unauthenticated
