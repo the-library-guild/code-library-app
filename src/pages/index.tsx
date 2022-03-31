@@ -21,17 +21,19 @@ interface Book {
 
 const GET_BOOKS = gql`
   query GetBooks {
-    getAllBooks {
-      _id
-      name
-      rentable {
-        ownershipStateTags
-      }
-      media {
-        contentTags
-        subTitle
-        publishedDate
-        contentDesc
+    getShelf {
+      children {
+        _id
+        name
+        rentable {
+          ownershipStateTags
+        }
+        media {
+          contentTags
+          subTitle
+          publishedDate
+          contentDesc
+        }
       }
     }
   }
