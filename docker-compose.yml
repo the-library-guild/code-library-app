@@ -47,14 +47,14 @@ services:
       - codelibrary_network
   api:
     restart: always
-    build: ../code-library-server
+    image: gcr.io/code-library-343215/code-library-api:latest
     container_name: app_backend
     networks:
       - codelibrary_network
     ports:
       - 4000:4000
-    volumes:
-      - ../code-library-server/:/app
+    env_file:
+      - .env.backend.local
     depends_on:
       - mongo
 

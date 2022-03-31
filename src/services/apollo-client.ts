@@ -6,13 +6,9 @@ import {
   from,
 } from "@apollo/client";
 
-const url = process.env.NEXT_PUBLIC_GRAPHQL_URL;
+const uri = process.env.NEXT_PUBLIC_GRAPHQL_URL;
 
-console.log(`Hey there, this is the URL: ${url}`);
-
-const defaultApiUrl = createHttpLink({
-  uri: process.env.NEXT_PUBLIC_GRAPHQL_URL
-});
+const defaultApiUrl = createHttpLink({ uri });
 
 const fetchOptionLink = new ApolloLink((operation, forward) => {
   operation.setContext(({ headers = {} }) => ({
