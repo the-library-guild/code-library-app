@@ -3,7 +3,7 @@ import { InternalPage } from "../layout/InternalPage";
 import { Booklist } from "../components/Booklist/Booklist";
 
 import { Perm } from "code-library-perms";
-import { useGetShelf } from "../components/Booklist/BookList.hook";
+import { useGetShelf } from "../components/Booklist/Booklist.hook";
 
 function IndexPage() {
   const query = useGetShelf();
