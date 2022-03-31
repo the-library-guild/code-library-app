@@ -8,11 +8,11 @@ import { signToken, verifyToken } from "../../../token";
 const validTimeInSeconds = parseInt(process.env.MAX_SESSION_DURATION_SECONDS);
 
 // graphQl queries require keys to not be surrounded by quotes, but JSON.stringify() produces quoted keys
-const graphqlStringify = (obj: { [key: string]: any }) => {
+const graphqlStringify = (obj: { [key: string]: unknown }) => {
   const sache = Object.entries(obj).map(([key, value]) => `${key}: "${value}"`);
   return "{" + sache.join(", ") + "}";
 };
-const mintJwt = (userData: { [key: string]: any }) => ({
+const mintJwt = (userData: { [key: string]: unknown }) => ({
   query: gql`
     query GetUserData {
       mintJwt(
@@ -32,8 +32,8 @@ export default NextAuth({
     }),
   ],
   pages: {
-    signIn: '/login',
-    error: '/login', // Error code is passed in as a query string i.e., ?error=Callaback
+    signIn: "/login",
+    error: "/login", // Error code is passed in as a query string i.e., ?error=Callaback
   },
   session: {
     strategy: "jwt",

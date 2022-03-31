@@ -1,3 +1,5 @@
+import React from 'react';
+
 import {
   Box,
   useColorModeValue,
@@ -6,17 +8,13 @@ import {
   Heading,
 } from '@chakra-ui/react';
 
-import { useSession } from "next-auth/react";
-
 import { Content } from '../../layout/Content';
 import { ToggleColorModeButton } from '../../layout/ToggleColorMode';
-
 import { UserDropdown } from './UserDropdown';
+import { useUserInfo } from './Navbar.hook';
 
 export function Navbar() {
-  const { data: session } = useSession();
-
-  const user = session!.user!;
+  const { user } = useUserInfo();
 
   return (
     <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4} w="100%">

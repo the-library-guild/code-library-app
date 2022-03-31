@@ -1,6 +1,8 @@
-import { Flex, useColorModeValue } from '@chakra-ui/react';
 import React, { ReactNode } from 'react';
-import { Navbar } from '../components/navigation/Navbar';
+
+import { Flex, useColorModeValue } from '@chakra-ui/react';
+
+import { Navbar } from '../components/Navbar/Navbar';
 import { Content } from './Content';
 
 interface InternalPageProps {

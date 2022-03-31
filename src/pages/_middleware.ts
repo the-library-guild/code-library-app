@@ -4,6 +4,7 @@ import { getToken } from "next-auth/jwt";
 
 import { verifyToken } from "../token";
 import { NextApiRequest } from "next";
+import { NextURL } from "next/dist/server/web/next-url";
 
 /*
 on any request:
@@ -15,7 +16,7 @@ on any request:
 More on how NextAuth.js middleware works: https://next-auth.js.org/configuration/nextjs#middleware
 */
 
-const makeRedirect = (url: any) => (pathname: string) => {
+const makeRedirect = (url: NextURL) => (pathname: string) => {
   // https://nextjs.org/docs/messages/middleware-relative-urls
 
   url.pathname = pathname;
@@ -24,13 +25,15 @@ const makeRedirect = (url: any) => (pathname: string) => {
 
 const secret = process.env.JWT_SECRET;
 
-const checkIfUserIsAuthenticated = async (req: NextApiRequest): Promise<boolean> => {
+const checkIfUserIsAuthenticated = async (
+  req: NextApiRequest
+): Promise<boolean> => {
   const token = await getToken({ req, secret, raw: true });
 
   const userInfo = verifyToken(token);
 
   return userInfo != null;
-}
+};
 
 async function middleware(req: NextApiRequest & NextRequest) {
   const redirect = makeRedirect(req.nextUrl.clone());

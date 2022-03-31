@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 import { useToast } from '@chakra-ui/react';
 import { useRouter } from 'next/router';

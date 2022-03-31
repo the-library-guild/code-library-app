@@ -1,3 +1,5 @@
+import React from 'react';
+
 import Head from "next/head";
 
 import type { AppProps } from "next/app";
@@ -13,7 +15,7 @@ import { apiClient } from "../services/apollo-client";
 import { PageAuthorizer } from "../components/authorization/PageAuthorizer";
 
 const theme = extendTheme({
-  initialColorMode: 'dark',
+  initialColorMode: 'system',
   colors: {
     primary: {
       100: "#35daad",

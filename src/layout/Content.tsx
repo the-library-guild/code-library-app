@@ -1,5 +1,6 @@
+import React, { ReactNode } from "react";
+
 import { Flex, FlexProps } from "@chakra-ui/react";
-import { ReactNode } from "react";
 
 interface ContentProps extends FlexProps {
   children: ReactNode;

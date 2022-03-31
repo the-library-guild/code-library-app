@@ -1,7 +1,10 @@
+import { ApolloError } from "@apollo/client";
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface BooklistQuery {
   query: {
     loading: boolean;
-    error: any;
+    error: ApolloError | undefined;
     books: Book[];
   };
 }

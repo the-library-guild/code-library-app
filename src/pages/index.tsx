@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { InternalPage } from "../layout/InternalPage";
 
 import { Booklist } from "../components/Booklist/Booklist";
