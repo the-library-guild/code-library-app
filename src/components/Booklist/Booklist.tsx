@@ -9,8 +9,6 @@ import { BookCard } from "./BookCard";
 export function Booklist({ query }: any) {
   const { loading, error, books } = query;
 
-  if (loading) return <FullPageSpinner />;
-
   if (error) return <div>{`Error! ${error.message}`}</div>;
 
   return (
@@ -19,7 +17,9 @@ export function Booklist({ query }: any) {
         <Stack align={"center"}>
           <Heading fontSize={"4xl"}>All Books</Heading>
         </Stack>
-        {books.map((book: any) => (
+        {loading
+          ? <FullPageSpinner />
+          : books.map((book: any) => (
           <BookCard key={book._id} book={book} />
         ))}
       </Stack>
