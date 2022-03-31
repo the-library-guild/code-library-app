@@ -26,11 +26,11 @@ const GET_BOOKS = gql`
         _id
         name
         rentable {
-          ownershipStateTags
+          stateTags
         }
         media {
           contentTags
-          subTitle
+          tagline
           publishedDate
           contentDesc
         }

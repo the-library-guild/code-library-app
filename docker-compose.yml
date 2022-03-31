@@ -47,14 +47,16 @@ services:
       - codelibrary_network
   api:
     restart: always
-    build: ../code-library-server
+    build:
+      context: ../code-library-server
+      target: production
     container_name: app_backend
     networks:
       - codelibrary_network
     ports:
       - 4000:4000
-    volumes:
-      - ../code-library-server/:/app
+    env_file:
+      - .env.local
     depends_on:
       - mongo
 

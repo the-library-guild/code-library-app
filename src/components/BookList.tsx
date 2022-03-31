@@ -15,11 +15,11 @@ interface Book {
   _id: string;
   name: string;
   rentable: {
-    ownershipStateTags: string[];
+    stateTags: string[];
   };
   media: {
     contentTags: string[];
-    subTitle: string;
+    tagline: string;
     publishedDate: Date;
     contentDesc: string;
   };
@@ -50,9 +50,9 @@ export function BookList({ books }: BookListProps) {
 }
 
 function BookCard({ book }: CardProps) {
-  const { rentable: { ownershipStateTags } } = book;
+  const { rentable: { stateTags } } = book;
 
-  const bookIsAvailable = ownershipStateTags.includes("Available");
+  const bookIsAvailable = stateTags.includes("Available");
 
   return bookIsAvailable ? <AvailableBookCard book={book} /> : <NonAvailableBookCard book={book} />
 }
@@ -74,7 +74,7 @@ const NonAvailableBookCard = ({ book }: CardProps) => {
       <Stat>
         <StatLabel>PM</StatLabel>
         <StatNumber>{name}</StatNumber>
-        <StatHelpText>{shorten(media.subTitle, 100)}</StatHelpText>
+        <StatHelpText>{shorten(media.tagline, 100)}</StatHelpText>
         <StatHelpText color={useColorModeValue("red.800", "red.300")}>Not Available</StatHelpText>
       </Stat>
     </Box>
@@ -94,7 +94,7 @@ const AvailableBookCard = ({ book }: CardProps) => {
       <Stat>
         <StatLabel>SE</StatLabel>
         <StatNumber>{name}</StatNumber>
-        <StatHelpText>{shorten(media.subTitle, 100)}</StatHelpText>
+        <StatHelpText>{shorten(media.tagline, 100)}</StatHelpText>
         <StatHelpText color={"primary.100"}>Available</StatHelpText>
       </Stat>
     </Box>
