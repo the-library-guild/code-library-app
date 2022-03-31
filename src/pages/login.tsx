@@ -19,20 +19,11 @@ export default function LogInPage() {
 
 const errorMessages = {
   Signin: "Try signing in with a different account.",
-  OAuthSignin: "Try signing in with a different account.",
-  OAuthCallback: "Try signing with a different account.",
-  OAuthCreateAccount: "Try signing with a different account.",
-  EmailCreateAccount: "Try signing with a different account.",
-  Callback: "Try signing in with a different account.",
-  OAuthAccountNotLinked:
-    "To confirm your identity, sign in with the same account you used originally.",
-  EmailSignin: "Check your email address.",
-  CredentialsSignin:
-    "Sign in failed. Check the details you provided are correct.",
-  default: "Unable to sign in.",
+  Callback: "We're facing issues while trying to connect to one of our servers.",
+  Default: "Unable to sign in.",
 };
 
-const messageFor = (e: LoginError) => e && (errorMessages[e] ?? errorMessages.default);
+const messageFor = (e: LoginError) => e && (errorMessages[e] ?? errorMessages.Default);
 
 type LoginError = "Signin" | "Callback";
 
@@ -52,7 +43,7 @@ function useErrorToasts() {
     if (Array.isArray(errors)) {
       errors.map((error: LoginError) => {
         toast({
-          title: 'Login Error',
+          title: 'Error',
           description: messageFor(error),
           status: 'error',
           duration: 3000,
@@ -65,7 +56,7 @@ function useErrorToasts() {
     }
 
     toast({
-      title: 'Login Error',
+      title: 'Error',
       description: messageFor(errors),
       status: 'error',
       duration: 3000,
