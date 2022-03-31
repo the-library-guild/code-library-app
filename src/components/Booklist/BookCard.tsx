@@ -7,19 +7,7 @@ import {
   StatNumber,
 } from "@chakra-ui/react";
 
-interface Book {
-  _id: string;
-  name: string;
-  rentable: {
-    stateTags: string[];
-  };
-  media: {
-    contentTags: string[];
-    tagline: string;
-    publishedDate: Date;
-    contentDesc: string;
-  };
-}
+import { Book } from ".";
 
 interface CardProps {
   book: Book;

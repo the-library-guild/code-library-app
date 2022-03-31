@@ -1,12 +1,14 @@
 import { Stack, Heading } from "@chakra-ui/react";
 
+import { BooklistQuery } from ".";
+
 import { Content } from "../../layout/Content";
 
 import { FullPageSpinner } from "../FullPageSpinner";
 
 import { BookCard } from "./BookCard";
 
-export function Booklist({ query }: any) {
+export function Booklist({ query }: BooklistQuery) {
   const { loading, error, books } = query;
 
   if (error) return <div>{`Error! ${error.message}`}</div>;
