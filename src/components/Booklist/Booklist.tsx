@@ -1,7 +1,4 @@
-import {
-  Stack,
-  Heading,
-} from "@chakra-ui/react";
+import { Stack, Heading } from "@chakra-ui/react";
 
 import { Content } from "../../layout/Content";
 
@@ -9,10 +6,8 @@ import { FullPageSpinner } from "../FullPageSpinner";
 
 import { BookCard } from "./BookCard";
 
-import { useGetShelf } from "./Booklist.hook";
-
-export function Booklist() {
-  const { loading, error, books } = useGetShelf();
+export function Booklist({ query }: any) {
+  const { loading, error, books } = query;
 
   if (loading) return <FullPageSpinner />;
 
@@ -24,7 +19,7 @@ export function Booklist() {
         <Stack align={"center"}>
           <Heading fontSize={"4xl"}>All Books</Heading>
         </Stack>
-        {books.map((book) => (
+        {books.map((book: any) => (
           <BookCard key={book._id} book={book} />
         ))}
       </Stack>

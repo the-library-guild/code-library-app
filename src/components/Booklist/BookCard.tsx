@@ -4,7 +4,7 @@ import {
   Stat,
   StatLabel,
   StatHelpText,
-  StatNumber
+  StatNumber,
 } from "@chakra-ui/react";
 
 interface Book {
@@ -26,11 +26,17 @@ interface CardProps {
 }
 
 export function BookCard({ book }: CardProps) {
-  const { rentable: { stateTags } } = book;
+  const {
+    rentable: { stateTags },
+  } = book;
 
   const bookIsAvailable = stateTags.includes("Available");
 
-  return bookIsAvailable ? <AvailableBookCard book={book} /> : <NonAvailableBookCard book={book} />
+  return bookIsAvailable ? (
+    <AvailableBookCard book={book} />
+  ) : (
+    <NonAvailableBookCard book={book} />
+  );
 }
 
 const NonAvailableBookCard = ({ book }: CardProps) => {
@@ -47,11 +53,13 @@ const NonAvailableBookCard = ({ book }: CardProps) => {
         <StatLabel>PM</StatLabel>
         <StatNumber>{name}</StatNumber>
         <StatHelpText>{media.tagline}</StatHelpText>
-        <StatHelpText color={useColorModeValue("red.800", "red.300")}>Not Available</StatHelpText>
+        <StatHelpText color={useColorModeValue("red.800", "red.300")}>
+          Not Available
+        </StatHelpText>
       </Stat>
     </Box>
   );
-}
+};
 
 const AvailableBookCard = ({ book }: CardProps) => {
   const { name, media } = book;
@@ -70,5 +78,5 @@ const AvailableBookCard = ({ book }: CardProps) => {
         <StatHelpText color={"primary.100"}>Available</StatHelpText>
       </Stat>
     </Box>
-  )
-}
+  );
+};

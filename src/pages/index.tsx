@@ -1,12 +1,13 @@
 import { InternalPage } from "../layout/InternalPage";
 
-import { Booklist } from "../components/Booklist/BookList";
+import { Booklist } from "../components/Booklist/Booklist";
+import { useGetShelf } from "../components/Booklist/Booklist.hook";
 import { Perm } from "code-library-perms";
 
 function BooksPage() {
   return (
     <InternalPage>
-      <Booklist />
+      <Booklist query={useGetShelf()} />
     </InternalPage>
   );
 }
