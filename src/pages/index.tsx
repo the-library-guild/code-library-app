@@ -9,11 +9,11 @@ interface Book {
   _id: string;
   name: string;
   rentable: {
-    ownershipStateTags: string[];
+    stateTags: string[];
   };
   media: {
     contentTags: string[];
-    subTitle: string;
+    tagline: string;
     publishedDate: Date;
     contentDesc: string;
   };
