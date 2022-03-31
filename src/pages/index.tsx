@@ -1,17 +1,19 @@
 import { InternalPage } from "../layout/InternalPage";
 
 import { Booklist } from "../components/Booklist/Booklist";
-import { useGetShelf } from "../components/Booklist/Booklist.hook";
-import { Perm } from "code-library-perms";
 
-function BooksPage() {
+import { Perm } from "code-library-perms";
+import { useGetShelf } from "../components/Booklist/BookList.hook";
+
+function IndexPage() {
+  const query = useGetShelf();
   return (
     <InternalPage>
-      <Booklist query={useGetShelf()} />
+      <Booklist query={query} />
     </InternalPage>
   );
 }
 
-BooksPage.permissions = Perm.VIEW_BOOKS;
+IndexPage.permissions = Perm.VIEW_BOOKS;
 
-export default BooksPage;
+export default IndexPage;
