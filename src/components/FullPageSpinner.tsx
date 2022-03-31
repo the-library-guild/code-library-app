@@ -1,4 +1,4 @@
-import { Flex, Spinner } from "@chakra-ui/react";
+import { Flex, Spinner, useColorModeValue } from "@chakra-ui/react";
 
 
 export function FullPageSpinner() {
@@ -15,7 +15,7 @@ export function FullPageSpinner() {
         <Spinner
           thickness='4px'
           speed='0.65s'
-          color='gray.800'
+          color={useColorModeValue("gray.600", "gray.300")}
           size='xl'
         />
       </Flex>
