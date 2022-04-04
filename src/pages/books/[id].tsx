@@ -65,7 +65,9 @@ function BookDetailedPage() {
 
   if (error || !book) return <h1>Could not find requested book</h1>;
 
-  const { name, media, rentable } = book;
+  const { name, media, rentable: { stateTags } } = book;
+
+  const bookIsAvailable = stateTags.includes("Available");
 
   return (
     <InternalPage>
@@ -87,9 +89,15 @@ function BookDetailedPage() {
                 <Link href={`/books/${book._id}`}>{name}</Link>
               </StatNumber>
               <StatHelpText>{media?.tagline}</StatHelpText>
+              {bookIsAvailable?
+                <StatHelpText color={useColorModeValue("green.800", "green.300")}>
+                  Available
+                </StatHelpText>
+              :
               <StatHelpText color={useColorModeValue("red.800", "red.300")}>
                 Not Available
               </StatHelpText>
+              }
             </Stat>
 
             <Flex>
