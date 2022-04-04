@@ -10,10 +10,8 @@ const RENT_BOOK = gql`
   }
 `;
 
-export function useRentBook(bookId: string) {
-  const [rentBook, _] = useMutation(RENT_BOOK, {
-    variables: { bookId },
-  });
+export function useRentBook() {
+  const [rentBook, { loading, error }] = useMutation(RENT_BOOK);
 
-  return rentBook;
+  return { rentBook, loading, error };
 }
