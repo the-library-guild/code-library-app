@@ -7,6 +7,7 @@ import { Perm } from "code-library-perms";
 
 import {
   Box,
+  Button,
   Stack,
   Stat,
   StatHelpText,
@@ -23,7 +24,8 @@ import { Content } from "../../layout/Content";
 import { InternalPage } from "../../layout/InternalPage";
 import { useRouter } from "next/router";
 import { FullPageSpinner } from "../../components/FullPageSpinner";
-import { ActionButton } from "../../components/Booklist/ActionButton";
+import { useBookState } from "../../hooks/use-book-state.hook";
+import { BookCard } from "../../components/Booklist/BookCard";
 
 const GET_BOOK = gql`
   query GetBook($bookId: ID!) {
@@ -45,7 +47,6 @@ const GET_BOOK = gql`
     }
   }
 `;
-
 const programAcronym = (contentTags: string[]) => contentTags[3];
 
 function BookDetailedPage() {
@@ -58,14 +59,19 @@ function BookDetailedPage() {
   const { loading, error, data } = useQuery(GET_BOOK, {
     variables: { bookId },
   });
+  const book = data?.getBook;
+
+  const { label, hasAction, actionLabel, action } = useBookState(book, session);
 
   if (loading) return <FullPageSpinner />;
 
-  const book = data?.getBook;
-
   if (error || !book) return <h1>Could not find requested book</h1>;
 
-  const { name, media, rentable: { stateTags } } = book;
+  const {
+    name,
+    media,
+    rentable: { stateTags },
+  } = book;
 
   const bookIsAvailable = stateTags.includes("Available");
 
@@ -89,20 +95,26 @@ function BookDetailedPage() {
                 <Link href={`/books/${book._id}`}>{name}</Link>
               </StatNumber>
               <StatHelpText>{media?.tagline}</StatHelpText>
-              {bookIsAvailable?
-                <StatHelpText color={useColorModeValue("green.800", "green.300")}>
+              {bookIsAvailable ? (
+                <StatHelpText
+                  color={useColorModeValue("green.800", "green.300")}
+                >
                   Available
                 </StatHelpText>
-              :
-              <StatHelpText color={useColorModeValue("red.800", "red.300")}>
-                Not Available
-              </StatHelpText>
-              }
+              ) : (
+                <StatHelpText color={useColorModeValue("red.800", "red.300")}>
+                  Not Available
+                </StatHelpText>
+              )}
             </Stat>
 
             <Flex>
               <Spacer />
-              {ActionButton(rentable.stateTags, session)}
+              {hasAction && (
+                <Button marginLeft={"auto"} onClick={() => action && action()}>
+                  {actionLabel}
+                </Button>
+              )}
             </Flex>
           </Box>
         </Stack>

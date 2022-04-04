@@ -2,20 +2,7 @@ import { ApolloError } from "@apollo/client";
 
 import { useEffect, useState } from "react";
 import { useGetShelf } from "../Booklist/Booklist.hook";
-
-interface Book {
-  _id: string;
-  name: string;
-  rentable: {
-    stateTags: string[];
-  };
-  media: {
-    contentTags: string[];
-    tagline: string;
-    publishedDate: Date;
-    contentDesc: string;
-  };
-}
+import { Book } from "../Booklist";
 
 interface UseSearchValue {
   loading: boolean;
