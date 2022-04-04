@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent } from 'react';
 
 import { InternalPage } from "../layout/InternalPage";
 
@@ -8,7 +8,7 @@ import { Perm } from "code-library-perms";
 import { Content } from '../layout/Content';
 import { Heading, Input, Stack } from '@chakra-ui/react';
 import { FullPageSpinner } from '../components/FullPageSpinner';
-import { useSearch } from '../hooks/use-search.hook';
+import { useSearch } from '../components/Search/use-search.hook';
 
 function IndexPage() {
   const { loading, error, books, searchTerm, setSearchTerm } = useSearch();
