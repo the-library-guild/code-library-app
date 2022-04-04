@@ -12,7 +12,7 @@ import { ApolloProvider } from "@apollo/client";
 
 import { apiClient } from "../services/apollo-client";
 
-import { PageAuthorizer } from "../components/authorization/PageAuthorizer";
+import { PageAuthorizer } from "../components/PageAuthorizer";
 
 const theme = extendTheme({
   initialColorMode: 'system',

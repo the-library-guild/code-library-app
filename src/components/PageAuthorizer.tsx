@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 
 import { hasPerms } from "code-library-perms";
 
-import { FullPageSpinner } from '../FullPageSpinner';
+import { FullPageSpinner } from './FullPageSpinner';
 
 interface Props {
   requiredPermissions: number;
