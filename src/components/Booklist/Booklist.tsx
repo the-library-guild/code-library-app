@@ -1,32 +1,18 @@
 import React from 'react';
 
-import { Stack, Heading } from "@chakra-ui/react";
-
-import { BooklistQuery } from ".";
-
-import { Content } from "../../layout/Content";
-
-import { FullPageSpinner } from "../FullPageSpinner";
+import { Book } from ".";
 
 import { BookCard } from "./BookCard";
 
-export function Booklist({ query }: BooklistQuery) {
-  const { loading, error, books } = query;
-
-  if (error) return <div>{`Error! ${error.message}`}</div>;
-
+export function Booklist({ books }: { books: Book[] }) {
   return (
-    <Content>
-      <Stack spacing={6} py={20} px={8} wordBreak={"break-all"}>
-        <Stack align={"center"}>
-          <Heading fontSize={"4xl"}>All Books</Heading>
-        </Stack>
-        {loading
-          ? <FullPageSpinner />
-          : books.map((book: any) => (
-          <BookCard key={book._id} book={book} />
-        ))}
-      </Stack>
-    </Content>
+    <>
+      {books && books.map((book: Book) => (
+        <BookCard key={book._id} book={book} />
+      ))}
+      {books.length === 0 && (
+        <div>Could not find any match :(</div>
+      )}
+    </>
   );
 }
