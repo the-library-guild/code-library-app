@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 
 import { Book } from ".";
+import Link from 'next/link';
 
 interface CardProps {
   book: Book;
@@ -41,8 +42,8 @@ const NonAvailableBookCard = ({ book }: CardProps) => {
     >
       <Stat>
         <StatLabel>PM</StatLabel>
-        <StatNumber>{name}</StatNumber>
-        <StatHelpText>{media.tagline}</StatHelpText>
+        <StatNumber><Link href={`/books/${book._id}`}>{name}</Link></StatNumber>
+        <StatHelpText>{media?.tagline}</StatHelpText>
         <StatHelpText color={useColorModeValue("red.800", "red.300")}>
           Not Available
         </StatHelpText>
@@ -63,7 +64,7 @@ const AvailableBookCard = ({ book }: CardProps) => {
     >
       <Stat>
         <StatLabel>SE</StatLabel>
-        <StatNumber>{name}</StatNumber>
+        <StatNumber><Link href={`/books/${book._id}`}>{name}</Link></StatNumber>
         <StatHelpText>{media?.tagline}</StatHelpText>
         <StatHelpText color={"primary.100"}>Available</StatHelpText>
       </Stat>
