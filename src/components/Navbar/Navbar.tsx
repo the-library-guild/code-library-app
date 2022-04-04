@@ -1,4 +1,5 @@
-import React from 'react';
+import React from "react";
+import Link from "next/link";
 
 import {
   Box,
@@ -7,26 +8,34 @@ import {
   Center,
   Heading,
   Flex,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 
-import { ToggleColorModeButton } from '../../layout/ToggleColorMode';
-import { UserDropdown } from './UserDropdown';
-import { useUserInfo } from './Navbar.hook';
+import { ToggleColorModeButton } from "../../layout/ToggleColorMode";
+import { UserDropdown } from "./UserDropdown";
+import { useUserInfo } from "./Navbar.hook";
 
 export function Navbar() {
   const { user } = useUserInfo();
 
   return (
-    <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4} w="100%">
-      <Flex h='16' maxW={'1480'} mx={'auto'} w={'100%'} alignItems={'center'} justifyContent={'space-between'} p={'8'}>
+    <Box bg={useColorModeValue("gray.100", "gray.900")} px={4} w="100%">
+      <Flex
+        h="16"
+        maxW={"1480"}
+        mx={"auto"}
+        w={"100%"}
+        alignItems={"center"}
+        justifyContent={"space-between"}
+        p={"8"}
+      >
         <Box>
-          <Heading size="lg">
-            CODE Library
-          </Heading>
+          <Link href="/">
+            <Heading size="lg">CODE Library</Heading>
+          </Link>
         </Box>
 
         <Center>
-          <Stack direction={'row'} spacing={4}>
+          <Stack direction={"row"} spacing={4}>
             <ToggleColorModeButton />
             <UserDropdown user={user} />
           </Stack>
