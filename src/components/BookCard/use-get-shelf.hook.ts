@@ -14,7 +14,7 @@ const shorten = (str: string, maxLength: number): string => {
 };
 
 export function useBookContainer(query: any) {
-  const { loading, error, data } = useQuery<getBooksResponse>(query);
+  const { loading, error, data, refetch } = useQuery<getBooksResponse>(query);
 
   const childrenList = (data?.getShelf?.children ?? []) as Book[];
 
@@ -25,5 +25,5 @@ export function useBookContainer(query: any) {
       tagline: shorten(book.media.tagline, 100),
     },
   }));
-  return { loading, error, books };
+  return { loading, error, books, refetch };
 }

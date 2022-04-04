@@ -46,7 +46,8 @@ const containerOptions = {
 function IndexPage() {
   const [query, setQuery] = useState<any>(containerOptions.shelf.query);
 
-  const { loading, error, books, searchTerm, setSearchTerm } = useSearch(query);
+  const { loading, error, books, searchTerm, setSearchTerm, refetch } =
+    useSearch(query);
 
   const [maxIdx, setMaxIdx] = useState(10);
 
@@ -67,7 +68,11 @@ function IndexPage() {
               setSearchTerm(term);
             }}
             containerOptions={containerOptions}
-            setQuery={setQuery}
+            setQuery={(value: any) => {
+              setQuery(value);
+              refetch();
+              console.log("refetchin'");
+            }}
           />
 
           {reduceContent(loading, error, books, maxIdx)}

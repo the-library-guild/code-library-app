@@ -11,6 +11,7 @@ interface UseSearchValue {
   books: Book[];
   searchTerm: string;
   setSearchTerm: (term: string) => void;
+  refetch: any;
 }
 
 const bySearchTerm = (searchTerm: string) => (book: Book) => {
@@ -22,7 +23,7 @@ const bySearchTerm = (searchTerm: string) => (book: Book) => {
 };
 
 export function useSearch(query: any): UseSearchValue {
-  const { loading, error, books } = useBookContainer(query);
+  const { loading, error, books, refetch } = useBookContainer(query);
 
   const [results, setResults] = useState<Book[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -44,5 +45,6 @@ export function useSearch(query: any): UseSearchValue {
     books: results,
     searchTerm,
     setSearchTerm,
+    refetch,
   };
 }
