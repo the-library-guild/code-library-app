@@ -1,5 +1,7 @@
 import { ApolloError } from "@apollo/client";
 
+import { BookCard } from "./BookCard";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface BooklistQuery {
   query: {
@@ -22,3 +24,4 @@ export interface Book {
     contentDesc: string;
   };
 }
+export { BookCard };

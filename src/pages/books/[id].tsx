@@ -1,56 +1,46 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 import { Stack } from "@chakra-ui/react";
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 
 import { Perm } from "code-library-perms";
 
 import { Content } from "../../layout/Content";
 import { InternalPage } from "../../layout/InternalPage";
 import { FullPageSpinner } from "../../components/FullPageSpinner";
-import { BookCard } from "../../components/Booklist/BookCard";
+import { BookCard } from "../../components/BookCard/BookCard";
+import { Book } from "../../components/BookCard";
 
-const GET_BOOK = gql`
-  query GetBook($bookId: ID!) {
-    getBook(bookId: $bookId) {
-      _id
-      name
-      tags
-      rentable {
-        dueDate
-        stateTags
-        rentedDate
-      }
-      media {
-        contentTags
-        tagline
-        publishedDate
-        contentDesc
-      }
-    }
-  }
-`;
+import { GET_BOOK } from "../../queries/queries";
+
+function reduceContent(loading: boolean, error: any, book: Book) {
+  if (loading) return <FullPageSpinner />;
+  if (error) return <div>Could not find requested book</div>;
+
+  return <BookCard book={book} isExpanded={true} />;
+}
+
 function BookDetailedPage() {
   const { query } = useRouter();
 
   const bookId = query.id as string;
 
-  const { loading, error, data } = useQuery(GET_BOOK, {
+  const { loading, error, data, refetch } = useQuery(GET_BOOK, {
     variables: { bookId },
   });
-  const book = data?.getBook;
 
-  if (loading) return <FullPageSpinner />;
+  useEffect(() => {
+    window.addEventListener("updateBookList", (e) => {
+      e.stopPropagation();
+      refetch();
+    });
+  }, []);
 
   return (
     <InternalPage>
-      <Content px={4}>
-        <Stack w={"100%"} spacing={4} mt={4}>
-          {error ? (
-            <h1>Could not find requested book</h1>
-          ) : (
-            <BookCard book={book} isExpanded={true} />
-          )}
+      <Content>
+        <Stack spacing={6} wordBreak="break-all" width="100%">
+          {reduceContent(loading, error, data?.getBook)}
         </Stack>
       </Content>
     </InternalPage>

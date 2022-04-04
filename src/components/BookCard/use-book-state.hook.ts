@@ -1,38 +1,14 @@
+import { useReducer, useEffect, useState } from "react";
+
 import { gql, useMutation } from "@apollo/client";
 import { useColorModeValue } from "@chakra-ui/react";
 
 import { hasPerms, Perm } from "code-library-perms";
 
-import { Book } from "../components/Booklist";
+import { Book } from ".";
+import { PROCESS_BOOK, RENT_BOOK, RETURN_BOOK } from "../../queries/mutations";
 
-const RETURN_BOOK = gql`
-  mutation ReturnBook($bookId: ID!) {
-    returnBook(bookId: $bookId) {
-      ... on Success {
-        id
-      }
-    }
-  }
-`;
-const RENT_BOOK = gql`
-  mutation RentBook($bookId: ID!) {
-    rentBook(bookId: $bookId) {
-      ... on Success {
-        id
-      }
-    }
-  }
-`;
-const PROCESS_BOOK = gql`
-  mutation ProcessBook($bookId: ID!) {
-    processBook(bookId: $bookId) {
-      ... on Success {
-        id
-      }
-    }
-  }
-`;
-/* move this out */
+// TODO: force book to update on mutation
 
 interface Info {
   isBorrowed: boolean;
@@ -63,12 +39,13 @@ function reduceColors(i: Info) {
   return ["red.800", "red.300"];
 }
 function reduceActionQuery(i: Info): [string, any] {
-  if (i.isProcessing && i.canProcess) return ["Process", PROCESS_BOOK];
+  if (i.isProcessing && i.canProcess) return ["Return to Shelf", PROCESS_BOOK];
   if (i.isAvailable && i.canRent) return ["Borrow", RENT_BOOK];
   if (i.isBorrowed && i.canReturn) return ["Return", RETURN_BOOK];
 
   return [
     "",
+    // TODO: find a more elegant solution for mutation Placeholder
     gql`
       mutation Placeholder {
         processBook(bookId: "lal") {
@@ -82,8 +59,8 @@ function reduceActionQuery(i: Info): [string, any] {
 }
 
 function useBookState(book: Book, session: any): useBookStateValue {
-  // TODO: dont display "Borrow" button if user has exceeded their booking limit
-  // TODO: implement logic for canReturn
+  // TODO: canBorrow = false if user has exceeded their booking limit
+  // TODO: implement env.ANYONE_CAN_RETURN (also in backend), which will influence canReturn
 
   const stateTags = book?.rentable?.stateTags ?? [];
   const userInfo = session?.user;

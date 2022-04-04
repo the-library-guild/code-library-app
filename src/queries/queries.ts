@@ -20,8 +20,8 @@ const GET_BOOK = gql`
     }
   }
 `;
-const GET_BOOKS = gql`
-  query GetBooks {
+const GET_SHELF = gql`
+  query GetShelf {
     getShelf {
       children {
         _id
@@ -42,4 +42,27 @@ const GET_BOOKS = gql`
     }
   }
 `;
-export { GET_BOOK, GET_BOOKS };
+const GET_RETURN_BOX = gql`
+  query GetReturnBox {
+    getReturnBox {
+      children {
+        _id
+        name
+        tags
+        rentable {
+          dueDate
+          stateTags
+          rentedDate
+        }
+        media {
+          contentTags
+          tagline
+          publishedDate
+          contentDesc
+        }
+      }
+    }
+  }
+`;
+
+export { GET_BOOK, GET_SHELF, GET_RETURN_BOX };
