@@ -17,8 +17,8 @@ function IndexPage() {
 
   return (
     <InternalPage>
-      <Content px={4} justify={"center"}>
-        <Stack spacing={6} py={8} px={8} wordBreak={"break-all"} w={"70%"}>
+      <Content px={4}>
+        <Stack spacing={6} py={8} px={2} wordBreak={"break-all"} width={"100%"}>
           <SearchBox searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
           <Stack align={"center"}>
             <Heading fontSize={"4xl"}>All Books</Heading>
