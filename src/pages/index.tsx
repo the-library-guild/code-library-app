@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from "react";
+import React from "react";
 
 import { InternalPage } from "../layout/InternalPage";
 
@@ -6,9 +6,10 @@ import { Booklist } from "../components/Booklist/Booklist";
 
 import { Perm } from "code-library-perms";
 import { Content } from "../layout/Content";
-import { Heading, Input, Stack } from "@chakra-ui/react";
+import { Heading, Stack } from "@chakra-ui/react";
 import { FullPageSpinner } from "../components/FullPageSpinner";
 import { useSearch } from "../components/Search/use-search.hook";
+import { SearchBox } from "../components/Search/SearchBox";
 
 function IndexPage() {
   const { loading, error, books, searchTerm, setSearchTerm } = useSearch();
@@ -33,24 +34,3 @@ function IndexPage() {
 IndexPage.permissions = Perm.VIEW_BOOKS;
 
 export default IndexPage;
-
-interface SearchBoxProps {
-  searchTerm: string;
-  setSearchTerm: (term: string) => void;
-}
-
-function SearchBox({ searchTerm, setSearchTerm }: SearchBoxProps) {
-  function handleChange(e: ChangeEvent<HTMLInputElement>) {
-    setSearchTerm(e.target.value);
-  }
-
-  return (
-    <Input
-      type={"string"}
-      placeholder={"Search for books"}
-      size={"md"}
-      value={searchTerm}
-      onChange={handleChange}
-    />
-  );
-}
