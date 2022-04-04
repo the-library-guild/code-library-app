@@ -1,7 +1,7 @@
 // TODO: fix books not displaying tagline
 // TODO: speed up book search (re-implement debouncing :P)
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Stack } from "@chakra-ui/react";
 
 import { Perm } from "code-library-perms";
@@ -74,7 +74,7 @@ function IndexPage() {
               console.log("refetchin'");
             }}
           />
-
+          <h2>{books.length} Results</h2>
           {reduceContent(loading, error, books, maxIdx)}
         </Stack>
       </Content>

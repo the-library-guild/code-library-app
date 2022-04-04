@@ -17,7 +17,7 @@ export function SignInButton({ ...rest }: SignInButtonProps) {
       bg={"primary.100"}
       color={"gray.700"}
       width={"100%"}
-      px="8"
+      px="10"
       _hover={{
         bg: "primary.200",
       }}

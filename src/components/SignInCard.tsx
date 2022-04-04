@@ -1,13 +1,6 @@
-import React from 'react';
+import React from "react";
 
-import {
-  Flex,
-  Box,
-  Stack,
-  Heading,
-  Text,
-  useColorModeValue
-} from "@chakra-ui/react";
+import { Flex, Box, Stack, Heading, useColorModeValue } from "@chakra-ui/react";
 
 import { SignInButton } from "./SignInButton";
 import { LibraryLogo } from "./LibraryLogo";
@@ -20,12 +13,6 @@ export function SignInCard() {
       <Stack align={"center"} p={"8"}>
         <LibraryLogo />
         <Heading fontSize={"4xl"}>CODE Library</Heading>
-        <Text
-          fontSize={"lg"}
-          color={useColorModeValue("gray.600", "gray.300")}
-        >
-          Sign in to your account
-        </Text>
       </Stack>
       <Box
         rounded={"lg"}
@@ -41,4 +28,3 @@ export function SignInCard() {
     </Stack>
   );
 }
-

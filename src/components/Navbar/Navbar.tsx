@@ -8,7 +8,10 @@ import {
   Center,
   Heading,
   Flex,
+  Text,
 } from "@chakra-ui/react";
+
+import { LibraryLogo } from "../LibraryLogo";
 
 import { ToggleColorModeButton } from "../../layout/ToggleColorMode";
 import { UserDropdown } from "./UserDropdown";
@@ -20,7 +23,7 @@ export function Navbar() {
   return (
     <Box bg={useColorModeValue("gray.100", "gray.900")} px={4} w="100%">
       <Flex
-        h="16"
+        h="24"
         maxW={"1480"}
         mx={"auto"}
         w={"100%"}
@@ -30,7 +33,15 @@ export function Navbar() {
       >
         <Box>
           <Link href="/">
-            <Heading size="lg">CODE Library</Heading>
+            <Heading
+              size="lg"
+              display="flex"
+              flexDirection="row"
+              cursor="pointer"
+            >
+              <LibraryLogo height="2rem" />
+              <Text marginLeft="3rem">CODE Library</Text>
+            </Heading>
           </Link>
         </Box>
 
