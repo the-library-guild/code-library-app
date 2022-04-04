@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 import {
   Box,
@@ -64,7 +64,7 @@ const AvailableBookCard = ({ book }: CardProps) => {
       <Stat>
         <StatLabel>SE</StatLabel>
         <StatNumber>{name}</StatNumber>
-        <StatHelpText>{media.tagline}</StatHelpText>
+        <StatHelpText>{media?.tagline}</StatHelpText>
         <StatHelpText color={"primary.100"}>Available</StatHelpText>
       </Stat>
     </Box>
