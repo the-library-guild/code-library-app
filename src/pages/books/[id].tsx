@@ -3,11 +3,10 @@ import Link from "next/link";
 
 import { useSession } from "next-auth/react";
 
-import { hasPerms, Perm } from "code-library-perms";
+import { Perm } from "code-library-perms";
 
 import {
   Box,
-  Button,
   Stack,
   Stat,
   StatHelpText,
@@ -52,7 +51,7 @@ const programAcronym = (contentTags: string[]) => contentTags[3];
 function BookDetailedPage() {
   const { query } = useRouter();
 
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   const bookId = query.id as string;
 
