@@ -55,13 +55,11 @@ interface UseSearchValue {
   setSearchTerm: (term: string) => void;
 }
 
-const filteredResults = (results: Book[], searchTerm: string) => {
-  return results.filter(
-    (book) =>
-      book.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      book.media.contentTags.some((tag: string) =>
-        tag.toLowerCase().includes(searchTerm.toLowerCase())
-      )
+const bySearchTerm = (searchTerm: string) => (book: Book) => {
+  const relevantFields = [...book.media.contentTags, book.name];
+
+  return relevantFields.some((tag: string) =>
+    tag.toLowerCase().includes(searchTerm.toLowerCase())
   );
 };
 
@@ -77,7 +75,7 @@ export function useSearch(): UseSearchValue {
     let childrenList = data?.getShelf?.children ?? [];
 
     if (debouncedSearchTerm) {
-      childrenList = filteredResults(childrenList, debouncedSearchTerm);
+      childrenList = childrenList.filter(bySearchTerm(debouncedSearchTerm));
     }
 
     const finalList: Book[] = childrenList.map((book) => {
