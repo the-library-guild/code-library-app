@@ -16,6 +16,7 @@ import { LibraryLogo } from "../LibraryLogo";
 import { ToggleColorModeButton } from "../../layout/ToggleColorMode";
 import { UserDropdown } from "./UserDropdown";
 import { useUserInfo } from "./Navbar.hook";
+import style from "./navbar.module.css";
 
 export function Navbar() {
   const { user } = useUserInfo();
@@ -39,19 +40,23 @@ export function Navbar() {
               flexDirection="row"
               cursor="pointer"
             >
-              <LibraryLogo height="2rem" />
-              <Text marginLeft="3rem">CODE Library</Text>
+              <LibraryLogo height="2rem" className={style.logo} />
+              <Text marginLeft="3rem" className={style.logoText}>
+                CODE Library
+              </Text>
             </Heading>
           </Link>
         </Box>
 
-        <Center>
-          <Stack direction={"row"} spacing={4}>
-            <ToggleColorModeButton />
-            <UserDropdown user={user} />
-          </Stack>
-        </Center>
+        {/* <Center>
+          <Stack direction={"row"} spacing={4}> */}
+        <ToggleColorModeButton className={style.themeToggle} />
+        <UserDropdown user={user} className={style.userProfile} />
+        {/* </Stack>
+        </Center> */}
       </Flex>
     </Box>
   );
 }
+
+// make init-on-mac && make generate-certificates && make trust-on-mac && docker-compose up

@@ -1,23 +1,21 @@
-import React from 'react';
-
+import React, { useEffect } from "react";
 import type { ReactElement } from "react";
-
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
+import { Stack } from "@chakra-ui/react";
 
 import { hasPerms } from "code-library-perms";
 
-import { FullPageSpinner } from './FullPageSpinner';
+import { InternalPage } from "../layout/InternalPage";
+import { Content } from "../layout/Content";
+import { FullPageSpinner } from "./FullPageSpinner";
 
 interface Props {
   requiredPermissions: number;
   children: ReactElement;
 }
 
-export function PageAuthorizer({
-  requiredPermissions,
-  children,
-}: Props) {
+export function PageAuthorizer({ requiredPermissions, children }: Props) {
   const { push: redirectTo } = useRouter();
   const { data: session, status } = useSession();
 
@@ -28,7 +26,7 @@ export function PageAuthorizer({
   const couldNotBeAuthenticated = !isLoading && !userInfo;
   const permissionWasDenied = !hasPerms(userPermissions, requiredPermissions);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isLoading) return;
 
     if (couldNotBeAuthenticated) {
@@ -36,11 +34,18 @@ export function PageAuthorizer({
     }
 
     if (permissionWasDenied) {
-      redirectTo("/permission-denied")
+      redirectTo("/permission-denied");
     }
   }, [isLoading, userInfo]);
 
-  if (isLoading) return <FullPageSpinner />;
+  if (isLoading)
+    return (
+      <Content>
+        <Stack spacing={6} wordBreak="break-all" width="100%">
+          <FullPageSpinner />
+        </Stack>
+      </Content>
+    );
 
   return children;
 }
