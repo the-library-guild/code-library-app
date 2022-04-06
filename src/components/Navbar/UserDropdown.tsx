@@ -29,8 +29,6 @@ interface UserDropdownProps {
 }
 
 export function UserDropdown({ user, ...props }: UserDropdownProps) {
-  if (user == null) return <div>Error: Failed to load user data</div>;
-
   return (
     <Menu {...props}>
       <MenuButton

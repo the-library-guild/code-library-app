@@ -4,16 +4,14 @@ import Link from "next/link";
 import { Box, useColorModeValue, Heading, Flex, Text } from "@chakra-ui/react";
 
 import { LibraryLogo } from "../LibraryLogo";
-
 import { ToggleColorModeButton } from "../../layout/ToggleColorMode";
 import { UserDropdown } from "./UserDropdown";
 import { useUserInfo } from "../../hooks/use-user-info.hook";
+
 import style from "./navbar.module.css";
 
 export function Navbar() {
   const { user } = useUserInfo();
-
-  console.log({ user });
 
   return (
     <Box bg={useColorModeValue("gray.100", "gray.900")} px={4} w="100%">

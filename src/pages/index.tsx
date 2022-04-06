@@ -72,7 +72,6 @@ function IndexPage() {
             setQuery={(value: any) => {
               setQuery(value);
               refetch();
-              console.log("refetchin'");
             }}
           />
           <h2>{books.length} Results</h2>
