@@ -25,7 +25,7 @@ export function SearchBox({
         fontSize="var(--chakra-fontSizes-4xl)"
         fontFamily="var(--chakra-fonts-heading)"
         fontWeight="var(--chakra-fontWeights-bold)"
-        onChange={(e) => setQuery(containerOptions[e.target.value].query)}
+        onChange={(e) => setQuery(containerOptions[e.target.value])}
       >
         {Object.entries(containerOptions).map(([value, option]) => (
           <option key={value} value={value}>

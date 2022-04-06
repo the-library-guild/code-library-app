@@ -41,14 +41,18 @@ const containerOptions = {
     label: "📥 Books in the Return Box",
     query: GET_RETURN_BOX,
   },
-  user: { label: "🤓 Books you're borrowing", query: GET_SHELF },
+  user: {
+    label: "🤓 Books you're borrowing",
+    query: GET_SHELF,
+    options: { variables: { userId: "" } },
+  },
 };
 
 function IndexPage() {
-  const [query, setQuery] = useState<any>(containerOptions.shelf.query);
+  const [query, setQuery] = useState<any>(containerOptions.shelf);
 
   const { loading, error, books, searchTerm, setSearchTerm, refetch } =
-    useSearch(query);
+    useSearch(query.query, query.variables ?? {});
 
   const [maxIdx, setMaxIdx] = useState(10);
 

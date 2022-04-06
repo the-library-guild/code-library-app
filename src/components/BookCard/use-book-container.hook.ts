@@ -13,8 +13,11 @@ const shorten = (str: string, maxLength: number): string => {
   return str.length > maxLength ? str.slice(0, maxLength) + "..." : str;
 };
 
-export function useBookContainer(query: any) {
-  const { loading, error, data, refetch } = useQuery<getBooksResponse>(query);
+export function useBookContainer(query: any, options: any = {}) {
+  const { loading, error, data, refetch } = useQuery<getBooksResponse>(
+    query,
+    options
+  );
 
   const childrenList = (data?.getShelf?.children ?? []) as Book[];
 
