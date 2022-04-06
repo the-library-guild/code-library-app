@@ -64,5 +64,27 @@ const GET_RETURN_BOX = gql`
     }
   }
 `;
+const GET_USER_BOOKS = gql`
+  query GetUserBooks($userId: String!) {
+    getUser(userId: $userId) {
+      children {
+        _id
+        name
+        tags
+        rentable {
+          dueDate
+          stateTags
+          rentedDate
+        }
+        media {
+          contentTags
+          tagline
+          publishedDate
+          contentDesc
+        }
+      }
+    }
+  }
+`;
 
-export { GET_BOOK, GET_SHELF, GET_RETURN_BOX };
+export { GET_BOOK, GET_SHELF, GET_RETURN_BOX, GET_USER_BOOKS };

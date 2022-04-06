@@ -13,7 +13,7 @@ import { FullPageSpinner } from "../components/FullPageSpinner";
 import { useSearch } from "../components/Search/use-search.hook";
 import { SearchBox } from "../components/Search/SearchBox";
 import { BookCard } from "../components/BookCard/BookCard";
-import { GET_SHELF, GET_RETURN_BOX } from "../queries/queries";
+import { GET_SHELF, GET_RETURN_BOX, GET_USER_BOOKS } from "../queries/queries";
 import { useInterval } from "../hooks/use-interval.hook";
 import { useUserInfo } from "../hooks/use-user-info.hook";
 
@@ -31,28 +31,35 @@ function reduceContent(
     .slice(0, maxIdx)
     .map((book) => <BookCard key={book?._id} book={book} />);
 }
-
-const containerOptions = {
-  shelf: {
-    label: "📚 Books on the Shelf",
-    query: GET_SHELF,
-  },
-  returnBox: {
-    label: "📥 Books in the Return Box",
-    query: GET_RETURN_BOX,
-  },
-  user: {
-    label: "🤓 Books you're borrowing",
-    query: GET_SHELF,
-    options: { variables: { userId: "" } },
-  },
-};
+export interface ContainerOption {
+  label: string;
+  query: any;
+  options?: { [key: string]: any };
+}
 
 function IndexPage() {
-  const [query, setQuery] = useState<any>(containerOptions.shelf);
+  const { user } = useUserInfo();
+
+  const containerOptions: { [key: string]: ContainerOption } = {
+    shelf: {
+      label: "📚 Books on the Shelf",
+      query: GET_SHELF,
+    },
+    returnBox: {
+      label: "📥 Books in the Return Box",
+      query: GET_RETURN_BOX,
+    },
+    user: {
+      label: "🤓 Books you're borrowing",
+      query: GET_USER_BOOKS,
+      options: { variables: { userId: user.email } },
+    },
+  };
+
+  const [query, setQuery] = useState<ContainerOption>(containerOptions.shelf);
 
   const { loading, error, books, searchTerm, setSearchTerm, refetch } =
-    useSearch(query.query, query.variables ?? {});
+    useSearch(query.query, query.options ?? {});
 
   const [maxIdx, setMaxIdx] = useState(10);
 
