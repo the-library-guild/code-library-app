@@ -39,9 +39,9 @@ export function SearchBox({
         type="string"
         placeholder="🔍 Search by title, author, or topic"
         size="md"
-        value={searchTerm}
         marginTop="3rem"
         marginBottom="1.5rem"
+        value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
     </FormControl>

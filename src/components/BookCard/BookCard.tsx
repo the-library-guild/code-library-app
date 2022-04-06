@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 import {
   Box,
   Flex,
@@ -15,6 +14,7 @@ import {
 
 import { Book } from ".";
 import { useBookState } from "./use-book-state.hook";
+import { useUserInfo } from "../../hooks/use-user-info.hook";
 
 const programAcronym = (contentTags: string[]) => contentTags[3];
 
@@ -23,11 +23,11 @@ interface BookCardProps {
   isExpanded?: boolean;
 }
 export function BookCard({ book, isExpanded = false }: BookCardProps) {
-  const { data: session } = useSession();
+  const userInfo = useUserInfo();
 
   const { label, color, hasAction, actionLabel, action } = useBookState(
     book,
-    session
+    userInfo
   );
   const { name, media } = book;
 

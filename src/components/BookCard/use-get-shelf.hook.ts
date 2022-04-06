@@ -18,6 +18,8 @@ export function useBookContainer(query: any) {
 
   const childrenList = (data?.getShelf?.children ?? []) as Book[];
 
+  console.log(childrenList[0]);
+
   const books = childrenList.map((book) => ({
     ...book,
     media: {

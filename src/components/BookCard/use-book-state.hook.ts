@@ -1,12 +1,12 @@
-import { useReducer, useEffect, useState } from "react";
-
 import { gql, useMutation } from "@apollo/client";
 import { useColorModeValue } from "@chakra-ui/react";
 
-import { hasPerms, Perm } from "code-library-perms";
+import { Perm } from "code-library-perms";
 
 import { Book } from ".";
 import { PROCESS_BOOK, RENT_BOOK, RETURN_BOOK } from "../../queries/mutations";
+
+import type { UserInfoValue } from "../../hooks/use-user-info.hook";
 
 // TODO: force book to update on mutation
 
@@ -58,21 +58,19 @@ function reduceActionQuery(i: Info): [string, any] {
   ];
 }
 
-function useBookState(book: Book, session: any): useBookStateValue {
+function useBookState(book: Book, userInfo: UserInfoValue): useBookStateValue {
   // TODO: canBorrow = false if user has exceeded their booking limit
   // TODO: implement env.ANYONE_CAN_RETURN (also in backend), which will influence canReturn
 
   const stateTags = book?.rentable?.stateTags ?? [];
-  const userInfo = session?.user;
-  const userPermissions = userInfo?.permsInt || 0;
 
   const isBorrowed = stateTags.includes("Borrowed");
   const isAvailable = stateTags.includes("Available");
   const isProcessing = stateTags.includes("Processing");
 
-  const canProcess = hasPerms(userPermissions, Perm.MANAGE_BOOKS);
+  const canProcess = userInfo.hasPerms(Perm.MANAGE_BOOKS);
   const canReturn = true;
-  const canRent = hasPerms(userPermissions, Perm.RENT_BOOKS);
+  const canRent = userInfo.hasPerms(Perm.RENT_BOOKS);
 
   const info: Info = {
     isBorrowed,

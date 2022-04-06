@@ -14,7 +14,8 @@ import { useSearch } from "../components/Search/use-search.hook";
 import { SearchBox } from "../components/Search/SearchBox";
 import { BookCard } from "../components/BookCard/BookCard";
 import { GET_SHELF, GET_RETURN_BOX } from "../queries/queries";
-import { useInterval } from "../components/BookCard/use-interval.hook";
+import { useInterval } from "../hooks/use-interval.hook";
+import { useUserInfo } from "../hooks/use-user-info.hook";
 
 function reduceContent(
   loading: boolean,
