@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 const RETURN_BOOK = gql`
   mutation ReturnBook($bookId: ID!) {

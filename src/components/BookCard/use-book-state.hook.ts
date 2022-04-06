@@ -1,12 +1,12 @@
-import { gql, useMutation } from "@apollo/client";
-import { useColorModeValue } from "@chakra-ui/react";
+import { gql, useMutation } from '@apollo/client';
+import { useColorModeValue } from '@chakra-ui/react';
 
-import { Perm } from "code-library-perms";
+import { Perm } from 'code-library-perms';
 
-import { Book } from ".";
-import { PROCESS_BOOK, RENT_BOOK, RETURN_BOOK } from "../../queries/mutations";
+import { Book } from '.';
+import { PROCESS_BOOK, RENT_BOOK, RETURN_BOOK } from '../../queries/mutations';
 
-import type { UserInfoValue } from "../../hooks/use-user-info.hook";
+import type { UserInfoValue } from '../../hooks/use-user-info.hook';
 
 // TODO: force book to update on mutation
 
@@ -27,24 +27,24 @@ interface useBookStateValue {
 }
 
 function reduceLabel(i: Info) {
-  if (i.isBorrowed) return "Borrowed";
-  if (i.isAvailable) return "Available";
-  if (i.isProcessing) return "Processing";
+  if (i.isBorrowed) return 'Borrowed';
+  if (i.isAvailable) return 'Available';
+  if (i.isProcessing) return 'Processing';
 
-  return "Unknown";
+  return 'Unknown';
 }
 function reduceColors(i: Info) {
-  if (i.isAvailable) return ["green.800", "green.300"];
+  if (i.isAvailable) return ['green.800', 'green.300'];
 
-  return ["red.800", "red.300"];
+  return ['red.800', 'red.300'];
 }
 function reduceActionQuery(i: Info): [string, any] {
-  if (i.isProcessing && i.canProcess) return ["Return to Shelf", PROCESS_BOOK];
-  if (i.isAvailable && i.canRent) return ["Borrow", RENT_BOOK];
-  if (i.isBorrowed && i.canReturn) return ["Return", RETURN_BOOK];
+  if (i.isProcessing && i.canProcess) return ['Return to Shelf', PROCESS_BOOK];
+  if (i.isAvailable && i.canRent) return ['Borrow', RENT_BOOK];
+  if (i.isBorrowed && i.canReturn) return ['Return', RETURN_BOOK];
 
   return [
-    "",
+    '',
     // TODO: find a more elegant solution for mutation Placeholder
     gql`
       mutation Placeholder {
@@ -64,9 +64,9 @@ function useBookState(book: Book, userInfo: UserInfoValue): useBookStateValue {
 
   const stateTags = book?.rentable?.stateTags ?? [];
 
-  const isBorrowed = stateTags.includes("Borrowed");
-  const isAvailable = stateTags.includes("Available");
-  const isProcessing = stateTags.includes("Processing");
+  const isBorrowed = stateTags.includes('Borrowed');
+  const isAvailable = stateTags.includes('Available');
+  const isProcessing = stateTags.includes('Processing');
 
   const canProcess = userInfo.hasPerms(Perm.MANAGE_BOOKS);
   const canReturn = true;
@@ -87,7 +87,7 @@ function useBookState(book: Book, userInfo: UserInfoValue): useBookStateValue {
 
   const [actionLabel, actionQuery] = reduceActionQuery(info);
 
-  const hasAction = actionLabel !== "";
+  const hasAction = actionLabel !== '';
 
   const [rawAction, { loading, error }] = useMutation(actionQuery, {
     variables: { bookId: book?._id },

@@ -1,10 +1,10 @@
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
-import { getToken } from "next-auth/jwt";
+import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
+import { getToken } from 'next-auth/jwt';
 
-import { verifyToken } from "../token";
-import { NextApiRequest } from "next";
-import { NextURL } from "next/dist/server/web/next-url";
+import { verifyToken } from '../token';
+import { NextApiRequest } from 'next';
+import { NextURL } from 'next/dist/server/web/next-url';
 
 /*
 on any request:
@@ -40,13 +40,13 @@ async function middleware(req: NextApiRequest & NextRequest) {
 
   const { pathname } = req.nextUrl;
 
-  if (pathname.startsWith("/api/")) return NextResponse.next();
+  if (pathname.startsWith('/api/')) return NextResponse.next();
 
   const isAuthenticated = await checkIfUserIsAuthenticated(req);
 
-  if (!isAuthenticated && pathname !== "/login") return redirect("/login");
+  if (!isAuthenticated && pathname !== '/login') return redirect('/login');
 
-  if (isAuthenticated && pathname === "/login") return redirect("/");
+  if (isAuthenticated && pathname === '/login') return redirect('/');
 
   return NextResponse.next();
 }

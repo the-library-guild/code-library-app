@@ -1,21 +1,20 @@
-// TODO: fix books not displaying tagline
 // TODO: speed up book search (re-implement debouncing :P)
 
-import React, { useState } from "react";
-import { Stack } from "@chakra-ui/react";
+import React, { useState } from 'react';
+import { Stack } from '@chakra-ui/react';
 
-import { Perm } from "code-library-perms";
+import { Perm } from 'code-library-perms';
 
-import { InternalPage } from "../layout/InternalPage";
-import { Book } from "../components/BookCard";
-import { Content } from "../layout/Content";
-import { FullPageSpinner } from "../components/FullPageSpinner";
-import { useSearch } from "../components/Search/use-search.hook";
-import { SearchBox } from "../components/Search/SearchBox";
-import { BookCard } from "../components/BookCard/BookCard";
-import { GET_SHELF, GET_RETURN_BOX, GET_USER_BOOKS } from "../queries/queries";
-import { useInterval } from "../hooks/use-interval.hook";
-import { useUserInfo } from "../hooks/use-user-info.hook";
+import { InternalPage } from '../layout/InternalPage';
+import { Book } from '../components/BookCard';
+import { Content } from '../layout/Content';
+import { FullPageSpinner } from '../components/FullPageSpinner';
+import { useSearch } from '../components/Search/use-search.hook';
+import { SearchBox } from '../components/Search/SearchBox';
+import { BookCard } from '../components/BookCard/BookCard';
+import { GET_SHELF, GET_RETURN_BOX, GET_USER_BOOKS } from '../queries/queries';
+import { useInterval } from '../hooks/use-interval.hook';
+import { useUserInfo } from '../hooks/use-user-info.hook';
 
 function reduceContent(
   loading: boolean,
@@ -42,11 +41,11 @@ function IndexPage() {
 
   const containerOptions: { [key: string]: ContainerOption } = {
     shelf: {
-      label: "📚 Books on the Shelf",
+      label: '📚 Books on the Shelf',
       query: GET_SHELF,
     },
     returnBox: {
-      label: "📥 Books in the Return Box",
+      label: '📥 Books in the Return Box',
       query: GET_RETURN_BOX,
     },
     user: {

@@ -1,5 +1,5 @@
-import React from "react";
-import Link from "next/link";
+import React from 'react';
+import Link from 'next/link';
 import {
   Box,
   Flex,
@@ -10,11 +10,11 @@ import {
   StatLabel,
   StatHelpText,
   StatNumber,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
-import { Book } from ".";
-import { useBookState } from "./use-book-state.hook";
-import { useUserInfo } from "../../hooks/use-user-info.hook";
+import { Book } from '.';
+import { useBookState } from './use-book-state.hook';
+import { useUserInfo } from '../../hooks/use-user-info.hook';
 
 const programAcronym = (contentTags: string[]) => contentTags[3];
 
@@ -33,14 +33,14 @@ export function BookCard({ book, isExpanded = false }: BookCardProps) {
 
   return (
     <Box
-      rounded={"lg"}
-      bg={useColorModeValue("white", "gray.700")}
-      boxShadow={"lg"}
+      rounded={'lg'}
+      bg={useColorModeValue('white', 'gray.700')}
+      boxShadow={'lg'}
       p={3}
     >
       <Stat>
         <StatLabel>
-          {media?.contentTags ? programAcronym(media?.contentTags) : "Unknown"}
+          {media?.contentTags ? programAcronym(media?.contentTags) : 'Unknown'}
         </StatLabel>
         <StatNumber>
           <Link href={`/books/${book?._id}`}>{name}</Link>
@@ -53,12 +53,12 @@ export function BookCard({ book, isExpanded = false }: BookCardProps) {
           <Spacer />
           {hasAction && (
             <Button
-              marginLeft={"auto"}
+              marginLeft={'auto'}
               onClick={() =>
                 action &&
                 action().then(() =>
                   window?.dispatchEvent(
-                    new CustomEvent("updateBookList", {
+                    new CustomEvent('updateBookList', {
                       bubbles: true,
                       cancelable: true,
                     })

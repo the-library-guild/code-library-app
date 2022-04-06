@@ -1,5 +1,5 @@
-import React, { ChangeEvent } from "react";
-import { FormControl, Select, Input } from "@chakra-ui/react";
+import React from 'react';
+import { FormControl, Select, Input } from '@chakra-ui/react';
 
 interface ContainerOption {
   label: string;

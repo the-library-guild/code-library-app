@@ -11,7 +11,8 @@
     "dev": "NODE_ENV=development next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint --fix",
+    "prettify": "prettier --config .prettierrc 'src/**/*.ts' --write"
   },
   "repository": {
     "type": "git",
@@ -48,7 +49,7 @@
     "@typescript-eslint/parser": "^5.12.1",
     "eslint": "^8.8.0",
     "eslint-config-next": "12.0.10",
-    "eslint-config-prettier": "^8.4.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.29.2",
     "prettier": "^2.5.1",

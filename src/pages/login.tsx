@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 
-import { useToast } from "@chakra-ui/react";
-import { useRouter } from "next/router";
+import { useToast } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
 
-import { SignInCard } from "../components/SignInCard";
+import { SignInCard } from '../components/SignInCard';
 
-import { ExternalPage } from "../layout/ExternalPage";
+import { ExternalPage } from '../layout/ExternalPage';
 
 export default function LogInPage() {
   useErrorToasts();
@@ -18,16 +18,16 @@ export default function LogInPage() {
 }
 
 const errorMessages = {
-  Signin: "Try signing in with a different account.",
+  Signin: 'Try signing in with a different account.',
   Callback:
     "We're facing issues while trying to connect to one of our servers.",
-  Default: "Unable to sign in.",
+  Default: 'Unable to sign in.',
 };
 
 const messageFor = (e: LoginError) =>
   e && (errorMessages[e] ?? errorMessages.Default);
 
-type LoginError = "Signin" | "Callback";
+type LoginError = 'Signin' | 'Callback';
 
 function useErrorToasts() {
   const {
@@ -40,33 +40,33 @@ function useErrorToasts() {
   const errors = error as LoginError;
 
   useEffect(() => {
-    router.replace("/login", undefined, { shallow: true });
+    router.replace('/login', undefined, { shallow: true });
 
     if (errors === undefined) return;
 
     if (Array.isArray(errors)) {
       errors.map((error: LoginError) => {
         toast({
-          title: "Error",
+          title: 'Error',
           description: messageFor(error),
-          status: "error",
+          status: 'error',
           duration: 3000,
           isClosable: true,
-          position: "top-right",
-          variant: "subtle",
+          position: 'top-right',
+          variant: 'subtle',
         });
       });
       return;
     }
 
     toast({
-      title: "Error",
+      title: 'Error',
       description: messageFor(errors),
-      status: "error",
+      status: 'error',
       duration: 3000,
       isClosable: true,
-      position: "top-right",
-      variant: "top-accent",
+      position: 'top-right',
+      variant: 'top-accent',
     });
   }, [error]);
 }

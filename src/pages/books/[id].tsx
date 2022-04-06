@@ -1,17 +1,17 @@
-import React, { useEffect } from "react";
-import { useRouter } from "next/router";
-import { Stack } from "@chakra-ui/react";
-import { useQuery } from "@apollo/client";
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { Stack } from '@chakra-ui/react';
+import { useQuery } from '@apollo/client';
 
-import { Perm } from "code-library-perms";
+import { Perm } from 'code-library-perms';
 
-import { Content } from "../../layout/Content";
-import { InternalPage } from "../../layout/InternalPage";
-import { FullPageSpinner } from "../../components/FullPageSpinner";
-import { BookCard } from "../../components/BookCard/BookCard";
-import { Book } from "../../components/BookCard";
+import { Content } from '../../layout/Content';
+import { InternalPage } from '../../layout/InternalPage';
+import { FullPageSpinner } from '../../components/FullPageSpinner';
+import { BookCard } from '../../components/BookCard/BookCard';
+import { Book } from '../../components/BookCard';
 
-import { GET_BOOK } from "../../queries/queries";
+import { GET_BOOK } from '../../queries/queries';
 
 function reduceContent(loading: boolean, error: any, book: Book) {
   if (loading) return <FullPageSpinner />;
@@ -30,7 +30,7 @@ function BookDetailedPage() {
   });
 
   useEffect(() => {
-    window.addEventListener("updateBookList", (e) => {
+    window.addEventListener('updateBookList', (e) => {
       e.stopPropagation();
       refetch();
     });

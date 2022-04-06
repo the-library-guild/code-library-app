@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 import {
   Avatar,
@@ -11,11 +11,11 @@ import {
   Stack,
   Center,
   Text,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
-import { signOut } from "next-auth/react";
+import { signOut } from 'next-auth/react';
 
-import { FaSignOutAlt } from "react-icons/fa";
+import { FaSignOutAlt } from 'react-icons/fa';
 
 interface UserInfo {
   name?: string | undefined;
@@ -33,26 +33,26 @@ export function UserDropdown({ user, ...props }: UserDropdownProps) {
     <Menu {...props}>
       <MenuButton
         as={Button}
-        rounded={"full"}
-        variant={"link"}
-        cursor={"pointer"}
+        rounded={'full'}
+        variant={'link'}
+        cursor={'pointer'}
       >
-        <Avatar name={user.name} src={user.image} size={"sm"} />
+        <Avatar name={user.name} src={user.image} size={'sm'} />
       </MenuButton>
-      <MenuList alignItems={"center"}>
-        <Center my={"2"}>
-          <Avatar name={user.name} src={user.image} size={"xl"} />
+      <MenuList alignItems={'center'}>
+        <Center my={'2'}>
+          <Avatar name={user.name} src={user.image} size={'xl'} />
         </Center>
         <Center>
           <Stack
-            align={"center"}
-            px={{ base: "6", md: "8" }}
-            py={{ base: "2", md: "4" }}
+            align={'center'}
+            px={{ base: '6', md: '8' }}
+            py={{ base: '2', md: '4' }}
           >
-            <Text fontWeight={"bold"} fontSize={["sm", "md"]}>
+            <Text fontWeight={'bold'} fontSize={['sm', 'md']}>
               {user.name}
             </Text>
-            <Text fontSize={["sm", "md"]}>{user.email}</Text>
+            <Text fontSize={['sm', 'md']}>{user.email}</Text>
           </Stack>
         </Center>
         <MenuDivider />

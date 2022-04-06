@@ -1,9 +1,9 @@
-import { useEffect, useRef, useLayoutEffect } from "react";
+import { useEffect, useRef, useLayoutEffect } from 'react';
 
 // src: https://usehooks-ts.com/react-hook/use-interval/
 
 const useIsomorphicLayoutEffect =
-  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+  typeof window !== 'undefined' ? useLayoutEffect : useEffect;
 
 function useInterval(callback: () => void, delay: number | null) {
   const savedCallback = useRef(callback);

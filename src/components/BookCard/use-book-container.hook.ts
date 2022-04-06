@@ -1,6 +1,6 @@
-import { useQuery } from "@apollo/client";
+import { useQuery } from '@apollo/client';
 
-import { Book } from ".";
+import { Book } from '.';
 
 interface getBooksResponse {
   getShelf: {
@@ -9,17 +9,19 @@ interface getBooksResponse {
 }
 
 const shorten = (str: string, maxLength: number): string => {
-  if (!str) return "";
-  return str.length > maxLength ? str.slice(0, maxLength) + "..." : str;
+  if (!str) return '';
+  return str.length > maxLength ? str.slice(0, maxLength) + '...' : str;
 };
 
 export function useBookContainer(query: any, options: any = {}) {
-  const { loading, error, data, refetch } = useQuery<getBooksResponse>(
-    query,
-    options
-  );
+  const { loading, error, data, refetch } = useQuery<getBooksResponse>(query, {
+    ...options,
+    returnPartialData: true,
+  });
 
   const childrenList = (data?.getShelf?.children ?? []) as Book[];
+
+  console.log(childrenList);
 
   const books = childrenList.map((book) => ({
     ...book,

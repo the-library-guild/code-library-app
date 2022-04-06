@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 const GET_BOOK = gql`
   query GetBook($bookId: ID!) {
@@ -27,11 +27,13 @@ const GET_SHELF = gql`
         _id
         name
         tags
+
         rentable {
           dueDate
           stateTags
           rentedDate
         }
+
         media {
           contentTags
           tagline

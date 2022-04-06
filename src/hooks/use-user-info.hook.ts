@@ -1,12 +1,12 @@
-import { signOut, useSession } from "next-auth/react";
+import { signOut, useSession } from 'next-auth/react';
 
-import { hasPerms } from "code-library-perms";
+import { hasPerms } from 'code-library-perms';
 
-import type { JWT } from "next-auth/jwt";
+import type { JWT } from 'next-auth/jwt';
 
 export interface UserInfoValue {
   user: JWT;
-  status: "authenticated" | "loading" | "unauthenticated";
+  status: 'authenticated' | 'loading' | 'unauthenticated';
   isLoading: boolean;
   isLoggedIn: boolean;
 
@@ -16,8 +16,8 @@ export interface UserInfoValue {
 export function useUserInfo(): UserInfoValue {
   const { data: session, status } = useSession();
 
-  const isLoading = status === "loading";
-  const isLoggedIn = status === "authenticated";
+  const isLoading = status === 'loading';
+  const isLoggedIn = status === 'authenticated';
 
   const user = session?.user as JWT;
 

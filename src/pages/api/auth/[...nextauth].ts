@@ -1,16 +1,16 @@
-import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-import { gql } from "@apollo/client";
+import NextAuth from 'next-auth';
+import GoogleProvider from 'next-auth/providers/google';
+import { gql } from '@apollo/client';
 
-import { apiClient } from "../../../services/apollo-client";
-import { signToken, verifyToken } from "../../../token";
+import { apiClient } from '../../../services/apollo-client';
+import { signToken, verifyToken } from '../../../token';
 
 const validTimeInSeconds = parseInt(process.env.MAX_SESSION_DURATION_SECONDS);
 
 // graphQl queries require keys to not be surrounded by quotes, but JSON.stringify() produces quoted keys
 const graphqlStringify = (obj: { [key: string]: unknown }) => {
   const sache = Object.entries(obj).map(([key, value]) => `${key}: "${value}"`);
-  return "{" + sache.join(", ") + "}";
+  return '{' + sache.join(', ') + '}';
 };
 const mintJwt = (userData: { [key: string]: unknown }) => ({
   query: gql`
@@ -32,11 +32,11 @@ export default NextAuth({
     }),
   ],
   pages: {
-    signIn: "/login",
-    error: "/login", // Error code is passed in as a query string i.e., ?error=Callaback
+    signIn: '/login',
+    error: '/login', // Error code is passed in as a query string i.e., ?error=Callaback
   },
   session: {
-    strategy: "jwt",
+    strategy: 'jwt',
     maxAge: validTimeInSeconds,
   },
   jwt: {
@@ -47,7 +47,7 @@ export default NextAuth({
       this is thankfully supported by next-auth.
       */
     encode: async ({ token }) => {
-      if (token == null) return "";
+      if (token == null) return '';
 
       // the first token created after sign in only contains one key called state
       if (token.state) return signToken(token);
@@ -57,7 +57,7 @@ export default NextAuth({
 
       const { data, error } = await apiClient.query(mintJwt(userData));
 
-      return error ? "" : data.mintJwt;
+      return error ? '' : data.mintJwt;
     },
     decode: ({ token }) => verifyToken(token),
   },

@@ -1,6 +1,6 @@
-import { ApolloError } from "@apollo/client";
+import { ApolloError } from '@apollo/client';
 
-import { BookCard } from "./BookCard";
+import { BookCard } from './BookCard';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface BooklistQuery {

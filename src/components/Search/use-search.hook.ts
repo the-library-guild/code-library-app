@@ -1,9 +1,9 @@
-import { ApolloError } from "@apollo/client";
+import { ApolloError } from '@apollo/client';
 
-import { useEffect, useState } from "react";
-import { useBookContainer } from "../BookCard/use-book-container.hook";
-import { Book } from "../BookCard";
-import { GET_SHELF } from "../../queries/queries";
+import { useEffect, useState } from 'react';
+import { useBookContainer } from '../BookCard/use-book-container.hook';
+import { Book } from '../BookCard';
+import { GET_SHELF } from '../../queries/queries';
 
 interface UseSearchValue {
   loading: boolean;
@@ -26,7 +26,7 @@ export function useSearch(query: any, options: any = {}): UseSearchValue {
   const { loading, error, books, refetch } = useBookContainer(query, options);
 
   const [results, setResults] = useState<Book[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     if (loading) return;

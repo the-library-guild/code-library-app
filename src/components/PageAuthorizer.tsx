@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
-import type { ReactElement } from "react";
-import { useRouter } from "next/router";
+import React, { useEffect } from 'react';
+import type { ReactElement } from 'react';
+import { useRouter } from 'next/router';
 
-import { FullPageSpinner } from "./FullPageSpinner";
-import { useUserInfo } from "../hooks/use-user-info.hook";
+import { FullPageSpinner } from './FullPageSpinner';
+import { useUserInfo } from '../hooks/use-user-info.hook';
 
 interface Props {
   requiredPermissions: number;
@@ -17,10 +17,10 @@ export function PageAuthorizer({ requiredPermissions, children }: Props) {
   useEffect(() => {
     if (isLoading) return;
 
-    if (!isLoggedIn) redirectTo("/login");
+    if (!isLoggedIn) redirectTo('/login');
 
     if (isLoggedIn && !hasPerms(requiredPermissions))
-      redirectTo("/permission-denied");
+      redirectTo('/permission-denied');
   }, [isLoading, isLoggedIn, user]);
 
   if (isLoading) return <FullPageSpinner />;
