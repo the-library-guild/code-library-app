@@ -10,14 +10,14 @@ services:
     networks:
       codelibrary_network:
         aliases:
-          - "api.codelibrary.dev"
-          - "client.codelibrary.dev"
+          - 'api.codelibrary.dev'
+          - 'client.codelibrary.dev'
     extra_hosts:
-      - "api.codelibrary.dev:127.0.0.1"
-      - "client.codelibrary.dev:127.0.0.1"
+      - 'api.codelibrary.dev:127.0.0.1'
+      - 'client.codelibrary.dev:127.0.0.1'
     ports:
-      - "80:80"
-      - "443:443"
+      - '80:80'
+      - '443:443'
   client:
     build:
       context: .
@@ -26,8 +26,6 @@ services:
     container_name: app_client
     volumes:
       - .:/app
-      - /app/node_modules
-      - /app/.next
     ports:
       - 3000:3000
     networks:
