@@ -6,5 +6,6 @@ services:
       context: .
       dockerfile: ./docker/npm/Dockerfile
     volumes:
-      - /app/node_modules
+      - ./:/app
+      - ./.npm:/root/.npm/
 

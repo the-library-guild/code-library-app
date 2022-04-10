@@ -1,8 +1,6 @@
-FROM node:16-alpine
+FROM node:16
 
 WORKDIR /app
-
-VOLUME [ "/app/node_modules", "/app/.next" ]
 
 COPY package*.json ./
 

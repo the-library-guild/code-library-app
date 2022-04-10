@@ -39,6 +39,4 @@ clean:
 
 .PHONY: npm_install
 npm_install:
-	docker-compose exec client npm install $(package) $(flags)
-	docker-compose build client
-	docker-compose restart
+	docker-compose -f docker-compose.helpers.yml run --rm npm install $(package) $(flags)
