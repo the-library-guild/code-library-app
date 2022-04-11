@@ -1,0 +1,17 @@
+name: Build of The Library App UI
+
+on: [push]
+
+env:
+  IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}
+
+jobs:
+  build-container:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build Container
+        run: |
+          docker build --tag $IMAGE_NAME:${{ github.sha }} --build-arg NEXT_PUBLIC_GRAPHQL_URL=${{ secrets.NEXT_PUBLIC_GRAPHQL_URL }} .
