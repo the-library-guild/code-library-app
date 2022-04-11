@@ -4,6 +4,8 @@ services:
   mongo:
     image: mongo
     container_name: app_db
+    ports:
+      - 27017:27017
     volumes:
       - mongo-store:/data/db
     networks:
