@@ -22,19 +22,11 @@ nvm use 16
 ```
 
 Now that we know we are running on the right environment, let's sping up the app.
-To facilitate fullstack development but still enable a stable environment,
-we provide two different setups with a few targets facilitate switching between them.
 
 ### Developing with the last stable release of the CODE Library's Server
 
 ```bash
 make start
-```
-
-### Developing client and server together
-
-```bash
-make start-fullstack
 ```
 
 By now you should be able to open [http://localhost:3000](http://localhost:3000) in your browser to see the application running.
