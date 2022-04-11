@@ -6,6 +6,14 @@ const RETURN_BOOK = gql`
       ... on Success {
         id
       }
+
+      ... on MissingPermissionsError {
+        msg
+      }
+
+      ... on Error {
+        msg
+      }
     }
   }
 `;
@@ -15,6 +23,14 @@ const RENT_BOOK = gql`
       ... on Success {
         id
       }
+
+      ... on MissingPermissionsError {
+        msg
+      }
+
+      ... on Error {
+        msg
+      }
     }
   }
 `;
@@ -23,6 +39,14 @@ const PROCESS_BOOK = gql`
     processBook(bookId: $bookId) {
       ... on Success {
         id
+      }
+
+      ... on MissingPermissionsError {
+        msg
+      }
+
+      ... on Error {
+        msg
       }
     }
   }
