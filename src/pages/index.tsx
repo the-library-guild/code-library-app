@@ -15,6 +15,7 @@ import { BookCard } from '../components/BookCard/BookCard';
 import { GET_SHELF, GET_RETURN_BOX, GET_USER_BOOKS } from '../queries/queries';
 import { useInterval } from '../hooks/use-interval.hook';
 import { useUserInfo } from '../hooks/use-user-info.hook';
+import { useRouter } from 'next/router';
 
 function reduceContent(
   loading: boolean,
@@ -38,6 +39,9 @@ export interface ContainerOption {
 
 function IndexPage() {
   const { user } = useUserInfo();
+  const { push } = useRouter();
+
+  if (!user) push('/login');
 
   const containerOptions: { [key: string]: ContainerOption } = {
     shelf: {
