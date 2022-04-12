@@ -12,7 +12,7 @@ import {
   StatNumber,
 } from '@chakra-ui/react';
 
-import { Book } from '.';
+import { Book } from './BookCard.constants';
 import { useBookState } from './use-book-state.hook';
 import { useUserInfo } from '../../hooks/use-user-info.hook';
 

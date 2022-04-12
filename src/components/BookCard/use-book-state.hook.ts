@@ -3,7 +3,7 @@ import { useColorModeValue } from '@chakra-ui/react';
 
 import { Perm } from 'code-library-perms';
 
-import { Book } from '.';
+import { Book } from './BookCard.constants';
 import { PROCESS_BOOK, RENT_BOOK, RETURN_BOOK } from '../../queries/mutations';
 
 import type { UserInfoValue } from '../../hooks/use-user-info.hook';
@@ -34,9 +34,9 @@ function reduceLabel(i: Info) {
   return 'Unknown';
 }
 function reduceColors(i: Info) {
-  if (i.isAvailable) return ['green.800', 'green.300'];
+  if (i.isAvailable) return ['green.400', 'green.300'];
 
-  return ['red.800', 'red.300'];
+  return ['red.600', 'red.300'];
 }
 function reduceActionQuery(i: Info): [string, any] {
   if (i.isProcessing && i.canProcess) return ['Return to Shelf', PROCESS_BOOK];

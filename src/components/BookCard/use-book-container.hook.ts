@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 
-import { Book } from '.';
+import { Book } from './BookCard.constants';
 
 interface getBooksResponse {
   getShelf: {
