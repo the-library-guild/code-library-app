@@ -7,7 +7,8 @@ module.exports = {
     NEXT_PUBLIC_GRAPHQL_URL: process.env.NEXT_PUBLIC_GRAPHQL_URL
   },
   serverRuntimeConfig: {
-    GRAPHQL_URL: process.env.GRAPHQL_URL
+    GRAPHQL_URL: process.env.GRAPHQL_URL,
+    IS_PROD: process.env.NODE_ENV === 'production'
   },
   experimental: {
     outputStandalone: true,

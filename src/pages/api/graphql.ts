@@ -5,10 +5,14 @@ const config = getConfig();
 
 const uri = config.serverRuntimeConfig.GRAPHQL_URL as string;
 
+const cookieName = config.serverRuntimeConfig.IS_PROD
+  ? '__Secure-next-auth.session-token'
+  : 'next-auth.session-token';
+
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { cookies, body } = req;
 
-  const token = cookies['next-auth.session-token'];
+  const token = cookies[cookieName];
 
   const response = await fetch(uri, {
     method: 'POST',
