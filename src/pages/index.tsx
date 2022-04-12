@@ -1,13 +1,13 @@
 // TODO: speed up book search (re-implement debouncing :P)
 
 import React, { useState } from 'react';
-import { Stack } from '@chakra-ui/react';
+import { Stack, Text } from '@chakra-ui/react';
 
 import { Perm } from 'code-library-perms';
 
-import { InternalPage } from '../layout/InternalPage';
-import { Book } from '../components/BookCard';
-import { Content } from '../layout/Content';
+import { InternalPage } from '../components/InternalPage';
+import { Book } from '../components/BookCard/BookCard.constants';
+import { Content } from '../components/Content';
 import { FullPageSpinner } from '../components/FullPageSpinner';
 import { useSearch } from '../components/Search/use-search.hook';
 import { SearchBox } from '../components/Search/SearchBox';
@@ -75,21 +75,18 @@ function IndexPage() {
   return (
     <InternalPage>
       <Content>
-        <Stack spacing={6} wordBreak="break-all" width="100%">
+        <Stack spacing={4} width="100%">
           <SearchBox
             searchTerm={searchTerm}
             setSearchTerm={(term: string) => {
               setMaxIdx(10);
               setSearchTerm(term);
             }}
-            containerOptions={containerOptions}
-            setQuery={(value: any) => {
-              setQuery(value);
-              refetch();
-            }}
           />
-          <h2>{books.length} Results</h2>
-          {reduceContent(loading, error, books, maxIdx)}
+          <Text fontSize={'sm'}>Results ({books.length})</Text>
+          <Stack spacing={6} wordBreak="break-all" width="100%">
+            {reduceContent(loading, error, books, maxIdx)}
+          </Stack>
         </Stack>
       </Content>
     </InternalPage>

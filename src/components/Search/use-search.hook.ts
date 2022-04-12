@@ -2,8 +2,7 @@ import { ApolloError } from '@apollo/client';
 
 import { useEffect, useState } from 'react';
 import { useBookContainer } from '../BookCard/use-book-container.hook';
-import { Book } from '../BookCard';
-import { GET_SHELF } from '../../queries/queries';
+import { Book } from '../BookCard/BookCard.constants';
 
 interface UseSearchValue {
   loading: boolean;

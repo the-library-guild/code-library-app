@@ -1,49 +1,54 @@
 import React from 'react';
-import { FormControl, Select, Input } from '@chakra-ui/react';
+import {
+  FormControl,
+  Input,
+  Icon,
+  Flex,
+  useColorModeValue,
+} from '@chakra-ui/react';
 
-interface ContainerOption {
-  label: string;
-  query: any;
-}
+import { RiSearchLine } from 'react-icons/ri';
 interface SearchBoxProps {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  containerOptions: { [value: string]: ContainerOption };
-  setQuery: any;
 }
 
-export function SearchBox({
-  searchTerm,
-  setSearchTerm,
-  containerOptions,
-  setQuery,
-}: SearchBoxProps) {
+export function SearchBox({ searchTerm, setSearchTerm }: SearchBoxProps) {
   return (
-    <FormControl display="flex" alignItems="center" flexDirection="column">
-      <Select
-        height="5rem"
-        fontSize="var(--chakra-fontSizes-4xl)"
-        fontFamily="var(--chakra-fonts-heading)"
-        fontWeight="var(--chakra-fontWeights-bold)"
-        onChange={(e) => setQuery(containerOptions[e.target.value])}
+    <FormControl
+      display="flex"
+      alignItems="center"
+      flexDirection="column"
+      flexWrap={'wrap'}
+    >
+      <Flex
+        as="label"
+        p="2"
+        w={'100%'}
+        maxHeight={40}
+        color={'gray.200'}
+        border="1px solid"
+        borderRadius="md"
+        bg={useColorModeValue('white', 'gray.700')}
+        align={'center'}
       >
-        {Object.entries(containerOptions).map(([value, option]) => (
-          <option key={value} value={value}>
-            {option.label}
-          </option>
-        ))}
-      </Select>
-      <Input
-        width="66%"
-        marginRight="auto"
-        type="string"
-        placeholder="🔍 Search by title, author, or topic"
-        size="md"
-        marginTop="3rem"
-        marginBottom="1.5rem"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
+        <Icon
+          as={RiSearchLine}
+          fontSize={'20'}
+          color={useColorModeValue('green.500', 'gray.400')}
+        />
+        <Input
+          type={'text'}
+          width={'100%'}
+          color={useColorModeValue('gray.500', 'gray.50')}
+          variant={'unstyled'}
+          placeholder="Search by title, author, or topic"
+          px={'4'}
+          _placeholder={{ color: 'gray.400', fontSize: '18' }}
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </Flex>
     </FormControl>
   );
 }
