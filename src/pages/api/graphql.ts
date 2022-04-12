@@ -1,6 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import getConfig from 'next/config';
 
-const uri = process.env.NEXT_PUBLIC_GRAPHQL_URL as string;
+const config = getConfig();
+
+const uri = config.serverRuntimeConfig.GRAPHQL_URL as string;
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { cookies, body } = req;

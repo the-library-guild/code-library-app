@@ -2,9 +2,12 @@
 
 module.exports = {
   reactStrictMode: true,
-  env: {
+  publicRuntimeConfig: {
     NEXT_PUBLIC_CLIENT_URL: process.env.NEXT_PUBLIC_CLIENT_URL,
     NEXT_PUBLIC_GRAPHQL_URL: process.env.NEXT_PUBLIC_GRAPHQL_URL
+  },
+  serverRuntimeConfig: {
+    GRAPHQL_URL: process.env.GRAPHQL_URL
   },
   experimental: {
     outputStandalone: true,
