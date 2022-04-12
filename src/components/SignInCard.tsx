@@ -5,7 +5,7 @@ import { Flex, Box, Stack, Heading, useColorModeValue } from '@chakra-ui/react';
 import { SignInButton } from './SignInButton';
 import { LibraryLogo } from './LibraryLogo';
 
-import { ToggleColorModeButton } from '../layout/ToggleColorMode';
+import { ToggleColorModeButton } from '../components/ToggleColorMode';
 
 export function SignInCard() {
   return (

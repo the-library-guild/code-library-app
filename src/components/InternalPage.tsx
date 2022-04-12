@@ -2,8 +2,8 @@ import React, { ReactNode } from 'react';
 
 import { Flex, useColorModeValue } from '@chakra-ui/react';
 
-import { Navbar } from '../components/Navbar/Navbar';
 import { Content } from './Content';
+import { Sidebar } from '../components/Sidebar/Sidebar';
 
 interface InternalPageProps {
   children: ReactNode;
@@ -12,16 +12,17 @@ interface InternalPageProps {
 export function InternalPage({ children }: InternalPageProps) {
   return (
     <Flex as={'header'} w={'100vw'} h={'100vh'} m={'0'} direction={'column'}>
-      <Navbar />
-      <Flex
-        as={'main'}
-        w={'100%'}
-        align={'center'}
-        justify={'center'}
-        bg={useColorModeValue('gray.50', 'gray.800')}
-      >
-        <Content>{children}</Content>
-      </Flex>
+      <Sidebar>
+        <Flex
+          as={'main'}
+          w={'100%'}
+          align={'center'}
+          justify={'center'}
+          bg={useColorModeValue('white', 'gray.800')}
+        >
+          <Content>{children}</Content>
+        </Flex>
+      </Sidebar>
     </Flex>
   );
 }

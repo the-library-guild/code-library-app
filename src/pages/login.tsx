@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 
 import { SignInCard } from '../components/SignInCard';
 
-import { ExternalPage } from '../layout/ExternalPage';
+import { ExternalPage } from '../components/ExternalPage';
 
 export default function LogInPage() {
   useErrorToasts();

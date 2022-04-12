@@ -5,11 +5,11 @@ import { useQuery } from '@apollo/client';
 
 import { Perm } from 'code-library-perms';
 
-import { Content } from '../../layout/Content';
-import { InternalPage } from '../../layout/InternalPage';
+import { Content } from '../../components/Content';
+import { InternalPage } from '../../components/InternalPage';
 import { FullPageSpinner } from '../../components/FullPageSpinner';
 import { BookCard } from '../../components/BookCard/BookCard';
-import { Book } from '../../components/BookCard';
+import { Book } from '../../components/BookCard/BookCard.constants';
 
 import { GET_BOOK } from '../../queries/queries';
 

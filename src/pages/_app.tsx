@@ -18,6 +18,7 @@ const theme = extendTheme({
   initialColorMode: 'system',
   colors: {
     primary: {
+      50: '#35daad',
       100: '#35daad',
       200: '#97dcc9',
     },
