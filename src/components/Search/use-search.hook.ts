@@ -1,16 +1,11 @@
-import { ApolloError } from '@apollo/client';
-
 import { useEffect, useState } from 'react';
-import { useBookContainer } from '../BookCard/use-book-container.hook';
 import { Book } from '../BookCard/BookCard.constants';
 
 interface UseSearchValue {
-  loading: boolean;
-  error: ApolloError | undefined;
-  books: Book[];
+  results: Book[];
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  refetch: any;
+  loadSearchResults: (initialResults: Book[]) => void;
 }
 
 const bySearchTerm = (searchTerm: string) => (book: Book) => {
@@ -21,29 +16,25 @@ const bySearchTerm = (searchTerm: string) => (book: Book) => {
   );
 };
 
-export function useSearch(query: any, options: any = {}): UseSearchValue {
-  const { loading, error, books, refetch } = useBookContainer(query, options);
-
+export function useSearch(): UseSearchValue {
   const [results, setResults] = useState<Book[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [initialResults, setInitialResults] = useState<Book[]>();
 
   useEffect(() => {
-    if (loading) return;
-
-    let childrenList = books ?? [];
+    let newResults = initialResults ?? [];
 
     if (searchTerm) {
-      childrenList = childrenList.filter(bySearchTerm(searchTerm));
+      newResults = newResults.filter(bySearchTerm(searchTerm));
     }
-    setResults(childrenList);
-  }, [searchTerm, loading]);
+
+    setResults(newResults);
+  }, [searchTerm, initialResults]);
 
   return {
-    loading,
-    error,
-    books: results,
+    results,
     searchTerm,
     setSearchTerm,
-    refetch,
+    loadSearchResults: setInitialResults,
   };
 }
