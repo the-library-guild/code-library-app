@@ -4,6 +4,7 @@ import { Flex, useColorModeValue } from '@chakra-ui/react';
 
 import { Content } from './Content';
 import { Sidebar } from '../components/Sidebar/Sidebar';
+import { ErrorBoundary } from './ErrorBoundary';
 
 interface InternalPageProps {
   children: ReactNode;
@@ -20,7 +21,9 @@ export function InternalPage({ children }: InternalPageProps) {
           justify={'center'}
           bg={useColorModeValue('white', 'gray.800')}
         >
-          <Content>{children}</Content>
+          <Content>
+            <ErrorBoundary>{children}</ErrorBoundary>
+          </Content>
         </Flex>
       </Sidebar>
     </Flex>
