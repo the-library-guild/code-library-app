@@ -26,7 +26,6 @@ const LinkItems: Array<LinkItemProps> = [
     href: '/students/borrowed',
   },
   { name: 'Books you reserved', icon: FiStar, href: '/students/reservations' },
-  { name: 'Settings', icon: FiSettings, href: '/students/borrowed' },
 ];
 
 export const SidebarContent = ({ ...rest }: BoxProps) => {
