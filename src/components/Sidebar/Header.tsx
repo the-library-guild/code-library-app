@@ -30,7 +30,7 @@ export const Header = ({ onOpen, ...rest }: HeaderProps) => {
       justifyContent={{ base: 'space-between' }}
       {...rest}
     >
-      <Flex justifyContent={'center'} gap={'4'}>
+      <Flex justifyContent={'center'} alignItems={'center'} gap={'4'}>
         <IconButton
           display={'flex'}
           onClick={onOpen}
