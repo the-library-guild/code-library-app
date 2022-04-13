@@ -6,7 +6,6 @@ import { useQuery } from '@apollo/client';
 import { Perm } from 'code-library-perms';
 
 import { Content } from '../../components/Content';
-import { InternalPage } from '../../components/InternalPage';
 import { FullPageSpinner } from '../../components/FullPageSpinner';
 import { BookCard } from '../../components/BookCard/BookCard';
 import { Book } from '../../components/BookCard/BookCard.constants';
@@ -37,13 +36,11 @@ function BookDetailedPage() {
   }, []);
 
   return (
-    <InternalPage>
-      <Content>
-        <Stack spacing={6} wordBreak="break-all" width="100%">
-          {reduceContent(loading, error, data?.getBook)}
-        </Stack>
-      </Content>
-    </InternalPage>
+    <Content>
+      <Stack spacing={6} wordBreak="break-all" width="100%">
+        {reduceContent(loading, error, data?.getBook)}
+      </Stack>
+    </Content>
   );
 }
 BookDetailedPage.permissions = Perm.VIEW_BOOKS;
