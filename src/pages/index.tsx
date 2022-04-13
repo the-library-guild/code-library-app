@@ -5,17 +5,14 @@ import { Stack, Text } from '@chakra-ui/react';
 
 import { Perm } from 'code-library-perms';
 
-import { InternalPage } from '../components/InternalPage';
 import { Book } from '../components/BookCard/BookCard.constants';
 import { Content } from '../components/Content';
 import { FullPageSpinner } from '../components/FullPageSpinner';
 import { useSearch } from '../components/Search/use-search.hook';
 import { SearchBox } from '../components/Search/SearchBox';
 import { BookCard } from '../components/BookCard/BookCard';
-import { GET_SHELF, GET_RETURN_BOX, GET_USER_BOOKS } from '../queries/queries';
+import { GET_SHELF } from '../queries/queries';
 import { useInterval } from '../hooks/use-interval.hook';
-import { useUserInfo } from '../hooks/use-user-info.hook';
-import { useRouter } from 'next/router';
 
 function reduceContent(
   loading: boolean,
@@ -38,31 +35,8 @@ export interface ContainerOption {
 }
 
 function IndexPage() {
-  const { user } = useUserInfo();
-  const { push } = useRouter();
-
-  if (!user) push('/login');
-
-  const containerOptions: { [key: string]: ContainerOption } = {
-    shelf: {
-      label: '📚 Books on the Shelf',
-      query: GET_SHELF,
-    },
-    returnBox: {
-      label: '📥 Books in the Return Box',
-      query: GET_RETURN_BOX,
-    },
-    user: {
-      label: "🤓 Books you're borrowing",
-      query: GET_USER_BOOKS,
-      options: { variables: { userId: user.email } },
-    },
-  };
-
-  const [query, setQuery] = useState<ContainerOption>(containerOptions.shelf);
-
   const { loading, error, books, searchTerm, setSearchTerm, refetch } =
-    useSearch(query.query, query.options ?? {});
+    useSearch(GET_SHELF, {});
 
   const [maxIdx, setMaxIdx] = useState(10);
 
@@ -73,25 +47,24 @@ function IndexPage() {
   }, 500);
 
   return (
-    <InternalPage>
-      <Content>
-        <Stack spacing={4} width="100%">
-          <SearchBox
-            searchTerm={searchTerm}
-            setSearchTerm={(term: string) => {
-              setMaxIdx(10);
-              setSearchTerm(term);
-            }}
-          />
-          <Text fontSize={'sm'}>Results ({books.length})</Text>
-          <Stack spacing={6} wordBreak="break-all" width="100%">
-            {reduceContent(loading, error, books, maxIdx)}
-          </Stack>
+    <Content>
+      <Stack spacing={4} width="100%">
+        <SearchBox
+          searchTerm={searchTerm}
+          setSearchTerm={(term: string) => {
+            setMaxIdx(10);
+            setSearchTerm(term);
+          }}
+        />
+        <Text fontSize={'sm'}>Results ({books.length})</Text>
+        <Stack spacing={6} wordBreak="break-all" width="100%">
+          {reduceContent(loading, error, books, maxIdx)}
         </Stack>
-      </Content>
-    </InternalPage>
+      </Stack>
+    </Content>
   );
 }
+
 IndexPage.permissions = Perm.VIEW_BOOKS;
 
 export default IndexPage;

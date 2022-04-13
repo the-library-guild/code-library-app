@@ -13,6 +13,9 @@ import { ApolloProvider } from '@apollo/client';
 import { apiClient } from '../services/apollo-client';
 
 import { PageAuthorizer } from '../components/PageAuthorizer';
+import { NextPage } from 'next';
+import { InternalPage } from '../components/InternalPage';
+import { ExternalPage } from '../components/ExternalPage';
 
 const theme = extendTheme({
   initialColorMode: 'system',
@@ -29,16 +32,20 @@ const theme = extendTheme({
   },
 });
 
-interface CustomAppProps extends Omit<AppProps, 'Component'> {
-  Component: AppProps['Component'] & { permissions: number };
-}
+type NextPageWithLayout = NextPage & {
+  permissions: number;
+};
+
+type CustomAppProps = AppProps & {
+  Component: NextPageWithLayout;
+};
 
 function App({ Component, pageProps }: CustomAppProps) {
   return (
     <SessionProvider session={pageProps.session} refetchInterval={0}>
       <ApolloProvider client={apiClient}>
         <Head>
-          <title>CODE Library</title>
+          <title>Treedom Library</title>
           <meta
             name="description"
             content="CODE University of Applied Sciences Library Management System"
@@ -47,10 +54,16 @@ function App({ Component, pageProps }: CustomAppProps) {
         <ChakraProvider theme={theme}>
           {Component.permissions ? (
             <PageAuthorizer requiredPermissions={Component.permissions}>
-              <Component {...pageProps} />
+              {
+                <InternalPage>
+                  <Component {...pageProps} />
+                </InternalPage>
+              }
             </PageAuthorizer>
           ) : (
-            <Component {...pageProps} />
+            <ExternalPage>
+              <Component {...pageProps} />
+            </ExternalPage>
           )}
         </ChakraProvider>
       </ApolloProvider>
