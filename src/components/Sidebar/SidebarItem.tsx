@@ -10,12 +10,18 @@ import {
 
 interface SidebarItemProps extends FlexProps {
   icon: IconType;
+  href: string;
   children: ReactText;
 }
-export const SidebarItem = ({ icon, children, ...rest }: SidebarItemProps) => {
+export const SidebarItem = ({
+  icon,
+  href,
+  children,
+  ...rest
+}: SidebarItemProps) => {
   return (
     <Link
-      href="#"
+      href={href}
       style={{ textDecoration: 'none' }}
       _focus={{ boxShadow: 'none' }}
     >
