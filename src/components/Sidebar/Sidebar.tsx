@@ -26,7 +26,7 @@ export function Sidebar({ children }: { children: ReactNode }) {
       >
         <DrawerOverlay />
         <DrawerContent>
-          <SidebarContent onClose={onClose} />
+          <SidebarContent />
         </DrawerContent>
       </Drawer>
       <Header onOpen={onOpen} />

@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   Box,
-  CloseButton,
   Flex,
   useColorModeValue,
   Link,
@@ -16,20 +15,21 @@ import { FiCompass, FiSettings, FiStar, FiTrendingUp } from 'react-icons/fi';
 interface LinkItemProps {
   name: string;
   icon: IconType;
+  href: string;
 }
 
 const LinkItems: Array<LinkItemProps> = [
-  { name: 'Explore', icon: FiCompass },
-  { name: 'Borrowed books', icon: FiTrendingUp },
-  { name: 'Favorites', icon: FiStar },
-  { name: 'Settings', icon: FiSettings },
+  { name: 'Explore', icon: FiCompass, href: '/' },
+  {
+    name: 'Books you borrowed',
+    icon: FiTrendingUp,
+    href: '/students/borrowed',
+  },
+  { name: 'Books you reserved', icon: FiStar, href: '/students/reservations' },
+  { name: 'Settings', icon: FiSettings, href: '/students/borrowed' },
 ];
 
-interface SidebarContentProps extends BoxProps {
-  onClose: () => void;
-}
-
-export const SidebarContent = ({ onClose, ...rest }: SidebarContentProps) => {
+export const SidebarContent = ({ ...rest }: BoxProps) => {
   return (
     <Box
       transition="3s ease"
@@ -49,13 +49,12 @@ export const SidebarContent = ({ onClose, ...rest }: SidebarContentProps) => {
         >
           <Flex as={'h2'} fontWeight={'bold'} gap={'2'} alignItems={'center'}>
             <LibraryLogo height={'24'} />
-            <Text fontSize={'2xl'}>CODE Library</Text>
+            <Text fontSize={'2xl'}>Treedom Library</Text>
           </Flex>
         </Link>
-        <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       {LinkItems.map((link) => (
-        <SidebarItem key={link.name} icon={link.icon}>
+        <SidebarItem key={link.name} icon={link.icon} href={link.href}>
           {link.name}
         </SidebarItem>
       ))}

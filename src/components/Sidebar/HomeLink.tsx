@@ -10,7 +10,7 @@ export function HomeLink() {
       _focus={{ boxShadow: 'none' }}
     >
       <Text as={'h2'} fontWeight={'bold'} fontSize={'2xl'}>
-        CODE Library
+        Treedom Library
       </Text>
     </Link>
   );

@@ -12,7 +12,7 @@ export function SignInCard() {
     <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
       <Stack align={'center'} p={'8'}>
         <LibraryLogo />
-        <Heading fontSize={'4xl'}>CODE Library</Heading>
+        <Heading fontSize={'4xl'}>Treedom Library</Heading>
       </Stack>
       <Box
         rounded={'lg'}
