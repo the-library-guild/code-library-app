@@ -5,13 +5,17 @@ import { Flex, Spinner, useColorModeValue } from '@chakra-ui/react';
 export function FullPageSpinner() {
   return (
     <Flex
-      style={{
-        width: '100%',
-        height: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
+      position={'absolute'}
+      top={0}
+      bottom={0}
+      left={0}
+      right={0}
+      margin={'auto'}
+      height={100}
+      width={100}
+      alignContent={'center'}
+      justifyItems={'center'}
+      textAlign={'center'}
     >
       <Spinner
         thickness="4px"
