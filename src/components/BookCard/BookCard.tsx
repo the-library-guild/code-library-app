@@ -1,5 +1,5 @@
 import React from 'react';
-import Link from 'next/link';
+import NextLink from 'next/link';
 import {
   Box,
   Flex,
@@ -10,6 +10,8 @@ import {
   StatLabel,
   StatHelpText,
   StatNumber,
+  LinkBox,
+  LinkOverlay,
 } from '@chakra-ui/react';
 
 import { Book } from './BookCard.constants';
@@ -32,45 +34,57 @@ export function BookCard({ book, isExpanded = false }: BookCardProps) {
   const { name, media } = book;
 
   return (
-    <Box
-      rounded={'lg'}
-      bg={useColorModeValue('white', 'gray.700')}
-      boxShadow={'lg'}
-      p={3}
-    >
-      <Stat>
-        <StatLabel>
-          {media?.contentTags ? programAcronym(media?.contentTags) : 'Unknown'}
-        </StatLabel>
-        <StatNumber>
-          <Link href={`/books/${book?._id}`}>{name}</Link>
-        </StatNumber>
-        <StatHelpText>{media?.tagline}</StatHelpText>
-        <StatHelpText color={color}>{label}</StatHelpText>
-      </Stat>
-      {isExpanded && (
-        <Flex>
-          <Spacer />
-          {hasAction && (
-            <Button
-              marginLeft={'auto'}
-              onClick={() =>
-                action &&
-                action().then(() =>
-                  window?.dispatchEvent(
-                    new CustomEvent('updateBookList', {
-                      bubbles: true,
-                      cancelable: true,
-                    })
-                  )
-                )
-              }
+    <LinkBox as={'article'} rounded={'lg'}>
+      <Box
+        rounded={'lg'}
+        bg={useColorModeValue('white', 'gray.700')}
+        boxShadow={'lg'}
+        p={3}
+      >
+        <Stat>
+          <StatLabel>
+            {media?.contentTags
+              ? programAcronym(media?.contentTags)
+              : 'Unknown'}
+          </StatLabel>
+          <StatNumber>
+            <NextLink
+              href={{
+                pathname: '/books/[id]',
+                query: { id: book?._id },
+              }}
+              passHref
             >
-              {actionLabel}
-            </Button>
-          )}
-        </Flex>
-      )}
-    </Box>
+              <LinkOverlay>{name}</LinkOverlay>
+            </NextLink>
+          </StatNumber>
+          <StatHelpText>{media?.tagline}</StatHelpText>
+          <StatHelpText color={color}>{label}</StatHelpText>
+        </Stat>
+        {isExpanded && (
+          <Flex>
+            <Spacer />
+            {hasAction && (
+              <Button
+                marginLeft={'auto'}
+                onClick={() =>
+                  action &&
+                  action().then(() =>
+                    window?.dispatchEvent(
+                      new CustomEvent('updateBookList', {
+                        bubbles: true,
+                        cancelable: true,
+                      })
+                    )
+                  )
+                }
+              >
+                {actionLabel}
+              </Button>
+            )}
+          </Flex>
+        )}
+      </Box>
+    </LinkBox>
   );
 }
