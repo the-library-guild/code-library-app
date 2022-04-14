@@ -21,12 +21,12 @@ export function Sidebar({ children }: { children: ReactNode }) {
         placement="left"
         onClose={onClose}
         returnFocusOnClose={false}
-        onOverlayClick={onClose}
+        closeOnOverlayClick
         size={'xs'}
       >
         <DrawerOverlay />
         <DrawerContent>
-          <SidebarContent />
+          <SidebarContent onClose={onClose} />
         </DrawerContent>
       </Drawer>
       <Header onOpen={onOpen} />

@@ -1,4 +1,5 @@
 import React from 'react';
+import NextLink from 'next/link';
 import {
   Box,
   Flex,
@@ -10,7 +11,7 @@ import {
 import { LibraryLogo } from '../LibraryLogo';
 import { SidebarItem } from './SidebarItem';
 import { IconType } from 'react-icons';
-import { FiCompass, FiSettings, FiStar, FiTrendingUp } from 'react-icons/fi';
+import { FiCompass, FiStar, FiTrendingUp } from 'react-icons/fi';
 
 interface LinkItemProps {
   name: string;
@@ -28,7 +29,11 @@ const LinkItems: Array<LinkItemProps> = [
   { name: 'Books you reserved', icon: FiStar, href: '/students/reservations' },
 ];
 
-export const SidebarContent = ({ ...rest }: BoxProps) => {
+type SidebarContentProps = BoxProps & {
+  onClose: () => void;
+};
+
+export const SidebarContent = ({ onClose, ...rest }: SidebarContentProps) => {
   return (
     <Box
       transition="3s ease"
@@ -41,19 +46,26 @@ export const SidebarContent = ({ ...rest }: BoxProps) => {
       {...rest}
     >
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-        <Link
-          href="/"
-          style={{ textDecoration: 'none' }}
-          _focus={{ boxShadow: 'none' }}
-        >
-          <Flex as={'h2'} fontWeight={'bold'} gap={'2'} alignItems={'center'}>
-            <LibraryLogo height={'24'} />
-            <Text fontSize={'2xl'}>Treedom Library</Text>
-          </Flex>
-        </Link>
+        <NextLink href="/" passHref>
+          <Link
+            style={{ textDecoration: 'none' }}
+            _focus={{ boxShadow: 'none' }}
+            onClick={onClose}
+          >
+            <Flex as={'h2'} fontWeight={'bold'} gap={'2'} alignItems={'center'}>
+              <LibraryLogo height={'24'} />
+              <Text fontSize={'2xl'}>Treedom Library</Text>
+            </Flex>
+          </Link>
+        </NextLink>
       </Flex>
       {LinkItems.map((link) => (
-        <SidebarItem key={link.name} icon={link.icon} href={link.href}>
+        <SidebarItem
+          key={link.name}
+          icon={link.icon}
+          href={link.href}
+          onClose={onClose}
+        >
           {link.name}
         </SidebarItem>
       ))}
