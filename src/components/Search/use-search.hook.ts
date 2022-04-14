@@ -5,7 +5,7 @@ interface UseSearchValue {
   results: Book[];
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  loadSearchResults: (initialResults: Book[]) => void;
+  setInitialResults: (initialResults: Book[]) => void;
 }
 
 const bySearchTerm = (searchTerm: string) => (book: Book) => {
@@ -35,6 +35,6 @@ export function useSearch(): UseSearchValue {
     results,
     searchTerm,
     setSearchTerm,
-    loadSearchResults: setInitialResults,
+    setInitialResults,
   };
 }

@@ -1,0 +1,106 @@
+import React, { useEffect, useReducer } from 'react';
+import { Text, Spinner, useColorModeValue, Flex } from '@chakra-ui/react';
+
+import useInfiniteScroll from 'react-infinite-scroll-hook';
+
+import { Book } from '../components/BookCard/BookCard.constants';
+import { ReactJSXElement } from '@emotion/react/types/jsx-namespace';
+
+function Loading() {
+  return (
+    <Flex justify={'center'} textAlign={'center'} gap={4}>
+      <Text fontWeight={'bold'} fontSize={'sm'}>
+        Loading more books
+      </Text>
+      <Spinner
+        thickness="4px"
+        speed="0.65s"
+        color={useColorModeValue('gray.600', 'gray.300')}
+        size="md"
+      />
+    </Flex>
+  );
+}
+
+type State = {
+  numberOfBooks: number;
+  booksToRender: Book[];
+};
+
+type Action = {
+  type: string;
+  payload: {
+    results: Book[];
+  };
+};
+
+const reducer = (state: State, action: Action): State => {
+  switch (action.type) {
+    case 'LOAD_MORE':
+      return {
+        booksToRender: action.payload.results.slice(0, state.numberOfBooks),
+        numberOfBooks: state.numberOfBooks + 10,
+      };
+    case 'REFRESH':
+      return {
+        booksToRender: action.payload.results.slice(0, 10),
+        numberOfBooks: 10,
+      };
+    default:
+      return { ...state };
+  }
+};
+
+type InfiniteScrollRenderProps = {
+  booksToRender: Book[];
+};
+
+type InfiniteScrollProps = {
+  children: (props: InfiniteScrollRenderProps) => ReactJSXElement;
+  results: Book[];
+  loading: boolean;
+};
+
+const getFirstTen = (books: Book[]) => {
+  if (books.length < 10) {
+    return books;
+  }
+  return books.slice(0, 10);
+};
+
+export const InfiniteScroll = React.memo(function InfiniteScroll({
+  children,
+  results,
+  loading,
+}: InfiniteScrollProps) {
+  const [state, dispatch] = useReducer(reducer, {
+    booksToRender: getFirstTen(results),
+    numberOfBooks: 10,
+  });
+
+  useEffect(() => {
+    if (loading) return;
+    loadMoreBooks();
+  }, [loading, results, dispatch]);
+
+  const loadMoreBooks = React.useCallback(() => {
+    dispatch({ type: 'LOAD_MORE', payload: { results } });
+  }, [dispatch, results]);
+
+  const hasNextPage = state.numberOfBooks < results.length;
+
+  const [scrollRef] = useInfiniteScroll({
+    loading,
+    hasNextPage,
+    onLoadMore: loadMoreBooks,
+    delayInMs: 1000,
+  });
+
+  return (
+    <>
+      {children({ booksToRender: state.booksToRender })}
+      <div ref={scrollRef} />
+      {hasNextPage && <Loading />}
+    </>
+  );
+});
