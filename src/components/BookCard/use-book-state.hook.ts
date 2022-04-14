@@ -4,6 +4,8 @@ import { useColorModeValue } from '@chakra-ui/react';
 import { Perm } from 'code-library-perms';
 
 import { Book } from './BookCard.constants';
+
+import { GET_BOOK, GET_SHELF, GET_USER_BOOKS } from '../../queries/queries';
 import { PROCESS_BOOK, RENT_BOOK, RETURN_BOOK } from '../../queries/mutations';
 
 import type { UserInfoValue } from '../../hooks/use-user-info.hook';
@@ -89,7 +91,7 @@ function useBookState(book: Book, userInfo: UserInfoValue): useBookStateValue {
 
   const [rawAction, { loading, error }] = useMutation(actionQuery, {
     variables: { bookId: book?._id },
-    refetchQueries: 'all',
+    refetchQueries: [GET_SHELF, GET_USER_BOOKS, GET_BOOK],
   });
 
   const action = hasAction && !loading && !error && rawAction;
