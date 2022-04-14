@@ -8,8 +8,6 @@ import { PROCESS_BOOK, RENT_BOOK, RETURN_BOOK } from '../../queries/mutations';
 
 import type { UserInfoValue } from '../../hooks/use-user-info.hook';
 
-// TODO: force book to update on mutation
-
 interface Info {
   isBorrowed: boolean;
   isAvailable: boolean;
@@ -91,6 +89,7 @@ function useBookState(book: Book, userInfo: UserInfoValue): useBookStateValue {
 
   const [rawAction, { loading, error }] = useMutation(actionQuery, {
     variables: { bookId: book?._id },
+    refetchQueries: 'all',
   });
 
   const action = hasAction && !loading && !error && rawAction;
