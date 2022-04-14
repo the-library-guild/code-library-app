@@ -91,7 +91,7 @@ function useBookState(book: Book, userInfo: UserInfoValue): useBookStateValue {
 
   const [rawAction, { loading, error }] = useMutation(actionQuery, {
     variables: { bookId: book?._id },
-    refetchQueries: [GET_SHELF, GET_USER_BOOKS, GET_BOOK],
+    refetchQueries: 'all',
   });
 
   const action = hasAction && !loading && !error && rawAction;
