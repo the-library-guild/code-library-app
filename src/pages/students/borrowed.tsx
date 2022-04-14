@@ -28,7 +28,7 @@ function BorrowedPage() {
 
   useEffect(() => {
     loadSearchResults(books);
-  }, [loading]);
+  }, [loading, books]);
 
   return (
     <Content>

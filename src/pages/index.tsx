@@ -24,7 +24,7 @@ function IndexPage() {
 
   useEffect(() => {
     loadSearchResults(books);
-  }, [loading]);
+  }, [loading, books]);
 
   return (
     <Content>
