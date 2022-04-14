@@ -10,13 +10,13 @@ function StudentReservationsPage() {
   const books = [
     {
       _id: 'dreamybook',
-      name: 'Feature Not Implemented',
+      name: 'Feature Not Yet Implemented',
       rentable: {
         stateTags: ['Processing'],
       },
       media: {
         contentTags: [],
-        tagline: 'Hold on there! We will be working on that very soon ❤️',
+        tagline: 'Hold on there! We will be working on it very soon ❤️',
         publishedDate: new Date(),
         contentDesc: '',
       },
