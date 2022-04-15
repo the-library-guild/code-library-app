@@ -25,6 +25,7 @@ function Loading() {
 type State = {
   numberOfBooks: number;
   booksToRender: Book[];
+  results: Book[];
 };
 
 type Action = {
@@ -34,18 +35,24 @@ type Action = {
   };
 };
 
+const init = (initialResults: Book[]) => {
+  return {
+    booksToRender: getFirstTen(initialResults),
+    numberOfBooks: 10,
+    results: initialResults,
+  };
+};
+
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'LOAD_MORE':
       return {
-        booksToRender: action.payload.results.slice(0, state.numberOfBooks),
+        ...state,
+        booksToRender: state.results.slice(0, state.numberOfBooks + 10),
         numberOfBooks: state.numberOfBooks + 10,
       };
     case 'REFRESH':
-      return {
-        booksToRender: action.payload.results.slice(0, 10),
-        numberOfBooks: 10,
-      };
+      return init(action?.payload?.results);
     default:
       return { ...state };
   }
@@ -68,24 +75,21 @@ const getFirstTen = (books: Book[]) => {
   return books.slice(0, 10);
 };
 
-export const InfiniteScroll = React.memo(function InfiniteScroll({
+export const InfiniteScroll = ({
   children,
   results,
   loading,
-}: InfiniteScrollProps) {
-  const [state, dispatch] = useReducer(reducer, {
-    booksToRender: getFirstTen(results),
-    numberOfBooks: 10,
-  });
+}: InfiniteScrollProps) => {
+  const [state, dispatch] = useReducer(reducer, results, init);
 
   useEffect(() => {
     if (loading) return;
-    loadMoreBooks();
-  }, [loading, results, dispatch]);
+    dispatch({ type: 'REFRESH', payload: { results } });
+  }, [loading, results]);
 
   const loadMoreBooks = React.useCallback(() => {
-    dispatch({ type: 'LOAD_MORE', payload: { results } });
-  }, [dispatch, results]);
+    dispatch({ type: 'LOAD_MORE', payload: { results: [] } });
+  }, [dispatch]);
 
   const hasNextPage = state.numberOfBooks < results.length;
 
@@ -103,4 +107,4 @@ export const InfiniteScroll = React.memo(function InfiniteScroll({
       {hasNextPage && <Loading />}
     </>
   );
-});
+};
