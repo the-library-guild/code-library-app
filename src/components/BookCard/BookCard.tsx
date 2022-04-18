@@ -16,8 +16,8 @@ import {
 import { Book } from './BookCard.constants';
 import { useBookState } from './use-book-state.hook';
 import { useUserInfo } from '../../hooks/use-user-info.hook';
+import { programAcronym } from './BookCard.helpers';
 
-const programAcronym = (contentTags: string[]) => contentTags[3];
 interface BookCardProps {
   book: Book;
   isExpanded?: boolean;
@@ -34,6 +34,17 @@ const BookCard = React.memo(function BookCard({
   );
   const { name, media } = book;
 
+  const handleClick = () =>
+    action &&
+    action().then(() =>
+      window?.dispatchEvent(
+        new CustomEvent('updateBookList', {
+          bubbles: true,
+          cancelable: true,
+        })
+      )
+    );
+
   return (
     <Box
       as={'article'}
@@ -43,9 +54,7 @@ const BookCard = React.memo(function BookCard({
       p={3}
     >
       <Stat>
-        <StatLabel>
-          {media?.contentTags ? programAcronym(media?.contentTags) : 'Unknown'}
-        </StatLabel>
+        <StatLabel>{programAcronym(media?.contentTags)}</StatLabel>
         <StatNumber>
           <NextLink
             href={{
@@ -69,20 +78,7 @@ const BookCard = React.memo(function BookCard({
         <Flex>
           <Spacer />
           {hasAction && (
-            <Button
-              marginLeft={'auto'}
-              onClick={() =>
-                action &&
-                action().then(() =>
-                  window?.dispatchEvent(
-                    new CustomEvent('updateBookList', {
-                      bubbles: true,
-                      cancelable: true,
-                    })
-                  )
-                )
-              }
-            >
+            <Button marginLeft={'auto'} onClick={handleClick}>
               {actionLabel}
             </Button>
           )}
