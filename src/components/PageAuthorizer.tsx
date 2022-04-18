@@ -25,5 +25,5 @@ export function PageAuthorizer({ requiredPermissions, children }: Props) {
 
   if (isLoading) return <FullPageSpinner />;
 
-  return children;
+  return React.cloneElement(children, { user, ...children.props });
 }
