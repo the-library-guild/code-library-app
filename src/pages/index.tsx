@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Divider, Stack, Text } from '@chakra-ui/react';
+import { Stack } from '@chakra-ui/react';
 
 import { Perm } from 'code-library-perms';
 

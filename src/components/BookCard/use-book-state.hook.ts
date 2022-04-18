@@ -5,7 +5,6 @@ import { Perm } from 'code-library-perms';
 
 import { Book } from './BookCard.constants';
 
-import { GET_BOOK, GET_SHELF, GET_USER_BOOKS } from '../../queries/queries';
 import { PROCESS_BOOK, RENT_BOOK, RETURN_BOOK } from '../../queries/mutations';
 
 import type { UserInfoValue } from '../../hooks/use-user-info.hook';
@@ -60,6 +59,7 @@ function reduceActionQuery(i: Info): [string, any] {
 
 function useBookState(book: Book, userInfo: UserInfoValue): useBookStateValue {
   // TODO: canBorrow = false if user has exceeded their booking limit
+  // Shall we add number of rentable books to the JWT token?
   // TODO: implement env.ANYONE_CAN_RETURN (also in backend), which will influence canReturn
 
   const stateTags = book?.rentable?.stateTags ?? [];
@@ -69,7 +69,7 @@ function useBookState(book: Book, userInfo: UserInfoValue): useBookStateValue {
   const isProcessing = stateTags.includes('Processing');
 
   const canProcess = userInfo.hasPerms(Perm.MANAGE_BOOKS);
-  const canReturn = true;
+  const canReturn = userInfo.hasPerms(Perm.RENT_BOOKS);
   const canRent = userInfo.hasPerms(Perm.RENT_BOOKS);
 
   const info: Info = {
