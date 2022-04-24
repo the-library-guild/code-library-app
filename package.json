@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https: //github.com/the-library-guild/code-library-app.git"
+    "url": "https://github.com/the-library-guild/code-library-app.git"
   },
   "contributors": [
     {
@@ -30,9 +30,9 @@
   ],
   "license": "ISC",
   "bugs": {
-    "url": "https: //github.com/the-library-guild/code-library-app/issues"
+    "url": "https://github.com/the-library-guild/code-library-app/issues"
   },
-  "homepage": "https: //github.com/the-library-guild/code-library-app#readme",
+  "homepage": "https://github.com/the-library-guild/code-library-app#readme",
   "dependencies": {
     "@apollo/client": "^3.5.8",
     "@chakra-ui/icons": "^1.1.7",
@@ -41,7 +41,7 @@
     "@emotion/styled": "^11.8.1",
     "@types/react-icons": "^3.0.0",
     "chalk": "^5.0.0",
-    "code-library-perms": "github:the-library-guild/code-library-perms",
+    "code-library-perms": "git+https://git@github.com/the-library-guild/code-library-perms.git",
     "dotenv": "^16.0.0",
     "framer-motion": "^6.2.8",
     "jsonwebtoken": "^8.5.1",
