@@ -39,7 +39,6 @@
     "@chakra-ui/react": "^1.8.5",
     "@emotion/react": "^11.8.1",
     "@emotion/styled": "^11.8.1",
-    "@types/react-icons": "^3.0.0",
     "chalk": "^5.0.0",
     "code-library-perms": "git+https://git@github.com/the-library-guild/code-library-perms.git",
     "dotenv": "^16.0.0",
