@@ -5,10 +5,8 @@
   "main": "dist/index",
   "typings": "dist/index",
   "scripts": {
-    "dockerBuild": "docker build -t code-library-client .",
-    "dockerStart": "docker run -e NODE_ENV=development -p 3000:3000 --network=host code-library-client",
-    "updatePerms": "npm uninstall code-library-perms && npm i --S https://github.com/LinusBolls/code-library-perms.git",
     "dev": "NODE_ENV=development next dev",
+    "update:perms": "npm uninstall code-library-perms && npm i --S https://github.com/the-library-guild/code-library-perms.git",
     "build": "next build",
     "start": "next start",
     "lint": "next lint --fix",
@@ -16,14 +14,25 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/LinusBolls/code-library-client.git/"
+    "url": "https: //github.com/the-library-guild/code-library-app.git"
   },
-  "author": "https://github.com/LinusBolls/",
+  "contributors": [
+    {
+      "name": "Linus Bolls",
+      "email": "linus.bolls@code.berlin",
+      "url": "https://github.com/LinusBolls"
+    },
+    {
+      "name": "Marcelo T. dos Santos",
+      "email": "marcelo.teixeira@code.berlin",
+      "url": "https://github.com/Marcelixoo"
+    }
+  ],
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/LinusBolls/code-library-client/issues"
+    "url": "https: //github.com/the-library-guild/code-library-app/issues"
   },
-  "homepage": "https://github.com/LinusBolls/code-library-client#readme",
+  "homepage": "https: //github.com/the-library-guild/code-library-app#readme",
   "dependencies": {
     "@apollo/client": "^3.5.8",
     "@chakra-ui/icons": "^1.1.7",
@@ -32,7 +41,7 @@
     "@emotion/styled": "^11.8.1",
     "@types/react-icons": "^3.0.0",
     "chalk": "^5.0.0",
-    "code-library-perms": "github:LinusBolls/code-library-perms",
+    "code-library-perms": "github:the-library-guild/code-library-perms",
     "dotenv": "^16.0.0",
     "framer-motion": "^6.2.8",
     "jsonwebtoken": "^8.5.1",
