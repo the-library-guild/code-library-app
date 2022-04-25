@@ -22,6 +22,12 @@ export const SidebarItem = ({
   children,
   ...rest
 }: SidebarItemProps) => {
+  const isLightMode = useColorModeValue(true, false);
+
+  const colorModeValue = (light: string, dark: string): string => {
+    return isLightMode ? light : dark;
+  };
+
   return (
     <NextLink href={href} passHref>
       <Link
@@ -37,8 +43,8 @@ export const SidebarItem = ({
           role="group"
           cursor="pointer"
           _hover={{
-            bg: useColorModeValue('gray.200', 'gray.600'),
-            color: useColorModeValue('gray.800', 'gray.50'),
+            bg: colorModeValue('gray.200', 'gray.600'),
+            color: colorModeValue('gray.800', 'gray.50'),
           }}
           {...rest}
         >
@@ -47,7 +53,7 @@ export const SidebarItem = ({
               mr="4"
               fontSize="16"
               _groupHover={{
-                color: useColorModeValue('gray.800', 'gray.50'),
+                color: colorModeValue('gray.800', 'gray.50'),
               }}
               as={icon}
             />

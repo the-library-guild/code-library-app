@@ -16,8 +16,9 @@ function IndexPage() {
   const { results, setInitialResults, searchTerm, setSearchTerm } = useSearch();
 
   useEffect(() => {
+    if (loading) return;
     setInitialResults(books);
-  }, [loading]);
+  }, [loading, books, setInitialResults]);
 
   return (
     <Content>
