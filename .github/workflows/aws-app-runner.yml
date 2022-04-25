@@ -6,6 +6,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      image: ${{ steps.build-image.outputs.image }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -19,6 +22,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
+          mask-aws-account-id: no
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -36,8 +40,6 @@ jobs:
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-    outputs:
-      build-image: ${{ steps.build-image.outputs.image }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -48,7 +50,7 @@ jobs:
         uses: awslabs/amazon-app-runner-deploy@main
         with:
           service: code-library-app-service
-          image: ${{ needs.build.outputs.build-image }}
+          image: ${{ needs.build.outputs.image }}
           access-role-arn: ${{ secrets.AWS_ROLE_ARN }}
           region: ${{ secrets.AWS_REGION }}
           cpu: 1
