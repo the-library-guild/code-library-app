@@ -45,7 +45,6 @@ jobs:
           service: code-library-app-service
           image: ${{ steps.build-image.outputs.image }}
           access-role-arn: ${{ secrets.AWS_ROLE_ARN }}
-          runtime: NODEJS_16
           region: ${{ secrets.AWS_REGION }}
           cpu: 1
           memory: 2
