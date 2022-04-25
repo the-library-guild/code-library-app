@@ -32,8 +32,8 @@ jobs:
           ECR_REPOSITORY: code-library-app
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build --tag $ECR_REGISTRY:$ECR_REPOSITORY:$IMAGE_TAG --build-arg NEXT_PUBLIC_GRAPHQL_URL=${{ secrets.NEXT_PUBLIC_GRAPHQL_URL }} .
-          docker tag $ECR_REGISTRY:$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY:$ECR_REPOSITORY:latest
+          docker build --tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG --build-arg NEXT_PUBLIC_GRAPHQL_URL=${{ secrets.NEXT_PUBLIC_GRAPHQL_URL }} .
+          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
