@@ -27,21 +27,21 @@ jobs:
       - name: Build and Push Container
         run: |
           docker build --tag $IMAGE_NAME:${{ github.sha }} --build-arg NEXT_PUBLIC_GRAPHQL_URL=${{ secrets.NEXT_PUBLIC_GRAPHQL_URL }} .
-          docker build --tag $IMAGE_NAME:latest --build-arg NEXT_PUBLIC_GRAPHQL_URL=${{ secrets.NEXT_PUBLIC_GRAPHQL_URL }} .
+          docker tag $IMAGE_NAME:latest --build-arg NEXT_PUBLIC_GRAPHQL_URL=${{ secrets.NEXT_PUBLIC_GRAPHQL_URL }} .
           docker push $IMAGE_NAME:${{ github.sha }}
           docker push $IMAGE_NAME:latest
   test-run:
     needs: build-container
     runs-on: ubuntu-20.04
     steps:
-      - id: "auth"
-        uses: "google-github-actions/auth@v0"
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v0'
         with:
-          credentials_json: "${{ secrets.GCP_CREDENTIALS }}"
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
 
       - name: Deploy to Cloud Run
         id: deploy-run
-        uses: "google-github-actions/deploy-cloudrun@v0"
+        uses: 'google-github-actions/deploy-cloudrun@v0'
         with:
           service: code-library-client
           image: ${{ env.IMAGE_NAME }}:${{ github.sha }}
