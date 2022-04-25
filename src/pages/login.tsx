@@ -8,7 +8,7 @@ import { SignInCard } from '../components/SignInCard';
 import { ExternalPage } from '../components/ExternalPage';
 
 export default function LogInPage() {
-  useErrorToasts();
+  useShowToastsOnError();
 
   return (
     <ExternalPage>
@@ -29,7 +29,7 @@ const messageFor = (e: LoginError) =>
 
 type LoginError = 'Signin' | 'Callback';
 
-function useErrorToasts() {
+function useShowToastsOnError() {
   const toast = useToast();
   const {
     replace,
