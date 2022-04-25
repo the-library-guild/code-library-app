@@ -1,6 +1,9 @@
-name: Build of The Library App UI
+name: Build & Validate The CODE Library App UI
 
-on: [push]
+on:
+  push:
+    branches: ['!main']
+  workflow_dispatch: # Allow manual invocation of the workflow
 
 jobs:
   build-container:

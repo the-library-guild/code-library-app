@@ -1,4 +1,4 @@
-name: Deployment to AWS App Runner
+name: Deploy CODE Library App UI to AWS App Runner
 on:
   push:
     branches: [main] # Trigger workflow on git push to main branch
