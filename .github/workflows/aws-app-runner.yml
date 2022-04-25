@@ -50,7 +50,7 @@ jobs:
         uses: awslabs/amazon-app-runner-deploy@main
         with:
           service: code-library-app-service
-          image: ${{ jobs.build.outputs.image }}
+          image: ${{ needs.build.outputs.image }}
           access-role-arn: ${{ secrets.AWS_ROLE_ARN }}
           region: ${{ secrets.AWS_REGION }}
           cpu: 1
