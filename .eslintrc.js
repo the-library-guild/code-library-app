@@ -9,6 +9,8 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:@typescript-eslint/recommended',
     'prettier',
+    'plugin:react/jsx-runtime',
+    'next',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -21,8 +23,9 @@ module.exports = {
   },
   plugins: ['react', 'react-hooks', '@typescript-eslint', 'prettier'],
   rules: {
-    'no-console': 1, // Means warning
-    'prettier/prettier': 2, // Means error
+    'no-console': 'warn',
+    'prettier/prettier': 'error',
     '@typescript-eslint/no-explicit-any': 'off',
+    'react-hooks/exhaustive-deps': 'warn',
   },
 };
