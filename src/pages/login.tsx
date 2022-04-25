@@ -30,43 +30,29 @@ const messageFor = (e: LoginError) =>
 type LoginError = 'Signin' | 'Callback';
 
 function useErrorToasts() {
+  const toast = useToast();
   const {
+    replace,
     query: { error },
   } = useRouter();
 
-  const toast = useToast();
-  const router = useRouter();
-
-  const errors = error as LoginError;
-
   useEffect(() => {
-    router.replace('/login', undefined, { shallow: true });
+    if (error === undefined) return;
 
-    if (errors === undefined) return;
+    replace('/login', undefined, { shallow: true });
 
-    if (Array.isArray(errors)) {
-      errors.map((error: LoginError) => {
-        toast({
-          title: 'Error',
-          description: messageFor(error),
-          status: 'error',
-          duration: 3000,
-          isClosable: true,
-          position: 'top-right',
-          variant: 'subtle',
-        });
+    const errors = (Array.isArray(error) ? error : [error]) as LoginError[];
+
+    errors.map((error: LoginError) => {
+      toast({
+        title: 'Error',
+        description: messageFor(error),
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top-right',
+        variant: 'top-accent',
       });
-      return;
-    }
-
-    toast({
-      title: 'Error',
-      description: messageFor(errors),
-      status: 'error',
-      duration: 3000,
-      isClosable: true,
-      position: 'top-right',
-      variant: 'top-accent',
     });
-  }, [error]);
+  }, [error, replace, toast]);
 }

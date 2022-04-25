@@ -21,7 +21,7 @@ export function PageAuthorizer({ requiredPermissions, children }: Props) {
 
     if (isLoggedIn && !hasPerms(requiredPermissions))
       redirectTo('/permission-denied');
-  }, [isLoading, isLoggedIn, user]);
+  }, [hasPerms, isLoading, isLoggedIn, redirectTo, requiredPermissions]);
 
   if (isLoading) return <FullPageSpinner />;
 
