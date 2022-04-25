@@ -6,6 +6,8 @@ const config = getConfig();
 
 const uri = config.serverRuntimeConfig.GRAPHQL_URL as string;
 
+console.log('GRAPHQL_URL', uri);
+
 const cookieName = config.serverRuntimeConfig.IS_PROD
   ? '__Secure-next-auth.session-token'
   : 'next-auth.session-token';
