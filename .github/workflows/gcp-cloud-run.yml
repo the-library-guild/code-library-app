@@ -26,8 +26,8 @@ jobs:
 
       - name: Build and Push Container
         run: |
-          docker build --tag $IMAGE_NAME:${{ github.sha }} --build-arg NEXT_PUBLIC_GRAPHQL_URL=${{ secrets.NEXT_PUBLIC_GRAPHQL_URL }} .
-          docker tag $IMAGE_NAME:latest --build-arg NEXT_PUBLIC_GRAPHQL_URL=${{ secrets.NEXT_PUBLIC_GRAPHQL_URL }} .
+          docker build --tag $IMAGE_NAME:${{ github.sha }} --build-arg NEXT_PUBLIC_CLIENT_URL=${{ secrets.NEXT_PUBLIC_CLIENT_URL }} .
+          docker tag $IMAGE_NAME:${{ github.sha }} $IMAGE_NAME:latest
           docker push $IMAGE_NAME:${{ github.sha }}
           docker push $IMAGE_NAME:latest
   test-run:
