@@ -29,11 +29,15 @@ function BookDetailedPage() {
   });
 
   useEffect(() => {
-    window.addEventListener('updateBookList', (e) => {
+    function refetchBookList(e: Event) {
       e.stopPropagation();
       refetch();
-    });
-  }, []);
+    }
+
+    window.addEventListener('updateBookList', refetchBookList);
+
+    return () => window.removeEventListener('updateBookList', refetchBookList);
+  }, [refetch]);
 
   return (
     <Content>
