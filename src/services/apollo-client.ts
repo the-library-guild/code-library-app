@@ -1,10 +1,10 @@
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 
-const uri = process.env.NEXT_PUBLIC_GRAPHQL_URL;
-const clientUrl = process.env.NEXT_PUBLIC_CLIENT_URL;
+import getConfig from 'next/config';
 
-console.log('NEXT_PUBLIC_GRAPHQL_URL', uri);
-console.log('NEXT_PUBLIC_CLIENT_URL', clientUrl);
+const config = getConfig();
+
+const uri = config.publicRuntimeConfig.NEXT_PUBLIC_GRAPHQL_URL as string;
 
 export const apiClient = new ApolloClient({
   link: new HttpLink({

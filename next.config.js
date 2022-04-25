@@ -1,20 +1,16 @@
 /** @type {import('next').NextConfig} */
 
-const graphqlUrl = process.env.NEXT_PUBLIC_GRAPHQL_URL;
-if (!graphqlUrl) {
-  throw Error('Please defined NEXT_PUBLIC_GRAPHQL_URL.');
-}
-
 const clientUrl = process.env.NEXT_PUBLIC_CLIENT_URL;
-if (!clientUrl) {
-  throw Error('Please defined NEXT_PUBLIC_CLIENT_URL.');
+
+if (clientUrl === null || clientUrl === undefined) {
+  throw Error('Required variable NEXT_PUBLIC_CLIENT_URL was not defined');
 }
 
 module.exports = {
   reactStrictMode: true,
   publicRuntimeConfig: {
     NEXT_PUBLIC_CLIENT_URL: clientUrl,
-    NEXT_PUBLIC_GRAPHQL_URL: graphqlUrl,
+    NEXT_PUBLIC_GRAPHQL_URL: `${clientUrl}/api/graphql`,
   },
   serverRuntimeConfig: {
     GRAPHQL_URL: process.env.GRAPHQL_URL,
