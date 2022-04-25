@@ -29,8 +29,7 @@ function BookDetailedPage() {
   });
 
   useEffect(() => {
-    function refetchBookList(e: Event) {
-      e.stopPropagation();
+    function refetchBookList() {
       refetch();
     }
 

@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/client';
+import { useEffect } from 'react';
 
 import { Book } from '../components/BookCard/BookCard.constants';
 import { GET_USER_BOOKS } from '../queries/queries';
@@ -20,8 +21,19 @@ export function useUserBorrowedBooks(email: string) {
     {
       ...{ variables: { email } },
       returnPartialData: true,
+      notifyOnNetworkStatusChange: true,
     }
   );
+
+  useEffect(() => {
+    function refetchBookList() {
+      refetch();
+    }
+
+    window.addEventListener('updateBookList', refetchBookList);
+
+    return () => window.removeEventListener('updateBookList', refetchBookList);
+  }, [refetch]);
 
   const childrenList = (data?.getUser?.children ?? []) as Book[];
 

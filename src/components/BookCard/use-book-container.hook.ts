@@ -17,6 +17,7 @@ export function useBookContainer(query: any, options: any = {}) {
   const { loading, error, data, refetch } = useQuery<getBooksResponse>(query, {
     ...options,
     returnPartialData: true,
+    notifyOnNetworkStatusChange: true,
   });
 
   const childrenList = (data?.getShelf?.children ?? []) as Book[];
