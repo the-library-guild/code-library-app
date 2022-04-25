@@ -1,14 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import getConfig from 'next/config';
-
-const config = getConfig();
-
-const uri = config.serverRuntimeConfig.GRAPHQL_URL as string;
+const uri = process.env.GRAPHQL_URL as string;
 
 console.log('GRAPHQL_URL', uri);
 
-const cookieName = config.serverRuntimeConfig.IS_PROD
+const cookieName = process.env.IS_PROD
   ? '__Secure-next-auth.session-token'
   : 'next-auth.session-token';
 
