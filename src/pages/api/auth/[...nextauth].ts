@@ -57,10 +57,6 @@ export default NextAuth({
 
       const { data, error } = await apiClient.query(mintJwt(userData));
 
-      if (error) {
-        console.error(error);
-      }
-
       return error ? '' : data.mintJwt;
     },
     decode: ({ token }) => verifyToken(token),
