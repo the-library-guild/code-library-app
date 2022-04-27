@@ -16,6 +16,7 @@ import { PageAuthorizer } from '../components/PageAuthorizer';
 import { NextPage } from 'next';
 import { InternalPage } from '../components/InternalPage';
 import { ExternalPage } from '../components/ExternalPage';
+import { PermissionDenied } from '../components/PermissionDenied';
 
 const theme = extendTheme({
   initialColorMode: 'system',
@@ -54,11 +55,17 @@ function App({ Component, pageProps }: CustomAppProps) {
         <ChakraProvider theme={theme}>
           {Component.permissions ? (
             <PageAuthorizer requiredPermissions={Component.permissions}>
-              {
-                <InternalPage>
-                  <Component {...pageProps} />
-                </InternalPage>
-              }
+              {({ user, hasRequiredPermissions }) => {
+                return (
+                  <InternalPage user={user}>
+                    {hasRequiredPermissions ? (
+                      <Component {...pageProps} />
+                    ) : (
+                      <PermissionDenied />
+                    )}
+                  </InternalPage>
+                );
+              }}
             </PageAuthorizer>
           ) : (
             <ExternalPage>
