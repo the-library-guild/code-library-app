@@ -1,31 +1,19 @@
 import React, { ReactNode } from 'react';
 
-import { Flex, useColorModeValue } from '@chakra-ui/react';
+import { StudentsView } from './StudentsView';
+import { LibrariansView } from './LibrariansView';
 
-import { Content } from './Content';
-import { Sidebar } from '../components/Sidebar/Sidebar';
-import { ErrorBoundary } from './ErrorBoundary';
-
+import { AppUser, LIBRARIAN_ROLE } from '../hooks/use-user-info.hook';
 interface InternalPageProps {
   children: ReactNode;
+  user: AppUser;
 }
 
-export function InternalPage({ children }: InternalPageProps) {
-  return (
-    <Flex as={'header'} w={'100vw'} h={'100vh'} m={'0'} direction={'column'}>
-      <Sidebar>
-        <Flex
-          as={'main'}
-          w={'100%'}
-          align={'center'}
-          justify={'center'}
-          bg={useColorModeValue('white', 'gray.800')}
-        >
-          <Content>
-            <ErrorBoundary>{children}</ErrorBoundary>
-          </Content>
-        </Flex>
-      </Sidebar>
-    </Flex>
-  );
+export function InternalPage({ user, children }: InternalPageProps) {
+  switch (user.role) {
+    case LIBRARIAN_ROLE:
+      return <LibrariansView>{children}</LibrariansView>;
+    default:
+      return <StudentsView>{children}</StudentsView>;
+  }
 }
