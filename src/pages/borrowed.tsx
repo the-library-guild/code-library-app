@@ -3,11 +3,11 @@ import { Stack } from '@chakra-ui/react';
 
 import { Perm } from 'code-library-perms';
 
-import { Content } from '../../components/Content';
-import { useUserInfo } from '../../hooks/use-user-info.hook';
-import { useUserBorrowedBooks } from '../../hooks/use-borrowed-books.hook';
-import { BooksContainer } from '../../components/BooksContainer';
-import { ResultsCount } from '../../components/ResultsCount';
+import { Content } from '../components/Content';
+import { useUserInfo } from '../hooks/use-user-info.hook';
+import { useUserBorrowedBooks } from '../hooks/use-borrowed-books.hook';
+import { BooksContainer } from '../components/BooksContainer';
+import { ResultsCount } from '../components/ResultsCount';
 
 function BorrowedPage() {
   const { user } = useUserInfo();

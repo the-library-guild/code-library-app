@@ -46,7 +46,9 @@ async function middleware(req: NextApiRequest & NextRequest) {
 
   if (!isAuthenticated && pathname !== '/login') return redirect('/login');
 
-  if (isAuthenticated && pathname === '/login') return redirect('/');
+  if (isAuthenticated && pathname === '/login') return redirect('/shelf');
+
+  if (isAuthenticated && pathname === '/') return redirect('/shelf');
 
   return NextResponse.next();
 }

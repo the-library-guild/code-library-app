@@ -11,7 +11,7 @@ import { useBookContainer } from '../components/BookCard/use-book-container.hook
 import { BooksContainer } from '../components/BooksContainer';
 import { InfiniteScroll } from '../components/InfiniteScroll';
 import { ResultsCount } from '../components/ResultsCount';
-function IndexPage() {
+function ShelfPage() {
   const { loading, error, books } = useBookContainer(GET_SHELF);
   const { results, setInitialResults, searchTerm, setSearchTerm } = useSearch();
 
@@ -44,6 +44,6 @@ function IndexPage() {
   );
 }
 
-IndexPage.permissions = Perm.VIEW_BOOKS;
+ShelfPage.permissions = Perm.VIEW_BOOKS;
 
-export default IndexPage;
+export default ShelfPage;
