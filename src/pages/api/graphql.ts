@@ -11,18 +11,22 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   const token = cookies[cookieName];
 
-  const response = await fetch(uri, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(body),
-  });
+  try {
+    const response = await fetch(uri, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(body),
+    });
 
-  const responseAsJson = await response.json();
+    const responseAsJson = await response.json();
 
-  res.status(200).json(responseAsJson);
+    res.status(200).json(responseAsJson);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 }
 
 export default handler;
