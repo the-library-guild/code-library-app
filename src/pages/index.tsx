@@ -18,7 +18,7 @@ function IndexPage() {
   useEffect(() => {
     if (loading) return;
     setInitialResults(books);
-  }, [loading, books, setInitialResults]);
+  }, [loading]);
 
   return (
     <Content>
