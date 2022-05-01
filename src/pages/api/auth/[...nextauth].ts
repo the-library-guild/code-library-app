@@ -5,24 +5,18 @@ import { gql } from '@apollo/client';
 import { apiClient } from '../../../services/apollo-client';
 import { signToken, verifyToken } from '../../../token';
 
-const validTimeInSeconds = parseInt(process.env.MAX_SESSION_DURATION_SECONDS);
+const sessionMaxAgeInSeconds = parseInt(
+  process.env.MAX_SESSION_DURATION_SECONDS
+);
 
-// graphQl queries require keys to not be surrounded by quotes, but JSON.stringify() produces quoted keys
-const graphqlStringify = (obj: { [key: string]: unknown }) => {
-  const sache = Object.entries(obj).map(([key, value]) => `${key}: "${value}"`);
-  return '{' + sache.join(', ') + '}';
-};
-const mintJwt = (userData: { [key: string]: unknown }) => ({
-  query: gql`
-    query GetUserData {
-      mintJwt(
-        userData: ${graphqlStringify(userData)},
-        secret: "${process.env.JWT_SECRET}"
-      )
-    }
-  `,
-});
-// https://next-auth.js.org/configuration/options
+const secret = process.env.JWT_SECRET;
+
+const GET_USER = gql`
+  query GetUserData($userData: Jwt!, $secret: String!) {
+    mintJwt(userData: $userData, secret: $secret)
+  }
+`;
+
 export default NextAuth({
   secret: process.env.JWT_SECRET,
   providers: [
@@ -37,15 +31,15 @@ export default NextAuth({
   },
   session: {
     strategy: 'jwt',
-    maxAge: validTimeInSeconds,
+    maxAge: sessionMaxAgeInSeconds,
   },
   jwt: {
     /*
-      next-auth is using non-standart jwts, which libraries like jsonwebtoken are to my knowledge unable to decode.
-      since we are not using next-auth on the graphql backend, but still need to decode the jwts there,
-      we are going with a 💫 custom 💫 implementation using jsonwebtoken.
-      this is thankfully supported by next-auth.
-      */
+    next-auth is using non-standart jwts, which libraries like jsonwebtoken are to my knowledge unable to decode.
+    since we are not using next-auth on the graphql backend, but still need to decode the jwts there,
+    we are going with a 💫 custom 💫 implementation using jsonwebtoken.
+    this is thankfully supported by next-auth.
+    */
     encode: async ({ token }) => {
       if (token == null) return '';
 
@@ -55,7 +49,13 @@ export default NextAuth({
       const { name, email, picture } = token;
       const userData = { name, email, picture };
 
-      const { data, error } = await apiClient.query(mintJwt(userData));
+      const { data, error } = await apiClient.query({
+        query: GET_USER,
+        variables: {
+          userData,
+          secret,
+        },
+      });
 
       return error ? '' : data.mintJwt;
     },
