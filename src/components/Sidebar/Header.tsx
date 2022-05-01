@@ -1,52 +1,39 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 
-import {
-  Flex,
-  FlexProps,
-  HStack,
-  IconButton,
-  useColorModeValue,
-} from '@chakra-ui/react';
-import { useUserInfo } from '../../hooks/use-user-info.hook';
-import { FiMenu } from 'react-icons/fi';
-import { HomeLink } from './HomeLink';
-import { ToggleColorModeButton } from '../../components/ToggleColorMode';
-import { UserDropdown } from './UserDropdown';
+import { Flex, FlexProps, HStack } from '@chakra-ui/react';
+import { useColorModeVariant } from '../../hooks/use-color-mode-variant.hook';
 
 interface HeaderProps extends FlexProps {
-  onOpen: () => void;
+  children: ReactNode;
 }
-export const Header = ({ onOpen, ...rest }: HeaderProps) => {
-  const { user } = useUserInfo();
+export const Header = ({ children, ...rest }: HeaderProps) => {
+  const lightOrDark = useColorModeVariant();
 
   return (
     <Flex
       px={4}
-      height="20"
-      alignItems="center"
-      bg={useColorModeValue('white', 'gray.900')}
+      w={'100%'}
+      height={20}
+      align={'center'}
+      bg={lightOrDark('white', 'gray.900')}
       borderBottomWidth="1px"
-      borderBottomColor={useColorModeValue('gray.200', 'gray.700')}
-      justifyContent={{ base: 'space-between' }}
+      borderBottomColor={lightOrDark('gray.200', 'gray.700')}
+      justifyContent={'space-between'}
       {...rest}
     >
-      <Flex justifyContent={'center'} alignItems={'center'} gap={'4'}>
-        <IconButton
-          display={'flex'}
-          onClick={onOpen}
-          variant="ghost"
-          fontSize={'2xl'}
-          aria-label="open menu"
-          icon={<FiMenu />}
-        />
-
-        <HomeLink />
-      </Flex>
-
-      <HStack spacing={{ base: '2', md: '6' }}>
-        <ToggleColorModeButton />
-        <UserDropdown user={user} />
-      </HStack>
+      {children}
     </Flex>
   );
 };
+
+export function HeaderLeftSideNode({ children }: { children: ReactNode }) {
+  return (
+    <Flex justifyContent={'center'} alignItems={'center'} gap={'2'}>
+      {children}
+    </Flex>
+  );
+}
+
+export function HeaderRightSideNode({ children }: { children: ReactNode }) {
+  return <HStack>{children}</HStack>;
+}
