@@ -10,6 +10,7 @@ export function ExternalPage({ children }: ExternalPageProps) {
   return (
     <Flex
       minH={'100vh'}
+      minW={'100vw'}
       align={'center'}
       justify={'center'}
       bg={useColorModeValue('gray.50', 'gray.800')}
