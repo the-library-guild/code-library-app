@@ -34,17 +34,6 @@ const BookCard = React.memo(function BookCard({
   );
   const { name, media } = book;
 
-  const handleClick = () =>
-    action &&
-    action().then(() =>
-      window?.dispatchEvent(
-        new CustomEvent('updateBookList', {
-          bubbles: true,
-          cancelable: true,
-        })
-      )
-    );
-
   return (
     <Box
       as={'article'}
@@ -78,7 +67,7 @@ const BookCard = React.memo(function BookCard({
         <Flex>
           <Spacer />
           {hasAction && (
-            <Button marginLeft={'auto'} onClick={handleClick}>
+            <Button marginLeft={'auto'} onClick={async () => await action()}>
               {actionLabel}
             </Button>
           )}
