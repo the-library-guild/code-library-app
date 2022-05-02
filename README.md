@@ -1,13 +1,42 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<p align="center">
+  <a
+    href="https://code-library-client-swguw3y6sa-ey.a.run.app/"
+    target="_blank"
+  >
+    <img src="./logo.png" alt="Treesome Library logo">
+  </a>
+</p>
 
-## Requirements
+This is the UI of CODE's Library Management App.
+It's an ongoing development taken by students at CODE University of Applied Sciences.
+The library is named after the famous Treedom of SpongeBob SquarePants, which portraits the small size of our physical installation.
+
+## Table of Contents
+
+- [Technologies](#technologies)
+- [System Requirements](#system-requirements)
+- [Installation Instructions](#installation-instructions)
+- [Folder Structure](#folder-structure)
+- [Architecture Overview](#architecture-overview)
+- [Deployments](#deployment-workflows)
+
+## Technologies
+
+The application is written using the following stack.
+
+- [Next.js](https://nextjs.org/)
+- [Chakra UI](https://chakra-ui.com/)
+- [TypesScript](https://www.typescriptlang.org/)
+- [Apollo GraphQL](https://www.apollographql.com/)
+
+## System Requirements
 
 - Docker.
 - Docker Compose.
 - Google Cloud SDK.
 - Node.js 16 (we recommend using `nvm` to support multiple Node.js versions)
 
-## Getting Started
+## Installation Instructions
 
 Just before we get started, make sure you are running Node 16.
 
@@ -31,10 +60,34 @@ make start
 
 By now you should be able to open [http://localhost:3000](http://localhost:3000) in your browser to see the application running.
 
+## Folder Structure
+
+To make it easy for new developers to navigate through our codebase, we provided you with a short explanation on why we split our code the way we do.
+
+In a nutshell, our application is organized as follows.
+
+```bash
+  src/
+     components/ Presentational components
+     pages/ Page components (Next.js convention for file-based routing)
+     hooks/ Custom React Hooks
+     helpers/ Helper functions used across the app
+     services/ External APIs integrations
+```
+
+For a more detailed exaplanation, navigate to the most relevant section.
+
+- [Components](./src/components/README.md)
+- [Hooks](./src/hooks/README.md)
+- [Helpers](./src/helpers/README.md)
+- [Services](./src/services/README.md)
+
+## Architecture Overview
+
 ## Deployment workflows
 
-We have two environments for deployment: staging and production. The first is running on Heroku + Netlify, while the former runs on GCP. Each one is triggered based on the name of the branch being pushed to the repository.
+We have two environments for deployment: staging and production. The first is running on Heroku, while the second runs on Google Cloud Run. Each one is triggered based on the name of the branch being pushed to the repository.
 
-- Pushes to master will trigger a deployment to the staging environment.
+- Pushes to main will trigger a deployment to the staging environment.
 - Creating or updating a pull requests will also trigger a deployment to the staging environment.
 - Tags prefixed with a "v" (i.e., v1.0.0) will trigger a deployment to the production environment.
