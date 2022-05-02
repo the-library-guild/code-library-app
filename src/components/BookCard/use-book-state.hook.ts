@@ -5,9 +5,11 @@ import { Perm } from 'code-library-perms';
 
 import { Book } from './BookCard.constants';
 
-import { PROCESS_BOOK, RENT_BOOK, RETURN_BOOK } from '../../queries/mutations';
-
-import type { UserInfoValue } from '../../hooks/use-user-info.hook';
+import {
+  PROCESS_BOOK,
+  RENT_BOOK,
+  RETURN_BOOK,
+} from '../../services/code-library-server/mutations';
 
 interface Info {
   isBorrowed: boolean;
@@ -55,6 +57,10 @@ function reduceActionQuery(i: Info): [string, any] {
       }
     `,
   ];
+}
+
+interface UserInfoValue {
+  hasPerms: (perm: number | number[]) => boolean;
 }
 
 function useBookState(book: Book, userInfo: UserInfoValue): useBookStateValue {

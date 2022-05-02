@@ -10,7 +10,7 @@ import { SessionProvider } from 'next-auth/react';
 
 import { ApolloProvider } from '@apollo/client';
 
-import { apiClient } from '../services/apollo-client';
+import { CodeLibraryServer } from '../services/code-library-server';
 
 import { PageAuthorizer } from '../components/PageAuthorizer';
 import { NextPage } from 'next';
@@ -44,7 +44,7 @@ type CustomAppProps = AppProps & {
 function App({ Component, pageProps }: CustomAppProps) {
   return (
     <SessionProvider session={pageProps.session} refetchInterval={0}>
-      <ApolloProvider client={apiClient}>
+      <ApolloProvider client={CodeLibraryServer}>
         <Head>
           <title>Treedom Library</title>
           <meta

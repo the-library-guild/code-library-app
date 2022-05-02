@@ -66,9 +66,11 @@ const GET_RETURN_BOX = gql`
     }
   }
 `;
+
 const GET_USER_BOOKS = gql`
   query GetUserBooks($email: String!) {
     getUser(email: $email) {
+      childrenIds
       children {
         _id
         name

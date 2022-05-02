@@ -2,7 +2,7 @@ import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import { gql } from '@apollo/client';
 
-import { apiClient } from '../../../services/apollo-client';
+import { CodeLibraryServer } from '../../../services/code-library-server';
 import { signToken, verifyToken } from '../../../token';
 
 const sessionMaxAgeInSeconds = parseInt(
@@ -49,7 +49,7 @@ export default NextAuth({
       const { name, email, picture } = token;
       const userData = { name, email, picture };
 
-      const { data, error } = await apiClient.query({
+      const { data, error } = await CodeLibraryServer.query({
         query: GET_USER,
         variables: {
           userData,
