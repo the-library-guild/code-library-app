@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactElement, ReactNode } from 'react';
 
 import { Box, Flex, IconButton, useDisclosure } from '@chakra-ui/react';
 
@@ -13,14 +13,14 @@ import {
 import { SidebarItem } from './Sidebar/SidebarItem';
 import { FiBox, FiCompass, FiMenu, FiTrendingUp } from 'react-icons/fi';
 import { useColorModeVariant } from '../hooks/use-color-mode-variant.hook';
-import { BORROWED, RETURN_BOX, SHELF } from '../routes';
+import { BORROWED, RETURN_BOX, SHELF } from '../helpers/routes';
 
 import { AppUser, LIBRARIAN_ROLE } from '../hooks/use-user-info.hook';
 import { ToggleColorModeButton } from './ToggleColorMode';
 import { UserDropdown } from './Sidebar/UserDropdown';
 import { HomeLink } from './Sidebar/HomeLink';
 interface InternalPageProps {
-  children: ReactNode;
+  children: ReactElement;
   user: AppUser;
 }
 
@@ -67,7 +67,12 @@ export function InternalPage({ user, children }: InternalPageProps) {
           bg={lightOrDark('white', 'gray.800')}
         >
           <Content>
-            <ErrorBoundary>{children}</ErrorBoundary>
+            <ErrorBoundary>
+              {React.cloneElement(children, {
+                ...children.props,
+                user,
+              })}
+            </ErrorBoundary>
           </Content>
         </Flex>
       </Box>
