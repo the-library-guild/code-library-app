@@ -2,7 +2,7 @@ import React from 'react';
 import NextLink from 'next/link';
 
 import { Text, Link } from '@chakra-ui/react';
-import { SHELF } from '../../routes';
+import { SHELF } from '../../helpers/routes';
 
 export function HomeLink() {
   return (

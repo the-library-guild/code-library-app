@@ -2,7 +2,7 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 
-import { verifyToken } from '../token';
+import { verifyToken } from '../helpers/token';
 import { NextApiRequest } from 'next';
 import { NextURL } from 'next/dist/server/web/next-url';
 

@@ -1,4 +1,5 @@
 import React, { ReactNode } from 'react';
+
 import NextLink from 'next/link';
 
 import {
@@ -13,7 +14,7 @@ import {
 
 import { LibraryLogo } from '../LibraryLogo';
 import { useColorModeVariant } from '../../hooks/use-color-mode-variant.hook';
-import { SHELF } from '../../routes';
+import { SHELF } from '../../helpers/routes';
 
 interface SidebarProps {
   onClose: any;

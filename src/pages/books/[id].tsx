@@ -9,8 +9,7 @@ import { Content } from '../../components/Content';
 import { FullPageSpinner } from '../../components/FullPageSpinner';
 import { BookCard } from '../../components/BookCard/BookCard';
 import { Book } from '../../components/BookCard/BookCard.constants';
-
-import { GET_BOOK } from '../../queries/queries';
+import { GET_BOOK } from '../../services/code-library-server/queries';
 
 function reduceContent(loading: boolean, error: any, book: Book) {
   if (loading) return <FullPageSpinner />;

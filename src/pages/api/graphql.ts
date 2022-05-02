@@ -1,15 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
+import { tokenFromRequest } from '../../helpers/cookies';
+
 const uri = process.env.GRAPHQL_URL as string;
 
-const cookieName = process.env.IS_PROD
-  ? '__Secure-next-auth.session-token'
-  : 'next-auth.session-token';
-
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { cookies, body } = req;
+  const { body } = req;
 
-  const token = cookies[cookieName];
+  const token = tokenFromRequest(req);
 
   try {
     const response = await fetch(uri, {
@@ -18,7 +16,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(body || {}),
     });
 
     const responseAsJson = await response.json();

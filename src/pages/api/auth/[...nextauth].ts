@@ -3,7 +3,7 @@ import GoogleProvider from 'next-auth/providers/google';
 import { gql } from '@apollo/client';
 
 import { CodeLibraryServer } from '../../../services/code-library-server';
-import { signToken, verifyToken } from '../../../token';
+import { signToken, verifyToken } from '../../../helpers/token';
 
 const sessionMaxAgeInSeconds = parseInt(
   process.env.MAX_SESSION_DURATION_SECONDS
