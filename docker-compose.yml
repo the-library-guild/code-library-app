@@ -1,6 +1,18 @@
 version: '3'
 
 services:
+  app:
+    build:
+      context: .
+      target: development
+    env_file: .env.local
+    ports:
+      - 3000:3000
+    volumes:
+      - ./:/app
+    networks:
+      - codelibrary_network
+
   mongo:
     image: mongo
     container_name: app_db
