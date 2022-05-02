@@ -1,4 +1,3 @@
-import { DefaultSession } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 
 // https://next-auth.js.org/getting-started/typescript/
@@ -8,7 +7,16 @@ declare module 'next-auth' {
    * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */
   interface Session {
-    user: JWT & DefaultSession['user'];
+    user: JWT & {
+      email: string;
+      name?: string;
+      picture?: string;
+      permsInt: number;
+      bookingLimit: number;
+      numOfBooksBorrowed: number;
+      exp: number;
+      iat: number;
+    };
   }
 }
 declare module 'next-auth/jwt' {
@@ -18,8 +26,9 @@ declare module 'next-auth/jwt' {
     name?: string;
     picture?: string;
     permsInt: number;
-    rentingLimit: number;
+    bookingLimit: number;
     exp: number;
     iat: number;
+    _doc: { childrenIds: string[] };
   }
 }

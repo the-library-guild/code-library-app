@@ -63,9 +63,15 @@ export default NextAuth({
   },
   callbacks: {
     session: async ({ session, token }) => {
-      const { permsInt, rentingLimit, exp, iat } = token;
+      const { permsInt, bookingLimit, exp, iat } = token;
 
-      session.user = { ...session.user, permsInt, rentingLimit, exp, iat };
+      session.user = {
+        ...session.user,
+        permsInt,
+        bookingLimit,
+        exp,
+        iat,
+      };
 
       return session;
     },
