@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Book } from '../BookCard/BookCard.constants';
+
+import { Book } from '../../BookCard/BookCard.constants';
 
 interface UseSearchValue {
   results: Book[];

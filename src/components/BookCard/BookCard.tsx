@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react';
 
 import { Book } from './BookCard.constants';
-import { useBookState } from './use-book-state.hook';
+import { useBookState } from '.';
 import { useUserInfo } from '../../hooks/use-user-info.hook';
 import { programAcronym } from './BookCard.helpers';
 

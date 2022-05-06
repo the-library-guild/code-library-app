@@ -4,7 +4,7 @@ import { Stack } from '@chakra-ui/react';
 
 import { Perm } from 'code-library-perms';
 import { Content } from '../components/Content';
-import { useSearch } from '../components/Search/use-search.hook';
+import { useSearch } from '../components/Search';
 import { SearchBox } from '../components/Search/SearchBox';
 import { BooksContainer } from '../components/BooksContainer';
 import { InfiniteScroll } from '../components/InfiniteScroll';

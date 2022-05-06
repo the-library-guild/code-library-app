@@ -3,13 +3,13 @@ import { useColorModeValue } from '@chakra-ui/react';
 
 import { Perm } from 'code-library-perms';
 
-import { Book } from './BookCard.constants';
+import { Book } from '../BookCard.constants';
 
 import {
   PROCESS_BOOK,
   RENT_BOOK,
   RETURN_BOOK,
-} from '../../services/code-library-server/mutations';
+} from '../../../services/code-library-server/mutations';
 
 interface Info {
   isBorrowed: boolean;
