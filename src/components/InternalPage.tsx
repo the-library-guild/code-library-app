@@ -1,6 +1,16 @@
 import React, { ReactElement } from 'react';
 
-import { Box, Flex, IconButton, useDisclosure } from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  IconButton,
+  useDisclosure,
+  MenuItem,
+} from '@chakra-ui/react';
+
+import { signOut } from 'next-auth/react';
+
+import { FaBook, FaSignOutAlt } from 'react-icons/fa';
 
 import { Content } from './Content';
 import { Sidebar } from '../components/Sidebar/Sidebar';
@@ -19,6 +29,11 @@ import { AppUser, LIBRARIAN_ROLE } from '../hooks/use-user-info.hook';
 import { ToggleColorModeButton } from './ToggleColorMode';
 import { UserDropdown } from './Sidebar/UserDropdown';
 import { HomeLink } from './Sidebar/HomeLink';
+import { LIBRARIAN_VIEW, useMakingAppContext } from '../making-app-context';
+import { useRouter } from 'next/router';
+
+const isDevelopmentEnvironment = process.env.NODE_ENV === 'development';
+
 interface InternalPageProps {
   children: ReactElement;
   user: AppUser;
@@ -56,7 +71,13 @@ export function InternalPage({ user, children }: InternalPageProps) {
           </HeaderLeftSideNode>
           <HeaderRightSideNode>
             <ToggleColorModeButton />
-            <UserDropdown user={user} />
+            <UserDropdown user={user}>
+              {isDevelopmentEnvironment ? (
+                <MakingAppActions />
+              ) : (
+                <ProductionAppActions />
+              )}
+            </UserDropdown>
           </HeaderRightSideNode>
         </Header>
         <Flex
@@ -117,4 +138,59 @@ function LibrarianOptions({ onClose }: SidebarOptionsProps) {
       </SidebarItem>
     </>
   );
+}
+
+function MakingAppActions() {
+  const { toggleAppView, toggleAppViewLabel } = useAppViewToggle();
+
+  return (
+    <>
+      <MenuItem icon={<FaBook />} onClick={() => toggleAppView()}>
+        {toggleAppViewLabel}
+      </MenuItem>
+      <MenuItem icon={<FaSignOutAlt />} onClick={() => signOut()}>
+        Logout
+      </MenuItem>
+    </>
+  );
+}
+
+function ProductionAppActions() {
+  return (
+    <>
+      <MenuItem icon={<FaSignOutAlt />} onClick={() => signOut()}>
+        Logout
+      </MenuItem>
+    </>
+  );
+}
+
+type UseToggleAppViewValue = {
+  toggleAppView: () => void;
+  toggleAppViewLabel: string;
+};
+
+function useAppViewToggle(): UseToggleAppViewValue {
+  const { currentView, switchToLibrarianView, switchToStudentView } =
+    useMakingAppContext();
+
+  const { push } = useRouter();
+
+  const isLibrarianView = currentView === LIBRARIAN_VIEW;
+
+  const toggleAppView = () => {
+    if (isLibrarianView) {
+      switchToStudentView();
+    } else {
+      switchToLibrarianView();
+    }
+
+    push('/shelf');
+  };
+
+  const toggleAppViewLabel = isLibrarianView
+    ? 'View as student'
+    : 'View as librarian';
+
+  return { toggleAppView, toggleAppViewLabel };
 }

@@ -3,6 +3,11 @@ import { signOut, useSession } from 'next-auth/react';
 import { hasPerms, Perm } from 'code-library-perms';
 
 import type { JWT } from 'next-auth/jwt';
+import {
+  LIBRARIAN_VIEW,
+  STUDENT_VIEW,
+  useMakingAppContext,
+} from '../making-app-context';
 
 export type AppUser = JWT & {
   role: UserRole;
@@ -25,12 +30,30 @@ export interface UserInfoValue {
 export function useUserInfo(): UserInfoValue {
   const { data: session, status } = useSession();
 
+  const { currentView } = useMakingAppContext();
+
   const isLoading = status === 'loading';
   const isLoggedIn = status === 'authenticated';
 
   if (!isLoading && !isLoggedIn) signOut();
 
-  const infoFromToken = session?.user as JWT;
+  let infoFromToken: JWT;
+  switch (currentView) {
+    case STUDENT_VIEW:
+      infoFromToken = {
+        ...session?.user,
+        permsInt: Perm.VIEW_BOOKS,
+      } as JWT;
+      break;
+    case LIBRARIAN_VIEW:
+      infoFromToken = {
+        ...session?.user,
+        permsInt: Perm.MANAGE_BOOKS,
+      } as JWT;
+      break;
+    default:
+      infoFromToken = session?.user as JWT;
+  }
 
   const roleFromPermissions = (permissions: number): UserRole => {
     switch (permissions) {

@@ -17,6 +17,7 @@ import { NextPage } from 'next';
 import { InternalPage } from '../components/InternalPage';
 import { ExternalPage } from '../components/ExternalPage';
 import { PermissionDenied } from '../components/PermissionDenied';
+import { MakingAppContextProvider } from '../making-app-context';
 
 const theme = extendTheme({
   initialColorMode: 'system',
@@ -53,28 +54,39 @@ function App({ Component, pageProps }: CustomAppProps) {
           />
         </Head>
         <ChakraProvider theme={theme}>
-          {Component.permissions ? (
-            <PageAuthorizer requiredPermissions={Component.permissions}>
-              {({ user, hasRequiredPermissions }) => {
-                return (
-                  <InternalPage user={user}>
-                    {hasRequiredPermissions ? (
-                      <Component {...pageProps} />
-                    ) : (
-                      <PermissionDenied />
-                    )}
-                  </InternalPage>
-                );
-              }}
-            </PageAuthorizer>
-          ) : (
-            <ExternalPage>
-              <Component {...pageProps} />
-            </ExternalPage>
-          )}
+          <MakingAppContextProvider>
+            <LibraryApp Component={Component} pageProps={pageProps} />
+          </MakingAppContextProvider>
         </ChakraProvider>
       </ApolloProvider>
     </SessionProvider>
+  );
+}
+
+type LibraryAppProps = {
+  Component: NextPageWithLayout;
+  pageProps: any;
+};
+
+function LibraryApp({ Component, pageProps }: LibraryAppProps) {
+  return Component.permissions ? (
+    <PageAuthorizer requiredPermissions={Component.permissions}>
+      {({ user, hasRequiredPermissions }) => {
+        return (
+          <InternalPage user={user}>
+            {hasRequiredPermissions ? (
+              <Component {...pageProps} />
+            ) : (
+              <PermissionDenied />
+            )}
+          </InternalPage>
+        );
+      }}
+    </PageAuthorizer>
+  ) : (
+    <ExternalPage>
+      <Component {...pageProps} />
+    </ExternalPage>
   );
 }
 
