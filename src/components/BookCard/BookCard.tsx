@@ -67,7 +67,7 @@ const BookCard = React.memo(function BookCard({
         <Flex>
           <Spacer />
           {hasAction && (
-            <Button marginLeft={'auto'} onClick={async () => await action()}>
+            <Button marginLeft={'auto'} onClick={action}>
               {actionLabel}
             </Button>
           )}
