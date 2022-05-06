@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 import {
   Avatar,
@@ -6,16 +6,11 @@ import {
   Menu,
   MenuButton,
   MenuList,
-  MenuItem,
   MenuDivider,
   Stack,
   Center,
   Text,
 } from '@chakra-ui/react';
-
-import { signOut } from 'next-auth/react';
-
-import { FaSignOutAlt } from 'react-icons/fa';
 
 interface UserInfo {
   name?: string | undefined;
@@ -25,10 +20,11 @@ interface UserInfo {
 
 interface UserDropdownProps {
   user: UserInfo;
+  children: ReactNode;
   [key: string]: any;
 }
 
-export function UserDropdown({ user, ...props }: UserDropdownProps) {
+export function UserDropdown({ user, children, ...props }: UserDropdownProps) {
   return (
     <Menu {...props}>
       <MenuButton
@@ -56,9 +52,7 @@ export function UserDropdown({ user, ...props }: UserDropdownProps) {
           </Stack>
         </Center>
         <MenuDivider />
-        <MenuItem icon={<FaSignOutAlt />} onClick={() => signOut()}>
-          Logout
-        </MenuItem>
+        {children}
       </MenuList>
     </Menu>
   );
