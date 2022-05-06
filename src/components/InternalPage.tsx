@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode } from 'react';
+import React, { ReactElement } from 'react';
 
 import { Box, Flex, IconButton, useDisclosure } from '@chakra-ui/react';
 
