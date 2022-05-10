@@ -2,7 +2,9 @@
 
 const clientUrl = process.env.NEXT_PUBLIC_CLIENT_URL;
 
-if (clientUrl === null || clientUrl === undefined) {
+const isNotTestEnvironemtn = process.env.NODE_ENV !== 'test';
+
+if ((clientUrl === null || clientUrl === undefined) && isNotTestEnvironemtn) {
   throw Error('Required variable NEXT_PUBLIC_CLIENT_URL was not defined');
 }
 
