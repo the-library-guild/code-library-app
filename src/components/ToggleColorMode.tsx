@@ -8,7 +8,7 @@ export const ToggleColorModeButton = ({ ...props }: ButtonProps) => {
   const { colorMode, toggleColorMode } = useColorMode();
 
   return (
-    <Button bg="'gray.800'" onClick={toggleColorMode} {...props}>
+    <Button variant={'ghost'} onClick={toggleColorMode} {...props}>
       {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
     </Button>
   );
