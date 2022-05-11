@@ -4,7 +4,7 @@ import Head from 'next/head';
 
 import type { AppProps } from 'next/app';
 
-import { ChakraProvider, extendTheme } from '@chakra-ui/react';
+import { ChakraProvider } from '@chakra-ui/react';
 
 import { SessionProvider } from 'next-auth/react';
 
@@ -18,21 +18,7 @@ import { InternalPage } from '../components/InternalPage';
 import { ExternalPage } from '../components/ExternalPage';
 import { PermissionDenied } from '../components/PermissionDenied';
 import { MakingAppContextProvider } from '../making-app-context';
-
-const theme = extendTheme({
-  initialColorMode: 'system',
-  colors: {
-    primary: {
-      50: '#35daad',
-      100: '#35daad',
-      200: '#97dcc9',
-    },
-    secondary: {
-      100: '#4059AD',
-      200: '#6577b2',
-    },
-  },
-});
+import { theme } from '@/helpers/theme';
 
 type NextPageWithLayout = NextPage & {
   permissions: number;
