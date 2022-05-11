@@ -1,15 +1,25 @@
 import { JWT } from 'next-auth/jwt';
-import jwt from 'jsonwebtoken';
 
-function signToken(tokenData: any) {
-  return jwt.sign(tokenData, process.env.JWT_SECRET);
+import { nanoid } from 'nanoid';
+
+import { SignJWT, jwtVerify } from 'jose';
+
+const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+
+async function signToken(tokenData: any) {
+  return await new SignJWT({ ...tokenData })
+    .setProtectedHeader({ alg: 'HS256' })
+    .setJti(nanoid())
+    .setIssuedAt()
+    .sign(secret);
 }
 
-function verifyToken(tokenStr: unknown) {
+async function verifyToken(tokenStr: unknown) {
   if (typeof tokenStr !== 'string') return null;
 
   try {
-    return jwt.verify(tokenStr, process.env.JWT_SECRET) as JWT;
+    const verified = await jwtVerify(tokenStr, secret);
+    return verified.payload as JWT;
   } catch (err) {
     return null;
   }

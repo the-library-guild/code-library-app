@@ -2,7 +2,7 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 
-import { verifyToken } from '../helpers/token';
+import { verifyToken } from '@/helpers/token';
 import { NextApiRequest } from 'next';
 import { NextURL } from 'next/dist/server/web/next-url';
 
@@ -30,7 +30,7 @@ const checkIfUserIsAuthenticated = async (
 ): Promise<boolean> => {
   const token = await getToken({ req, secret, raw: true });
 
-  const userInfo = verifyToken(token);
+  const userInfo = await verifyToken(token);
 
   return userInfo != null;
 };

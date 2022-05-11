@@ -2,8 +2,8 @@ import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import { gql } from '@apollo/client';
 
-import { CodeLibraryServer } from '../../../services/code-library-server';
-import { signToken, verifyToken } from '../../../helpers/token';
+import { CodeLibraryServer } from '@/services/code-library-server';
+import { signToken, verifyToken } from '@/helpers/token';
 
 const sessionMaxAgeInSeconds = parseInt(
   process.env.MAX_SESSION_DURATION_SECONDS
@@ -44,7 +44,7 @@ export default NextAuth({
       if (token == null) return '';
 
       // the first token created after sign in only contains one key called state
-      if (token.state) return signToken(token);
+      if (token.state) return await signToken(token);
 
       const { name, email, picture } = token;
       const userData = { name, email, picture };
@@ -59,7 +59,7 @@ export default NextAuth({
 
       return error ? '' : data.mintJwt;
     },
-    decode: ({ token }) => verifyToken(token),
+    decode: async ({ token }) => await verifyToken(token),
   },
   callbacks: {
     session: async ({ session, token }) => {
