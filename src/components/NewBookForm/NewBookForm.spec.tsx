@@ -18,11 +18,10 @@ describe('NewBookForm', () => {
   beforeEach(() => jest.clearAllMocks());
 
   it('renders a form with the right accessibility role', () => {
-    const { getByLabelText, getByText } = render(<NewBookForm {...args} />);
+    const { getByLabelText } = render(<NewBookForm {...args} />);
 
     const form = screen.getByRole('form');
 
-    getByText(/New Book/i);
     getByLabelText(/book id/i);
     getByLabelText(/main title/i);
     getByLabelText(/sub title/i);
