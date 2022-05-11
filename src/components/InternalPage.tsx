@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, ReactNode } from 'react';
 
 import {
   Box,
@@ -31,6 +31,7 @@ import { UserDropdown } from './Sidebar/UserDropdown';
 import { HomeLink } from './Sidebar/HomeLink';
 import { LIBRARIAN_VIEW, useMakingAppContext } from '../making-app-context';
 import { useRouter } from 'next/router';
+import { AddNewBookModal } from './AddNewBookModal/AddNewBookModal';
 
 const isDevelopmentEnvironment = process.env.NODE_ENV === 'development';
 
@@ -66,10 +67,10 @@ export function InternalPage({ user, children }: InternalPageProps) {
               aria-label={'open menu'}
               icon={<FiMenu />}
             />
-
             <HomeLink />
           </HeaderLeftSideNode>
           <HeaderRightSideNode>
+            {isLibrarian && <LibrarianActionsBar />}
             <ToggleColorModeButton />
             <UserDropdown user={user}>
               {isDevelopmentEnvironment ? (
@@ -193,4 +194,18 @@ function useAppViewToggle(): UseToggleAppViewValue {
     : 'View as librarian';
 
   return { toggleAppView, toggleAppViewLabel };
+}
+
+function LibrarianActionsBar() {
+  const onSubmit = () => ({
+    success: true,
+    error: null,
+    loading: false,
+  });
+
+  return (
+    <Flex justify={'flex-end'}>
+      <AddNewBookModal onSubmit={onSubmit} />
+    </Flex>
+  );
 }
