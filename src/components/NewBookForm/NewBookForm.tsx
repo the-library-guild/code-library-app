@@ -4,7 +4,6 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Heading,
   Input,
   Stack,
   useToast,
@@ -12,17 +11,20 @@ import {
 
 import { SyntheticEvent, useState } from 'react';
 
-type NewBookSubmissionResponse = {
+export type NewBookSubmissionResponse = {
   success: boolean;
   error: { message: string } | null;
   loading: boolean;
 };
 
+export type NewBookFormOnSubmit = (
+  values: NewBookFormValues
+) => Promise<NewBookSubmissionResponse> | NewBookSubmissionResponse;
+
 export type NewBookFormProps = {
-  onSubmit: (
-    values: NewBookFormValues
-  ) => Promise<NewBookSubmissionResponse> | NewBookSubmissionResponse;
+  onSubmit: NewBookFormOnSubmit;
   onCancel: () => void;
+  onSuccess?: () => void;
 };
 
 export type NewBookFormValues = {
@@ -56,7 +58,7 @@ const asNumber = (field: FormField) => {
   };
 };
 
-function NewBookForm({ onSubmit, onCancel }: NewBookFormProps) {
+function NewBookForm({ onSubmit, onCancel, onSuccess }: NewBookFormProps) {
   const [submitting, setSubmitting] = useState(false);
 
   const toast = useToast();
@@ -90,12 +92,17 @@ function NewBookForm({ onSubmit, onCancel }: NewBookFormProps) {
         duration: 3000,
         isClosable: true,
         position: 'top-right',
-        variant: 'top-accent',
+        variant: 'solid',
       });
     }
 
     if (success) {
       setSubmitting(false);
+
+      if (onSuccess) {
+        onSuccess();
+      }
+
       toast({
         title: 'Success',
         description: 'New book successfully added to the shelf!',
@@ -103,15 +110,13 @@ function NewBookForm({ onSubmit, onCancel }: NewBookFormProps) {
         duration: 3000,
         isClosable: true,
         position: 'top-right',
-        variant: 'top-accent',
+        variant: 'solid',
       });
     }
   }
 
   return (
-    <Stack spacing={8} align={'center'}>
-      <Heading size={'lg'}>New Book</Heading>
-
+    <Stack spacing={4} align={'center'}>
       <form
         id="new-book-form"
         role={'form'}
@@ -195,15 +200,11 @@ function NewBookForm({ onSubmit, onCancel }: NewBookFormProps) {
         </FormControl>
       </form>
       <Flex justify={'flex-end'} gap={2} w={'100%'}>
-        <Button size={'lg'} onClick={onCancel} disabled={submitting}>
-          Cancel
-        </Button>
         <Button
           form="new-book-form"
           type={'submit'}
           isLoading={submitting}
           loadingText="Submitting"
-          size={'lg'}
           bg={'primary.100'}
           color={'gray.900'}
           _hover={{
@@ -211,6 +212,9 @@ function NewBookForm({ onSubmit, onCancel }: NewBookFormProps) {
           }}
         >
           Create
+        </Button>
+        <Button onClick={onCancel} disabled={submitting}>
+          Cancel
         </Button>
       </Flex>
     </Stack>
