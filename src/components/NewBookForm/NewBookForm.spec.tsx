@@ -1,10 +1,20 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import { NewBookForm } from './NewBookForm';
 
+const onSubmit = jest.fn();
+const onCancel = jest.fn();
+
+const args = {
+  onSubmit,
+  onCancel,
+};
+
 describe('NewBookForm', () => {
-  it('renders a form with all necessary fields and accessibility roles', () => {
-    const { getByLabelText, getByText } = render(<NewBookForm />);
+  beforeEach(() => jest.clearAllMocks());
+
+  it('renders a form with the right accessibility role', () => {
+    const { getByLabelText, getByText } = render(<NewBookForm {...args} />);
 
     const form = screen.getByRole('form');
 
@@ -17,16 +27,50 @@ describe('NewBookForm', () => {
     getByLabelText(/year of publication/i);
     getByLabelText(/language/i);
     getByLabelText(/subject area/i);
-    getByText(/create/i);
 
     expect(form).toBeInTheDocument();
   });
 
-  it('calls the submission endpoint with all information submitted', () => {
-    const { getByText } = render(<NewBookForm />);
+  it('calls the onSubmit callback when submission button is clicked', async () => {
+    const { getByText } = render(<NewBookForm {...args} />);
 
     const createButton = getByText(/create/i);
 
     fireEvent.click(createButton);
+
+    await waitFor(() => expect(args.onSubmit).toHaveBeenCalled());
+  });
+
+  it('calls the onSubmit callback when submission button is clicked', async () => {
+    const { getByText } = render(<NewBookForm {...args} />);
+
+    const createButton = getByText(/create/i);
+
+    fireEvent.click(createButton);
+
+    const expectedValues = expect.objectContaining({
+      bookId: expect.any(String),
+      mainTitle: expect.any(String),
+      subTitle: expect.any(String),
+      author: expect.any(String),
+      publisher: expect.any(String),
+      publicationYear: expect.any(Number),
+      language: expect.any(String),
+      subject: expect.any(String),
+    });
+
+    await waitFor(() =>
+      expect(args.onSubmit).toHaveBeenCalledWith(expectedValues)
+    );
+  });
+
+  it('calls the onClose callback when cancelation button is clicked', async () => {
+    const { getByText } = render(<NewBookForm {...args} />);
+
+    const cancelButton = getByText(/cancel/i);
+
+    fireEvent.click(cancelButton);
+
+    await waitFor(() => expect(args.onCancel).toHaveBeenCalled());
   });
 });

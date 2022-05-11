@@ -1,15 +1,18 @@
 import { ComponentMeta } from '@storybook/react';
 
-import { NewBookForm } from './NewBookForm';
+import { NewBookForm, NewBookFormValues } from './NewBookForm';
 
-// More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
+const onSubmit = (values: NewBookFormValues) => {
+  alert(JSON.stringify(values, null, 2));
+};
+
+const onCancel = () => alert('Cancelled!');
+
 export default {
-  title: 'Library/NewBookForm',
   component: NewBookForm,
-  // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
-  argTypes: {
-    backgroundColor: { control: 'color' },
-  },
+  title: 'Library/NewBookForm',
 } as ComponentMeta<typeof NewBookForm>;
 
-export { NewBookForm };
+export const Default = () => (
+  <NewBookForm onSubmit={onSubmit} onCancel={onCancel} />
+);
