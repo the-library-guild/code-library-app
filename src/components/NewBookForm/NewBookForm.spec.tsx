@@ -2,7 +2,11 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import { NewBookForm } from './NewBookForm';
 
-const onSubmit = jest.fn();
+const onSubmit = jest.fn(() => ({
+  success: true,
+  error: null,
+  loading: false,
+}));
 const onCancel = jest.fn();
 
 const args = {

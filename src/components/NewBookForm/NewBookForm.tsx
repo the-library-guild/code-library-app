@@ -7,12 +7,21 @@ import {
   Heading,
   Input,
   Stack,
+  useToast,
 } from '@chakra-ui/react';
 
-import { SyntheticEvent } from 'react';
+import { SyntheticEvent, useState } from 'react';
+
+type NewBookSubmissionResponse = {
+  success: boolean;
+  error: { message: string } | null;
+  loading: boolean;
+};
 
 export type NewBookFormProps = {
-  onSubmit: (values: NewBookFormValues) => void;
+  onSubmit: (
+    values: NewBookFormValues
+  ) => Promise<NewBookSubmissionResponse> | NewBookSubmissionResponse;
   onCancel: () => void;
 };
 
@@ -48,13 +57,17 @@ const asNumber = (field: FormField) => {
 };
 
 function NewBookForm({ onSubmit, onCancel }: NewBookFormProps) {
-  function handleSubmission(event: SyntheticEvent<HTMLFormElement>) {
+  const [submitting, setSubmitting] = useState(false);
+
+  const toast = useToast();
+
+  async function handleSubmission(event: SyntheticEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const { ...fields } = event.currentTarget.elements;
 
     const entries = Object.values(fields).reduce((curr, field) => {
-      if (typeof field?.name !== 'string') return curr;
+      if (field?.name == '') return curr;
 
       return {
         ...curr,
@@ -62,8 +75,39 @@ function NewBookForm({ onSubmit, onCancel }: NewBookFormProps) {
       };
     }, {}) as unknown as NewBookFormValues;
 
-    onSubmit({ ...entries });
+    const { error, success, loading } = await onSubmit({ ...entries });
+
+    if (loading) {
+      setSubmitting(true);
+    }
+
+    if (error) {
+      setSubmitting(false);
+      toast({
+        title: 'Error',
+        description: error.message,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top-right',
+        variant: 'top-accent',
+      });
+    }
+
+    if (success) {
+      setSubmitting(false);
+      toast({
+        title: 'Success',
+        description: 'New book successfully added to the shelf!',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+        position: 'top-right',
+        variant: 'top-accent',
+      });
+    }
   }
+
   return (
     <Stack spacing={8} align={'center'}>
       <Heading size={'lg'}>New Book</Heading>
@@ -151,13 +195,13 @@ function NewBookForm({ onSubmit, onCancel }: NewBookFormProps) {
         </FormControl>
       </form>
       <Flex justify={'flex-end'} gap={2} w={'100%'}>
-        <Button size={'lg'} onClick={onCancel}>
+        <Button size={'lg'} onClick={onCancel} disabled={submitting}>
           Cancel
         </Button>
         <Button
           form="new-book-form"
           type={'submit'}
-          isLoading={false}
+          isLoading={submitting}
           loadingText="Submitting"
           size={'lg'}
           bg={'primary.100'}
