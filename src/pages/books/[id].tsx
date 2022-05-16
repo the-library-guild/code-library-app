@@ -5,18 +5,11 @@ import { useQuery } from '@apollo/client';
 
 import { Perm } from 'code-library-perms';
 
-import { Content } from '../../components/Content';
-import { FullPageSpinner } from '../../components/FullPageSpinner';
-import { BookCard } from '../../components/BookCard/BookCard';
-import { Book } from '../../components/BookCard/BookCard.constants';
-import { GET_BOOK } from '../../services/code-library-server/queries';
+import { GET_BOOK } from '@/services/code-library-server/queries';
 
-function reduceContent(loading: boolean, error: any, book: Book) {
-  if (loading) return <FullPageSpinner />;
-  if (error) return <div>Could not find requested book</div>;
-
-  return <BookCard book={book} isExpanded={true} />;
-}
+import { Content } from '@/components/Content';
+import { BookCard } from '@/components/BookCard/BookCard';
+import { Suspense } from '@/components/Suspense';
 
 function BookDetailedPage() {
   const { query } = useRouter();
@@ -40,7 +33,13 @@ function BookDetailedPage() {
   return (
     <Content>
       <Stack spacing={6} wordBreak="break-all" width="100%">
-        {reduceContent(loading, error, data?.getBook)}
+        <Suspense
+          loading={loading}
+          error={error}
+          onErrorMessage={'Could not find requested book'}
+        >
+          <BookCard book={data?.getBook} isExpanded={true} />
+        </Suspense>
       </Stack>
     </Content>
   );
