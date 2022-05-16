@@ -1,6 +1,8 @@
 import {
   Button,
+  ButtonProps,
   Flex,
+  FlexProps,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -9,7 +11,8 @@ import {
   useToast,
 } from '@chakra-ui/react';
 
-import { SyntheticEvent, useState } from 'react';
+import { ReactNode, SyntheticEvent, useState } from 'react';
+import { valueOf } from './NewBookForm.helpers';
 
 export type NewBookSubmissionResponse = {
   success: boolean;
@@ -23,8 +26,8 @@ export type NewBookFormOnSubmit = (
 
 export type NewBookFormProps = {
   onSubmit: NewBookFormOnSubmit;
-  onCancel: () => void;
   onSuccess?: () => void;
+  children: ReactNode;
 };
 
 export type NewBookFormValues = {
@@ -38,26 +41,11 @@ export type NewBookFormValues = {
   subject: string;
 };
 
-const asNumber = (field: HTMLInputElement) => Number(field.value);
-const asArray = (field: HTMLInputElement, separator = ',') =>
-  field.value.split(separator);
-
-const valueOf = (field: HTMLInputElement) => {
-  const matches = (match: string) => {
-    if (field.name === match) {
-      return true;
-    }
-
-    return false;
-  };
-
-  if (matches('publicationYear')) return asNumber(field);
-  if (matches('subject')) return asArray(field, '/');
-
-  return field.value;
-};
-
-function NewBookForm({ onSubmit, onCancel, onSuccess }: NewBookFormProps) {
+export function NewBookForm({
+  onSubmit,
+  onSuccess,
+  children,
+}: NewBookFormProps) {
   const [submitting, setSubmitting] = useState(false);
 
   const toast = useToast();
@@ -68,9 +56,11 @@ function NewBookForm({ onSubmit, onCancel, onSuccess }: NewBookFormProps) {
     const { ...fields } = event.currentTarget.elements;
 
     const entries = Object.values(fields).reduce((curr, field) => {
-      if (!(field instanceof HTMLInputElement)) return curr;
+      const fieldIsNotAnInput = !(field instanceof HTMLInputElement);
+      if (fieldIsNotAnInput) return curr;
 
-      if (field.name == '') return curr;
+      const fieldNameIsEmpty = field.name == '';
+      if (fieldNameIsEmpty) return curr;
 
       return {
         ...curr,
@@ -121,21 +111,21 @@ function NewBookForm({ onSubmit, onCancel, onSuccess }: NewBookFormProps) {
       <form
         id="new-book-form"
         role={'form'}
-        onSubmit={handleSubmission}
         style={{
           width: '100%',
           display: 'flex',
           gap: '1rem',
           flexDirection: 'column',
         }}
+        onSubmit={handleSubmission}
       >
-        <FormControl>
+        <FormControl isDisabled={submitting}>
           <FormLabel htmlFor="book-id">Book ID</FormLabel>
           <Input type="text" name="bookId" id="book-id" placeholder="STS17" />
           <FormErrorMessage>Book ID is requried</FormErrorMessage>
         </FormControl>
 
-        <FormControl>
+        <FormControl isDisabled={submitting}>
           <FormLabel htmlFor="main-title">Main Title</FormLabel>
           <Input
             type="text"
@@ -145,7 +135,7 @@ function NewBookForm({ onSubmit, onCancel, onSuccess }: NewBookFormProps) {
           />
         </FormControl>
 
-        <FormControl>
+        <FormControl isDisabled={submitting}>
           <FormLabel htmlFor="sub-title">Sub Title</FormLabel>
           <Input
             type="text"
@@ -155,7 +145,7 @@ function NewBookForm({ onSubmit, onCancel, onSuccess }: NewBookFormProps) {
           />
         </FormControl>
 
-        <FormControl>
+        <FormControl isDisabled={submitting}>
           <FormLabel htmlFor="author">Author</FormLabel>
           <Input
             type="text"
@@ -165,7 +155,7 @@ function NewBookForm({ onSubmit, onCancel, onSuccess }: NewBookFormProps) {
           />
         </FormControl>
 
-        <FormControl>
+        <FormControl isDisabled={submitting}>
           <FormLabel htmlFor="publisher">Publisher</FormLabel>
           <Input
             type="text"
@@ -175,7 +165,7 @@ function NewBookForm({ onSubmit, onCancel, onSuccess }: NewBookFormProps) {
           />
         </FormControl>
 
-        <FormControl>
+        <FormControl isDisabled={submitting}>
           <FormLabel htmlFor="publication-year">Year of Publication</FormLabel>
           <Input
             type="text"
@@ -185,12 +175,12 @@ function NewBookForm({ onSubmit, onCancel, onSuccess }: NewBookFormProps) {
           />
         </FormControl>
 
-        <FormControl>
+        <FormControl isDisabled={submitting}>
           <FormLabel htmlFor="language">Language</FormLabel>
           <Input type="text" name="language" id="language" placeholder="fr" />
         </FormControl>
 
-        <FormControl>
+        <FormControl isDisabled={submitting}>
           <FormLabel htmlFor="subject">Subject Area</FormLabel>
           <Input
             type="text"
@@ -200,26 +190,35 @@ function NewBookForm({ onSubmit, onCancel, onSuccess }: NewBookFormProps) {
           />
         </FormControl>
       </form>
-      <Flex justify={'flex-end'} gap={2} w={'100%'}>
-        <Button
-          form="new-book-form"
-          type={'submit'}
-          isLoading={submitting}
-          loadingText="Submitting"
-          bg={'primary.100'}
-          color={'gray.900'}
-          _hover={{
-            color: 'gray.100',
-          }}
-        >
-          Create
-        </Button>
-        <Button onClick={onCancel} disabled={submitting}>
-          Cancel
-        </Button>
-      </Flex>
+      {children}
     </Stack>
   );
 }
 
-export { NewBookForm };
+export function NewBookFormControls({ children, ...rest }: FlexProps) {
+  return (
+    <Flex justify={'flex-end'} gap={2} w={'100%'} {...rest}>
+      {children}
+    </Flex>
+  );
+}
+
+export function NewBookFormSubmissionButton({
+  children,
+  ...rest
+}: ButtonProps) {
+  return (
+    <Button
+      form="new-book-form"
+      type={'submit'}
+      bg={'primary.100'}
+      color={'gray.900'}
+      _hover={{
+        color: 'gray.100',
+      }}
+      {...rest}
+    >
+      {children}
+    </Button>
+  );
+}

@@ -1,24 +1,42 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
-import { NewBookForm } from './NewBookForm';
+import {
+  NewBookForm,
+  NewBookFormControls,
+  NewBookFormSubmissionButton,
+} from './NewBookForm';
 
 const onSubmit = jest.fn(() => ({
   success: true,
   error: null,
   loading: false,
 }));
-const onCancel = jest.fn();
 
 const args = {
   onSubmit,
-  onCancel,
 };
 
 describe('NewBookForm', () => {
   beforeEach(() => jest.clearAllMocks());
 
+  const renderForm = () => {
+    return render(
+      <NewBookForm {...args}>
+        <NewBookFormControls>
+          <NewBookFormSubmissionButton
+            role="button"
+            isLoading={false}
+            loadingText={'Creating'}
+          >
+            Create
+          </NewBookFormSubmissionButton>
+        </NewBookFormControls>
+      </NewBookForm>
+    );
+  };
+
   it('renders a form with the right accessibility role', () => {
-    render(<NewBookForm {...args} />);
+    renderForm();
 
     const form = screen.getByRole('form');
 
@@ -26,7 +44,7 @@ describe('NewBookForm', () => {
   });
 
   it('renders all elements with accessible labels', () => {
-    const { getByLabelText } = render(<NewBookForm {...args} />);
+    const { getByLabelText } = renderForm();
 
     expect(getByLabelText(/book id/i)).toBeInTheDocument();
     expect(getByLabelText(/main title/i)).toBeInTheDocument();
@@ -50,7 +68,7 @@ describe('NewBookForm', () => {
       subject: ['War story', 'Fantasy'],
     });
 
-    const { getByText, getByLabelText } = render(<NewBookForm {...args} />);
+    const { getByText, getByLabelText } = renderForm();
 
     (getByLabelText(/book id/i) as HTMLInputElement).value = 'STS17';
     (getByLabelText(/main title/i) as HTMLInputElement).value = '';
@@ -69,15 +87,5 @@ describe('NewBookForm', () => {
       expect(args.onSubmit).toHaveBeenCalled();
       expect(args.onSubmit).toHaveBeenCalledWith(expectedValues);
     });
-  });
-
-  it('calls the onClose callback when cancelation button is clicked', async () => {
-    const { getByText } = render(<NewBookForm {...args} />);
-
-    const cancelButton = getByText(/cancel/i);
-
-    fireEvent.click(cancelButton);
-
-    await waitFor(() => expect(args.onCancel).toHaveBeenCalled());
   });
 });

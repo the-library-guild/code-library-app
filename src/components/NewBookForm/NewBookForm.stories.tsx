@@ -1,56 +1,149 @@
-import { ComponentMeta } from '@storybook/react';
+import { ComponentMeta, ComponentStory } from '@storybook/react';
 
-import { NewBookForm, NewBookFormValues } from './NewBookForm';
+// eslint-disable-next-line storybook/use-storybook-testing-library
+import { Matcher } from '@testing-library/react';
 
-const onCancel = () => alert('Cancelled!');
+import { screen, userEvent } from '@storybook/testing-library';
+
+import {
+  NewBookForm,
+  NewBookFormControls,
+  NewBookFormSubmissionButton,
+} from './NewBookForm';
+import { Alert, AlertIcon, Heading } from '@chakra-ui/react';
 
 export default {
   component: NewBookForm,
   title: 'Library/NewBookForm',
 } as ComponentMeta<typeof NewBookForm>;
 
-export const Empty = () => {
-  const onSubmit = (values: NewBookFormValues) => {
-    alert(JSON.stringify(values, null, 2));
+const Preview = ({ children }) => (
+  <div style={{ padding: '2rem' }}>{children}</div>
+);
 
-    return {
-      success: false,
-      error: null,
-      loading: false,
-    };
-  };
+const NonInteractiveTemplate: ComponentStory<typeof NewBookForm> = (args) => (
+  <Preview>
+    <NewBookForm onSubmit={args.onSubmit}>
+      <NewBookFormControls pt={6}>
+        <NewBookFormSubmissionButton
+          role="button"
+          isLoading={false}
+          loadingText={'Creating'}
+        >
+          Create
+        </NewBookFormSubmissionButton>
+      </NewBookFormControls>
+    </NewBookForm>
+  </Preview>
+);
 
-  const onCancel = () => alert('Cancelled!');
+export const Empty = NonInteractiveTemplate.bind({});
 
-  return <NewBookForm onSubmit={onSubmit} onCancel={onCancel} />;
-};
-
-export const Submitting = () => {
-  const onSubmit = () => ({
+Empty.args = {
+  onSubmit: () => ({
     success: false,
     error: null,
-    loading: true,
-  });
-
-  return <NewBookForm onSubmit={onSubmit} onCancel={onCancel} />;
+    loading: false,
+  }),
 };
 
-export const OnError = () => {
-  const onSubmit = () => ({
-    success: false,
-    error: { message: 'Could not process your request' },
-    loading: true,
-  });
+export const Filled = NonInteractiveTemplate.bind({});
 
-  return <NewBookForm onSubmit={onSubmit} onCancel={onCancel} />;
-};
-
-export const OnSuccess = () => {
-  const onSubmit = () => ({
+Filled.args = {
+  onSubmit: () => ({
     success: true,
     error: null,
     loading: false,
-  });
-
-  return <NewBookForm onSubmit={onSubmit} onCancel={onCancel} />;
+  }),
 };
+
+const fillInput = (id: Matcher) => {
+  const input = screen.getByLabelText(id);
+
+  const withText = async (text: string) => {
+    await userEvent.type(input, text, {
+      delay: 10,
+    });
+  };
+
+  return {
+    withText,
+  };
+};
+
+const sample = {
+  bookId: 'A11Y04',
+  mainTitle: 'Inclusive Designing',
+  subTitle: 'Joining Usability, Accessibility, and Inclusion',
+  author: 'P. M. Langdon, J. Lazar, A. Heylighen, H. Dong',
+  publisher: 'Springer',
+  publicationYear: '2014',
+  language: 'en',
+  subject: 'Engineering/Design/Accessibility',
+};
+
+Filled.play = async () => {
+  await fillInput(/book id/i).withText(sample.bookId);
+  await fillInput(/main title/i).withText(sample.mainTitle);
+  await fillInput(/sub title/i).withText(sample.subTitle);
+  await fillInput(/author/i).withText(sample.author);
+  await fillInput(/publisher/i).withText(sample.publisher);
+  await fillInput(/year of publication/i).withText(sample.publicationYear);
+  await fillInput(/language/i).withText(sample.language);
+  await fillInput(/subject area/i).withText(sample.subject);
+};
+
+const InteractiveTemplate: ComponentStory<typeof NewBookForm> = (args) => (
+  <Preview>
+    <Alert status={'info'} variant={'subtle'} my={4}>
+      <AlertIcon />
+      Click the &quot;Create&quot; button to see what happens
+    </Alert>
+    <NewBookForm onSubmit={args.onSubmit}>
+      <NewBookFormControls pt={6}>
+        <NewBookFormSubmissionButton
+          role="button"
+          isLoading={false}
+          loadingText={'Creating'}
+        >
+          Create
+        </NewBookFormSubmissionButton>
+      </NewBookFormControls>
+    </NewBookForm>
+  </Preview>
+);
+
+export const OnError = InteractiveTemplate.bind({});
+
+OnError.args = {
+  onSubmit: () => ({
+    success: false,
+    error: { message: 'You can not add books to the shelf.' },
+    loading: false,
+  }),
+};
+
+const fillInWithSampleData = () => {
+  screen.getByLabelText(/book id/i).value = sample.bookId;
+  screen.getByLabelText(/main title/i).value = sample.mainTitle;
+  screen.getByLabelText(/sub title/i).value = sample.subTitle;
+  screen.getByLabelText(/author/i).value = sample.author;
+  screen.getByLabelText(/publisher/i).value = sample.publisher;
+  screen.getByLabelText(/year of publication/i).value = sample.publicationYear;
+  screen.getByLabelText(/language/i).value = sample.language;
+  screen.getByLabelText(/subject area/i).value = sample.subject;
+};
+
+OnError.play = fillInWithSampleData;
+
+export const OnSuccess = InteractiveTemplate.bind({});
+
+OnSuccess.args = {
+  onSubmit: () => ({
+    success: true,
+    error: null,
+    loading: false,
+  }),
+};
+
+OnSuccess.play = fillInWithSampleData;
