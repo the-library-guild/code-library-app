@@ -1,9 +1,10 @@
 import React from 'react';
 
-import { Book } from './BookCard/BookCard.constants';
 import { BookCard } from './BookCard/BookCard';
 import { Suspense } from './Suspense';
 import { Flex, Spinner, useColorModeValue } from '@chakra-ui/react';
+
+import { Book } from '@/services/code-library-server/books';
 
 interface BooksProps {
   loading: boolean;
@@ -26,7 +27,7 @@ export const BooksContainer = React.memo(function BooksContainer({
       fallback={<LocalSpinner />}
     >
       {books.map((book) => (
-        <BookCard key={book?._id} book={book} />
+        <BookCard key={book?.id} book={book} />
       ))}
       {noBooksOnShelf && <EmptyShelf />}
     </Suspense>

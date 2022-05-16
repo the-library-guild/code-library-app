@@ -37,7 +37,7 @@ function ShelfView({ loading, error, books }: ShelfViewProps) {
         />
         {!loading && (
           <ResultsCount
-            results={results}
+            count={results.length}
             text={search.searchTerm ? 'Results' : 'Books in the shelf'}
           />
         )}

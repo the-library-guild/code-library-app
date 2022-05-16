@@ -1,17 +1,16 @@
-import { Text } from '@chakra-ui/react';
 import React from 'react';
 
-import { Book } from './BookCard/BookCard.constants';
+import { Text } from '@chakra-ui/react';
 
 type ResultsCountProps = {
-  results: Book[];
+  count: number;
   text: string;
 };
 
-export function ResultsCount({ results, text }: ResultsCountProps) {
+export function ResultsCount({ count, text }: ResultsCountProps) {
   return (
     <Text p={1} fontWeight={'bold'} fontSize={'sm'}>
-      {`${text} (${results.length})`}
+      {`${text} (${count})`}
     </Text>
   );
 }

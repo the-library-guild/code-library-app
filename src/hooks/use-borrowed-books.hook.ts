@@ -1,14 +1,15 @@
 import { useQuery } from '@apollo/client';
 import { useEffect } from 'react';
 
-import { Book } from '../components/BookCard/BookCard.constants';
 import { GET_USER_BOOKS } from '../services/code-library-server/queries';
 import { fromResponse } from '../services/code-library-server/books';
+
+import { BookResource } from '@/services/code-library-server/books';
 
 interface getBooksResponse {
   getUser: {
     childrenIds: string[];
-    children: Book[];
+    children: BookResource[];
   };
 }
 

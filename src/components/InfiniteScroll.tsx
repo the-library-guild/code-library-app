@@ -1,10 +1,9 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { ReactElement, useEffect, useReducer } from 'react';
 import { Text, Spinner, useColorModeValue, Flex } from '@chakra-ui/react';
 
 import useInfiniteScroll from 'react-infinite-scroll-hook';
 
-import { Book } from '../components/BookCard/BookCard.constants';
-import { ReactJSXElement } from '@emotion/react/types/jsx-namespace';
+import { Book } from '@/services/code-library-server/books';
 
 function Loading() {
   return (
@@ -63,7 +62,7 @@ type InfiniteScrollRenderProps = {
 };
 
 type InfiniteScrollProps = {
-  children: (props: InfiniteScrollRenderProps) => ReactJSXElement;
+  children: (props: InfiniteScrollRenderProps) => ReactElement;
   results: Book[];
   loading: boolean;
 };

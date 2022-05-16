@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { Book } from '../../BookCard/BookCard.constants';
+import { Book } from '@/services/code-library-server/books';
 
 interface UseSearchValue {
   results: Book[];
@@ -10,7 +10,12 @@ interface UseSearchValue {
 }
 
 const bySearchTerm = (searchTerm: string) => (book: Book) => {
-  const relevantFields = [...book.media.contentTags, book.name];
+  const relevantFields = [
+    book.designation,
+    book.subjectArea,
+    book.subTitle,
+    book.title,
+  ].filter(Boolean) as string[];
 
   return relevantFields.some((tag: string) =>
     tag.toLowerCase().includes(searchTerm.toLowerCase())

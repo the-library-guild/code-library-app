@@ -17,7 +17,7 @@ function ReturnBoxPage() {
   return (
     <Content>
       <Stack spacing={4} width="100%">
-        <ResultsCount results={books} text={'Books borrowed by you'} />
+        <ResultsCount count={books.length} text={'Books borrowed by you'} />
         <Stack spacing={6} wordBreak="break-all" width="100%">
           <BooksContainer {...{ loading, error, books }} />
         </Stack>

@@ -3,8 +3,7 @@ import { useColorModeValue } from '@chakra-ui/react';
 
 import { Perm } from 'code-library-perms';
 
-import { Book } from '../BookCard.constants';
-
+import { Book } from '@/services/code-library-server/books';
 import {
   PROCESS_BOOK,
   RENT_BOOK,
@@ -68,11 +67,13 @@ function useBookState(book: Book, userInfo: UserInfoValue): useBookStateValue {
   // Shall we add number of rentable books to the JWT token?
   // TODO: implement env.ANYONE_CAN_RETURN (also in backend), which will influence canReturn
 
-  const stateTags = book?.rentable?.stateTags ?? [];
+  const text = (text: string) => ({
+    includes: (match: string) => text === match,
+  });
 
-  const isBorrowed = stateTags.includes('Borrowed');
-  const isAvailable = stateTags.includes('Available');
-  const isProcessing = stateTags.includes('Processing');
+  const isBorrowed = text(book.status).includes('Borrowed');
+  const isAvailable = text(book.status).includes('Available');
+  const isProcessing = text(book.status).includes('Processing');
 
   const canProcess = userInfo.hasPerms(Perm.MANAGE_BOOKS);
   const canReturn = userInfo.hasPerms(Perm.RENT_BOOKS);
@@ -96,7 +97,7 @@ function useBookState(book: Book, userInfo: UserInfoValue): useBookStateValue {
   const hasAction = actionLabel !== '';
 
   const [rawAction, { loading, error }] = useMutation(actionQuery, {
-    variables: { bookId: book?._id },
+    variables: { bookId: book?.id },
     refetchQueries: 'all',
   });
 

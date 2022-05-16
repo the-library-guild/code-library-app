@@ -13,27 +13,28 @@ import {
   Link,
 } from '@chakra-ui/react';
 
-import { Book } from './BookCard.constants';
 import { useBookState } from '.';
 import { useUserInfo } from '../../hooks/use-user-info.hook';
-import { programAcronym } from './BookCard.helpers';
+import { Book } from '@/services/code-library-server/books';
 
 interface BookCardProps {
   book: Book;
   isExpanded?: boolean;
+  label: string;
+  color: string;
+  hasAction: boolean;
+  actionLabel: string;
+  action: any;
 }
-const BookCard = React.memo(function BookCard({
+const BookCard = function BookCard({
   book,
   isExpanded = false,
+  label,
+  color,
+  hasAction,
+  actionLabel,
+  action,
 }: BookCardProps) {
-  const userInfo = useUserInfo();
-
-  const { label, color, hasAction, actionLabel, action } = useBookState(
-    book,
-    userInfo
-  );
-  const { name, media } = book;
-
   return (
     <Box
       as={'article'}
@@ -43,12 +44,12 @@ const BookCard = React.memo(function BookCard({
       p={3}
     >
       <Stat>
-        <StatLabel>{programAcronym(media?.contentTags)}</StatLabel>
+        <StatLabel>{book.designation}</StatLabel>
         <StatNumber>
           <NextLink
             href={{
               pathname: '/books/[id]',
-              query: { id: book?._id },
+              query: { id: book?.id },
             }}
             passHref
           >
@@ -56,11 +57,11 @@ const BookCard = React.memo(function BookCard({
               style={{ textDecoration: 'none' }}
               _focus={{ boxShadow: 'none' }}
             >
-              {name}
+              {book.title}
             </Link>
           </NextLink>
         </StatNumber>
-        <StatHelpText>{media?.tagline}</StatHelpText>
+        <StatHelpText>{book.subTitle}</StatHelpText>
         <StatHelpText color={color}>{label}</StatHelpText>
       </Stat>
       {isExpanded && (
@@ -75,6 +76,32 @@ const BookCard = React.memo(function BookCard({
       )}
     </Box>
   );
-});
+};
 
-export { BookCard };
+interface BookCardLoaderProps {
+  book: Book;
+  isExpanded?: boolean;
+}
+
+const BookCardLoader = ({ book, isExpanded = false }: BookCardLoaderProps) => {
+  const userInfo = useUserInfo();
+
+  const { label, color, hasAction, actionLabel, action } = useBookState(
+    book,
+    userInfo
+  );
+
+  return (
+    <BookCard
+      book={book}
+      isExpanded={isExpanded}
+      label={label}
+      color={color}
+      hasAction={hasAction}
+      actionLabel={actionLabel}
+      action={action}
+    />
+  );
+};
+
+export { BookCardLoader as BookCard, BookCard as BookCardComponent };

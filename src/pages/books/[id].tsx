@@ -10,6 +10,7 @@ import { GET_BOOK } from '@/services/code-library-server/queries';
 import { Content } from '@/components/Content';
 import { BookCard } from '@/components/BookCard/BookCard';
 import { Suspense } from '@/components/Suspense';
+import { toSchema } from '@/services/code-library-server/books';
 
 function BookDetailedPage() {
   const { query } = useRouter();
@@ -19,6 +20,8 @@ function BookDetailedPage() {
   const { loading, error, data, refetch } = useQuery(GET_BOOK, {
     variables: { bookId },
   });
+
+  const book = toSchema(data?.getBook);
 
   useEffect(() => {
     function refetchBookList() {
@@ -38,7 +41,7 @@ function BookDetailedPage() {
           error={error}
           onErrorMessage={'Could not find requested book'}
         >
-          <BookCard book={data?.getBook} isExpanded={true} />
+          <BookCard book={book} isExpanded={true} />
         </Suspense>
       </Stack>
     </Content>
