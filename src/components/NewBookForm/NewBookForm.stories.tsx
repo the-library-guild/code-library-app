@@ -129,14 +129,20 @@ OnError.args = {
 };
 
 const fillInWithSampleData = () => {
-  screen.getByLabelText(/book id/i).value = sample.bookId;
-  screen.getByLabelText(/main title/i).value = sample.mainTitle;
-  screen.getByLabelText(/sub title/i).value = sample.subTitle;
-  screen.getByLabelText(/author/i).value = sample.author;
-  screen.getByLabelText(/publisher/i).value = sample.publisher;
-  screen.getByLabelText(/year of publication/i).value = sample.publicationYear;
-  screen.getByLabelText(/language/i).value = sample.language;
-  screen.getByLabelText(/subject area/i).value = sample.subject;
+  (screen.getByLabelText(/book id/i) as HTMLInputElement).value = sample.bookId;
+  (screen.getByLabelText(/main title/i) as HTMLInputElement).value =
+    sample.mainTitle;
+  (screen.getByLabelText(/sub title/i) as HTMLInputElement).value =
+    sample.subTitle;
+  (screen.getByLabelText(/author/i) as HTMLInputElement).value = sample.author;
+  (screen.getByLabelText(/publisher/i) as HTMLInputElement).value =
+    sample.publisher;
+  (screen.getByLabelText(/year of publication/i) as HTMLInputElement).value =
+    sample.publicationYear;
+  (screen.getByLabelText(/language/i) as HTMLInputElement).value =
+    sample.language;
+  (screen.getByLabelText(/subject area/i) as HTMLInputElement).value =
+    sample.subject;
 };
 
 OnError.play = fillInWithSampleData;
@@ -155,10 +161,10 @@ OnSuccess.play = fillInWithSampleData;
 
 const ConsumerTemplate: ComponentStory<typeof NewBookForm> = (args) => (
   <Preview>
-    <AddNewBookModal onSubmit={args.onSubmit}>
+    <AddNewBookModal {...args}>
       {({ onOpen }) => (
         <Button onClick={onOpen} variant={'outline'}>
-          + Create New Book
+          + Create new book
         </Button>
       )}
     </AddNewBookModal>
