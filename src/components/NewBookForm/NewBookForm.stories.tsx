@@ -5,7 +5,7 @@ import { Matcher } from '@testing-library/react';
 
 import { screen, userEvent } from '@storybook/testing-library';
 
-import { Alert, AlertIcon, Button } from '@chakra-ui/react';
+import { Alert, AlertIcon, Button, useBreakpointValue } from '@chakra-ui/react';
 
 import {
   NewBookForm,
@@ -20,9 +20,11 @@ export default {
   title: 'Library/NewBookForm',
 } as ComponentMeta<typeof NewBookForm>;
 
-const Preview = ({ children }) => (
-  <div style={{ padding: '2rem' }}>{children}</div>
-);
+const Preview = ({ children }) => {
+  const padding = useBreakpointValue({ base: '1rem', md: '2rem' });
+
+  return <div style={{ padding, marginTop: '1rem' }}>{children}</div>;
+};
 
 const NonInteractiveTemplate: ComponentStory<typeof NewBookForm> = (args) => (
   <Preview>
@@ -163,9 +165,9 @@ const ConsumerTemplate: ComponentStory<typeof NewBookForm> = (args) => (
   </Preview>
 );
 
-export const InModal = ConsumerTemplate.bind({});
+export const OnModal = ConsumerTemplate.bind({});
 
-InModal.args = {
+OnModal.args = {
   onSubmit: () => ({
     success: true,
     error: null,
