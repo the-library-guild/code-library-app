@@ -18,53 +18,57 @@ describe('NewBookForm', () => {
   beforeEach(() => jest.clearAllMocks());
 
   it('renders a form with the right accessibility role', () => {
-    const { getByLabelText } = render(<NewBookForm {...args} />);
+    render(<NewBookForm {...args} />);
 
     const form = screen.getByRole('form');
-
-    getByLabelText(/book id/i);
-    getByLabelText(/main title/i);
-    getByLabelText(/sub title/i);
-    getByLabelText(/author/i);
-    getByLabelText(/publisher/i);
-    getByLabelText(/year of publication/i);
-    getByLabelText(/language/i);
-    getByLabelText(/subject area/i);
 
     expect(form).toBeInTheDocument();
   });
 
-  it('calls the onSubmit callback when submission button is clicked', async () => {
-    const { getByText } = render(<NewBookForm {...args} />);
+  it('renders all elements with accessible labels', () => {
+    const { getByLabelText } = render(<NewBookForm {...args} />);
 
-    const createButton = getByText(/create/i);
-
-    fireEvent.click(createButton);
-
-    await waitFor(() => expect(args.onSubmit).toHaveBeenCalled());
+    expect(getByLabelText(/book id/i)).toBeInTheDocument();
+    expect(getByLabelText(/main title/i)).toBeInTheDocument();
+    expect(getByLabelText(/sub title/i)).toBeInTheDocument();
+    expect(getByLabelText(/author/i)).toBeInTheDocument();
+    expect(getByLabelText(/publisher/i)).toBeInTheDocument();
+    expect(getByLabelText(/year of publication/i)).toBeInTheDocument();
+    expect(getByLabelText(/language/i)).toBeInTheDocument();
+    expect(getByLabelText(/subject area/i)).toBeInTheDocument();
   });
 
   it('calls the onSubmit callback when submission button is clicked', async () => {
-    const { getByText } = render(<NewBookForm {...args} />);
-
-    const createButton = getByText(/create/i);
-
-    fireEvent.click(createButton);
-
     const expectedValues = expect.objectContaining({
-      bookId: expect.any(String),
+      bookId: 'STS17',
       mainTitle: expect.any(String),
       subTitle: expect.any(String),
       author: expect.any(String),
       publisher: expect.any(String),
       publicationYear: expect.any(Number),
       language: expect.any(String),
-      subject: expect.any(String),
+      subject: ['War story', 'Fantasy'],
     });
 
-    await waitFor(() =>
-      expect(args.onSubmit).toHaveBeenCalledWith(expectedValues)
-    );
+    const { getByText, getByLabelText } = render(<NewBookForm {...args} />);
+
+    (getByLabelText(/book id/i) as HTMLInputElement).value = 'STS17';
+    (getByLabelText(/main title/i) as HTMLInputElement).value = '';
+    (getByLabelText(/sub title/i) as HTMLInputElement).value = '';
+    (getByLabelText(/author/i) as HTMLInputElement).value = '';
+    (getByLabelText(/publisher/i) as HTMLInputElement).value = '';
+    (getByLabelText(/year of publication/i) as HTMLInputElement).value = '';
+    (getByLabelText(/language/i) as HTMLInputElement).value = '';
+    (getByLabelText(/subject area/i) as HTMLInputElement).value =
+      'War story/Fantasy';
+
+    const createButton = getByText(/create/i);
+    fireEvent.click(createButton);
+
+    await waitFor(() => {
+      expect(args.onSubmit).toHaveBeenCalled();
+      expect(args.onSubmit).toHaveBeenCalledWith(expectedValues);
+    });
   });
 
   it('calls the onClose callback when cancelation button is clicked', async () => {

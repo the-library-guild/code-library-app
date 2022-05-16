@@ -38,24 +38,23 @@ export type NewBookFormValues = {
   subject: string;
 };
 
-interface FormField extends Element {
-  name?: string | undefined;
-  value?: any | undefined;
-}
+const asNumber = (field: HTMLInputElement) => Number(field.value);
+const asArray = (field: HTMLInputElement, separator = ',') =>
+  field.value.split(separator);
 
-const asNumber = (field: FormField) => {
-  const now = () => Number(field?.value);
-  const ifMatches = (match: string) => {
-    if (field?.name === match) {
-      return now();
+const valueOf = (field: HTMLInputElement) => {
+  const matches = (match: string) => {
+    if (field.name === match) {
+      return true;
     }
 
-    return field?.value;
+    return false;
   };
-  return {
-    now,
-    ifMatches,
-  };
+
+  if (matches('publicationYear')) return asNumber(field);
+  if (matches('subject')) return asArray(field, '/');
+
+  return field.value;
 };
 
 function NewBookForm({ onSubmit, onCancel, onSuccess }: NewBookFormProps) {
@@ -69,13 +68,15 @@ function NewBookForm({ onSubmit, onCancel, onSuccess }: NewBookFormProps) {
     const { ...fields } = event.currentTarget.elements;
 
     const entries = Object.values(fields).reduce((curr, field) => {
-      if (field?.name == '') return curr;
+      if (!(field instanceof HTMLInputElement)) return curr;
+
+      if (field.name == '') return curr;
 
       return {
         ...curr,
-        [field?.name]: asNumber(field).ifMatches('publicationYear'),
+        [field.name]: valueOf(field),
       };
-    }, {}) as unknown as NewBookFormValues;
+    }, {}) as NewBookFormValues;
 
     const { error, success, loading } = await onSubmit({ ...entries });
 
