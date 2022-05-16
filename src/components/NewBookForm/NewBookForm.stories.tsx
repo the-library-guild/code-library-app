@@ -5,12 +5,15 @@ import { Matcher } from '@testing-library/react';
 
 import { screen, userEvent } from '@storybook/testing-library';
 
+import { Alert, AlertIcon, Button } from '@chakra-ui/react';
+
 import {
   NewBookForm,
   NewBookFormControls,
   NewBookFormSubmissionButton,
 } from './NewBookForm';
-import { Alert, AlertIcon, Heading } from '@chakra-ui/react';
+
+import { AddNewBookModal } from '../AddNewBookModal/AddNewBookModal';
 
 export default {
   component: NewBookForm,
@@ -147,3 +150,25 @@ OnSuccess.args = {
 };
 
 OnSuccess.play = fillInWithSampleData;
+
+const ConsumerTemplate: ComponentStory<typeof NewBookForm> = (args) => (
+  <Preview>
+    <AddNewBookModal onSubmit={args.onSubmit}>
+      {({ onOpen }) => (
+        <Button onClick={onOpen} variant={'outline'}>
+          + Create New Book
+        </Button>
+      )}
+    </AddNewBookModal>
+  </Preview>
+);
+
+export const InModal = ConsumerTemplate.bind({});
+
+InModal.args = {
+  onSubmit: () => ({
+    success: true,
+    error: null,
+    loading: false,
+  }),
+};

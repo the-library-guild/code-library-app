@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 
 import {
   Button,
+  ButtonProps,
   IconButton,
   Modal,
   ModalBody,
@@ -24,31 +25,21 @@ import {
 
 import { FaPlus } from 'react-icons/fa';
 
-type AddNewBookModalProps = {
-  onSubmit: NewBookFormOnSubmit;
+type AddNewBookModalChildrenProps = {
+  onOpen: () => void;
 };
 
-export function AddNewBookModal({ onSubmit }: AddNewBookModalProps) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+type AddNewBookModalProps = {
+  onSubmit: NewBookFormOnSubmit;
+  children: (props: AddNewBookModalChildrenProps) => ReactElement;
+};
 
-  const isMobile = useBreakpointValue({ base: true, md: false });
+export function AddNewBookModal({ onSubmit, children }: AddNewBookModalProps) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
-      {isMobile ? (
-        <Tooltip label={'Add new book to shelf'}>
-          <IconButton
-            onClick={onOpen}
-            variant={'ghost'}
-            aria-label={'Add new book to shelf'}
-            icon={<FaPlus />}
-          />
-        </Tooltip>
-      ) : (
-        <Button onClick={onOpen} variant={'outline'}>
-          Add new book
-        </Button>
-      )}
+      {children({ onOpen })}
 
       <Modal
         closeOnOverlayClick={false}
@@ -74,6 +65,37 @@ export function AddNewBookModal({ onSubmit }: AddNewBookModalProps) {
           </ModalFooter>
         </ModalContent>
       </Modal>
+    </>
+  );
+}
+
+type AddNewBookModalButtonProps = ButtonProps & {
+  onOpen: () => void;
+};
+
+export function AddNewBookModalButton({
+  onOpen,
+  children,
+  ...rest
+}: AddNewBookModalButtonProps) {
+  const isMobile = useBreakpointValue({ base: true, md: false });
+
+  return (
+    <>
+      {isMobile ? (
+        <Tooltip label={'Add new book to shelf'}>
+          <IconButton
+            onClick={onOpen}
+            variant={'ghost'}
+            aria-label={'Add new book to shelf'}
+            icon={<FaPlus />}
+          />
+        </Tooltip>
+      ) : (
+        <Button onClick={onOpen} variant={'outline'} {...rest}>
+          {children}
+        </Button>
+      )}
     </>
   );
 }

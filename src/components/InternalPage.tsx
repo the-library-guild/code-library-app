@@ -31,7 +31,10 @@ import { UserDropdown } from './Sidebar/UserDropdown';
 import { HomeLink } from './Sidebar/HomeLink';
 import { LIBRARIAN_VIEW, useMakingAppContext } from '../making-app-context';
 import { useRouter } from 'next/router';
-import { AddNewBookModal } from './AddNewBookModal/AddNewBookModal';
+import {
+  AddNewBookModal,
+  AddNewBookModalButton,
+} from './AddNewBookModal/AddNewBookModal';
 
 const isDevelopmentEnvironment = process.env.NODE_ENV === 'development';
 
@@ -205,7 +208,13 @@ function LibrarianActionsBar() {
 
   return (
     <Flex justify={'flex-end'}>
-      <AddNewBookModal onSubmit={onSubmit} />
+      <AddNewBookModal onSubmit={onSubmit}>
+        {({ onOpen }) => (
+          <AddNewBookModalButton onOpen={onOpen}>
+            Add New Book
+          </AddNewBookModalButton>
+        )}
+      </AddNewBookModal>
     </Flex>
   );
 }
