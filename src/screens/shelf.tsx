@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 
 import { Stack } from '@chakra-ui/react';
 
@@ -20,19 +20,10 @@ type ShelfViewProps = {
 function ShelfView({ loading, error, books }: ShelfViewProps) {
   const { results, ...search } = useSearch();
 
-  // Avoids rerenders with similar results
-  const lastBooks = useRef<Book[]>([]);
-
   useEffect(() => {
     if (loading) {
       return;
     }
-
-    if (lastBooks.current.length === books.length) {
-      return;
-    }
-
-    lastBooks.current = books;
 
     search.setInitialResults(books);
   }, [books, loading, search]);
