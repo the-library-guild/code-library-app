@@ -15,7 +15,12 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
-import { NewBookForm, NewBookFormOnSubmit } from '../NewBookForm/NewBookForm';
+import {
+  NewBookForm,
+  NewBookFormControls,
+  NewBookFormOnSubmit,
+  NewBookFormSubmissionButton,
+} from '../NewBookForm/NewBookForm';
 
 import { FaPlus } from 'react-icons/fa';
 
@@ -58,14 +63,15 @@ export function AddNewBookModal({ onSubmit }: AddNewBookModalProps) {
           <ModalHeader>New Book</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <NewBookForm
-              onSubmit={onSubmit}
-              onSuccess={onClose}
-              onCancel={onClose}
-            />
+            <NewBookForm onSubmit={onSubmit} onSuccess={onClose} />
           </ModalBody>
 
-          <ModalFooter />
+          <ModalFooter>
+            <NewBookFormControls>
+              <Button onClick={onClose}>Cancel</Button>
+              <NewBookFormSubmissionButton>Create</NewBookFormSubmissionButton>
+            </NewBookFormControls>
+          </ModalFooter>
         </ModalContent>
       </Modal>
     </>

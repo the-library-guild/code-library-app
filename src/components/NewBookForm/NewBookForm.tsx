@@ -27,7 +27,7 @@ export type NewBookFormOnSubmit = (
 export type NewBookFormProps = {
   onSubmit: NewBookFormOnSubmit;
   onSuccess?: () => void;
-  children: ReactNode;
+  children?: ReactNode;
 };
 
 export type NewBookFormValues = {
