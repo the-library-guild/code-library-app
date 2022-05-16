@@ -13,6 +13,7 @@ import {
   ModalOverlay,
   Tooltip,
   useBreakpointValue,
+  useColorModeValue,
   useDisclosure,
 } from '@chakra-ui/react';
 
@@ -50,7 +51,7 @@ export function AddNewBookModal({ onSubmit, children }: AddNewBookModalProps) {
         size={useBreakpointValue({ base: 'full', md: 'sm' })}
       >
         <ModalOverlay />
-        <ModalContent maxW={700}>
+        <ModalContent maxW={700} bg={useColorModeValue('white', 'gray.900')}>
           <ModalHeader>New Book</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
