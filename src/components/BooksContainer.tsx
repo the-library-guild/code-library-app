@@ -1,8 +1,9 @@
 import React from 'react';
 
 import { Book } from './BookCard/BookCard.constants';
-import { FullPageSpinner } from './FullPageSpinner';
 import { BookCard } from './BookCard/BookCard';
+import { Suspense } from './Suspense';
+import { Flex, Spinner, useColorModeValue } from '@chakra-ui/react';
 
 interface BooksProps {
   loading: boolean;
@@ -15,23 +16,43 @@ export const BooksContainer = React.memo(function BooksContainer({
   error,
   books,
 }: BooksProps) {
-  if (loading) return <FullPageSpinner />;
-  if (error) return <Error error={error} />;
-  if (books?.length === 0) return <EmptyShelf />;
+  const noBooksOnShelf = books?.length === 0;
 
   return (
-    <>
+    <Suspense
+      loading={loading}
+      error={error}
+      onErrorMessage={error?.message}
+      fallback={<LocalSpinner />}
+    >
       {books.map((book) => (
         <BookCard key={book?._id} book={book} />
       ))}
-    </>
+      {noBooksOnShelf && <EmptyShelf />}
+    </Suspense>
   );
 });
 
-function Error({ error }: { error: Error }) {
-  return <div>{`Error! ${error.message}`}</div>;
-}
-
 function EmptyShelf() {
   return <div>We could not find any books :(</div>;
+}
+
+function LocalSpinner() {
+  return (
+    <Flex
+      justify={'center'}
+      align={'center'}
+      height={{ base: '80vw', lg: '40vw' }}
+      flex={'1 1 auto'}
+      flexDir={'column'}
+      flexGrow={1}
+    >
+      <Spinner
+        thickness="4px"
+        speed="0.65s"
+        color={useColorModeValue('gray.600', 'gray.300')}
+        size="xl"
+      />
+    </Flex>
+  );
 }
