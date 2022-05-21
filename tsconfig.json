@@ -6,6 +6,7 @@
       "@/hooks/*": ["hooks/*"],
       "@/services/*": ["services/*"],
       "@/pages/*": ["pages/*"],
+      "@/views/*": ["views/*"],
       "@/helpers/*": ["helpers/*"]
     },
     "target": "es5",
