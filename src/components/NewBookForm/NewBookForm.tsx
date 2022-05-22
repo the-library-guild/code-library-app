@@ -7,8 +7,8 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
+  Skeleton,
   Stack,
-  useToast,
 } from '@chakra-ui/react';
 
 import { ReactNode, SyntheticEvent, useState } from 'react';
@@ -22,11 +22,10 @@ export type NewBookSubmissionResponse = {
 
 export type NewBookFormOnSubmit = (
   values: NewBookFormValues
-) => Promise<NewBookSubmissionResponse> | NewBookSubmissionResponse;
+) => Promise<void> | void;
 
 export type NewBookFormProps = {
   onSubmit: NewBookFormOnSubmit;
-  onSuccess?: () => void;
   children?: ReactNode;
 };
 
@@ -41,14 +40,8 @@ export type NewBookFormValues = {
   subject: string;
 };
 
-export function NewBookForm({
-  onSubmit,
-  onSuccess,
-  children,
-}: NewBookFormProps) {
+export function NewBookForm({ onSubmit, children }: NewBookFormProps) {
   const [submitting, setSubmitting] = useState(false);
-
-  const toast = useToast();
 
   async function handleSubmission(event: SyntheticEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -68,128 +61,101 @@ export function NewBookForm({
       };
     }, {}) as NewBookFormValues;
 
-    const { error, success, loading } = await onSubmit({ ...entries });
+    setSubmitting(true);
 
-    if (loading) {
-      setSubmitting(true);
-    }
+    await onSubmit({ ...entries });
 
-    if (error) {
-      setSubmitting(false);
-      toast({
-        title: 'Error',
-        description: error.message,
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-        position: 'top-right',
-        variant: 'solid',
-      });
-    }
-
-    if (success) {
-      setSubmitting(false);
-
-      if (onSuccess) {
-        onSuccess();
-      }
-
-      toast({
-        title: 'Success',
-        description: 'New book successfully added to the shelf!',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-        position: 'top-right',
-        variant: 'solid',
-      });
-    }
+    setSubmitting(false);
   }
 
   return (
     <Stack spacing={4} align={'center'}>
-      <form
-        id="new-book-form"
-        role={'form'}
-        style={{
-          width: '100%',
-          display: 'flex',
-          gap: '1rem',
-          flexDirection: 'column',
-        }}
-        onSubmit={handleSubmission}
-      >
-        <FormControl isDisabled={submitting}>
-          <FormLabel htmlFor="book-id">Book ID</FormLabel>
-          <Input type="text" name="bookId" id="book-id" placeholder="STS17" />
-          <FormErrorMessage>Book ID is requried</FormErrorMessage>
-        </FormControl>
+      <Skeleton isLoaded={!submitting}>
+        <form
+          id="new-book-form"
+          role={'form'}
+          style={{
+            width: '100%',
+            display: 'flex',
+            gap: '1rem',
+            flexDirection: 'column',
+          }}
+          onSubmit={handleSubmission}
+        >
+          <FormControl isDisabled={submitting}>
+            <FormLabel htmlFor="book-id">Book ID</FormLabel>
+            <Input type="text" name="bookId" id="book-id" placeholder="STS17" />
+            <FormErrorMessage>Book ID is requried</FormErrorMessage>
+          </FormControl>
 
-        <FormControl isDisabled={submitting}>
-          <FormLabel htmlFor="main-title">Main Title</FormLabel>
-          <Input
-            type="text"
-            name="mainTitle"
-            id="main-title"
-            placeholder="La radiologie et la guerre"
-          />
-        </FormControl>
+          <FormControl isDisabled={submitting}>
+            <FormLabel htmlFor="main-title">Main Title</FormLabel>
+            <Input
+              type="text"
+              name="mainTitle"
+              id="main-title"
+              placeholder="La radiologie et la guerre"
+            />
+          </FormControl>
 
-        <FormControl isDisabled={submitting}>
-          <FormLabel htmlFor="sub-title">Sub Title</FormLabel>
-          <Input
-            type="text"
-            name="subTitle"
-            id="sub-title"
-            placeholder="Depuis la découverte des rayons X, en 1895, les méthodes de la radiologie, progressivement élaborées par les médecins, ont été appliquées avec succès sous la forme de radio-diagnostic et de radiothérapie."
-          />
-        </FormControl>
+          <FormControl isDisabled={submitting}>
+            <FormLabel htmlFor="sub-title">Sub Title</FormLabel>
+            <Input
+              type="text"
+              name="subTitle"
+              id="sub-title"
+              placeholder="Depuis la découverte des rayons X, en 1895, les méthodes de la radiologie, progressivement élaborées par les médecins, ont été appliquées avec succès sous la forme de radio-diagnostic et de radiothérapie."
+            />
+          </FormControl>
 
-        <FormControl isDisabled={submitting}>
-          <FormLabel htmlFor="author">Author</FormLabel>
-          <Input
-            type="text"
-            name="author"
-            id="author"
-            placeholder="Marie Curie"
-          />
-        </FormControl>
+          <FormControl isDisabled={submitting}>
+            <FormLabel htmlFor="author">Author</FormLabel>
+            <Input
+              type="text"
+              name="author"
+              id="author"
+              placeholder="Marie Curie"
+            />
+          </FormControl>
 
-        <FormControl isDisabled={submitting}>
-          <FormLabel htmlFor="publisher">Publisher</FormLabel>
-          <Input
-            type="text"
-            name="publisher"
-            id="publisher"
-            placeholder="Library of Alexandria"
-          />
-        </FormControl>
+          <FormControl isDisabled={submitting}>
+            <FormLabel htmlFor="publisher">Publisher</FormLabel>
+            <Input
+              type="text"
+              name="publisher"
+              id="publisher"
+              placeholder="Library of Alexandria"
+            />
+          </FormControl>
 
-        <FormControl isDisabled={submitting}>
-          <FormLabel htmlFor="publication-year">Year of Publication</FormLabel>
-          <Input
-            type="text"
-            name="publicationYear"
-            id="publication-year"
-            placeholder="1921"
-          />
-        </FormControl>
+          <FormControl isDisabled={submitting}>
+            <FormLabel htmlFor="publication-year">
+              Year of Publication
+            </FormLabel>
+            <Input
+              type="text"
+              name="publicationYear"
+              id="publication-year"
+              placeholder="1921"
+            />
+          </FormControl>
 
-        <FormControl isDisabled={submitting}>
-          <FormLabel htmlFor="language">Language</FormLabel>
-          <Input type="text" name="language" id="language" placeholder="fr" />
-        </FormControl>
+          <FormControl isDisabled={submitting}>
+            <FormLabel htmlFor="language">Language</FormLabel>
+            <Input type="text" name="language" id="language" placeholder="fr" />
+          </FormControl>
 
-        <FormControl isDisabled={submitting}>
-          <FormLabel htmlFor="subject">Subject Area</FormLabel>
-          <Input
-            type="text"
-            name="subject"
-            id="subject"
-            placeholder="War story/Fantasy"
-          />
-        </FormControl>
-      </form>
+          <FormControl isDisabled={submitting}>
+            <FormLabel htmlFor="subject">Subject Area</FormLabel>
+            <Input
+              type="text"
+              name="subject"
+              id="subject"
+              placeholder="War story/Fantasy"
+            />
+          </FormControl>
+        </form>
+      </Skeleton>
       {children}
     </Stack>
   );

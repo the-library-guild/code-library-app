@@ -4,16 +4,10 @@ import {
   NewBookForm,
   NewBookFormControls,
   NewBookFormSubmissionButton,
-} from './NewBookForm';
-
-const onSubmit = jest.fn(() => ({
-  success: true,
-  error: null,
-  loading: false,
-}));
+} from '.';
 
 const args = {
-  onSubmit,
+  onSubmit: jest.fn(),
 };
 
 describe('NewBookForm', () => {

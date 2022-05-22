@@ -1,9 +1,8 @@
-import React, { ReactElement } from 'react';
+import React, { useContext, createContext, ReactNode } from 'react';
 
 import {
   Button,
   ButtonProps,
-  IconButton,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -21,26 +20,44 @@ import {
   NewBookForm,
   NewBookFormControls,
   NewBookFormOnSubmit,
+  NewBookFormValues,
   NewBookFormSubmissionButton,
-} from '../NewBookForm/NewBookForm';
-
-import { FaPlus } from 'react-icons/fa';
-
-type AddNewBookModalChildrenProps = {
-  onOpen: () => void;
-};
+} from '@/components/NewBookForm';
 
 type AddNewBookModalProps = {
   onSubmit: NewBookFormOnSubmit;
-  children: (props: AddNewBookModalChildrenProps) => ReactElement;
+  children: ReactNode;
 };
+
+type ModalContextValue = {
+  isOpen: boolean;
+  onOpen: () => void;
+  onClose: () => void;
+};
+
+const ModalContext = createContext<ModalContextValue>({
+  isOpen: false,
+  onOpen: () => {
+    return;
+  },
+  onClose: () => {
+    return;
+  },
+});
 
 export function AddNewBookModal({ onSubmit, children }: AddNewBookModalProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const value = { isOpen, onOpen, onClose };
+
+  const submitAndClose = async (values: NewBookFormValues) => {
+    await onSubmit(values);
+    onClose();
+  };
+
   return (
     <>
-      {children({ onOpen })}
+      <ModalContext.Provider value={value}>{children}</ModalContext.Provider>
 
       <Modal
         closeOnOverlayClick={false}
@@ -55,7 +72,7 @@ export function AddNewBookModal({ onSubmit, children }: AddNewBookModalProps) {
           <ModalHeader>New Book</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <NewBookForm onSubmit={onSubmit} onSuccess={onClose} />
+            <NewBookForm onSubmit={submitAndClose} />
           </ModalBody>
 
           <ModalFooter>
@@ -70,33 +87,18 @@ export function AddNewBookModal({ onSubmit, children }: AddNewBookModalProps) {
   );
 }
 
-type AddNewBookModalButtonProps = ButtonProps & {
-  onOpen: () => void;
-};
+export const useModal = () => useContext(ModalContext);
 
-export function AddNewBookModalButton({
-  onOpen,
-  children,
-  ...rest
-}: AddNewBookModalButtonProps) {
-  const isMobile = useBreakpointValue({ base: true, md: false });
+export function AddNewBookModalButton({ children, ...rest }: ButtonProps) {
+  const { onOpen } = useModal();
 
   return (
     <>
-      {isMobile ? (
-        <Tooltip label={'Add new book to shelf'}>
-          <IconButton
-            onClick={onOpen}
-            variant={'ghost'}
-            aria-label={'Add new book to shelf'}
-            icon={<FaPlus />}
-          />
-        </Tooltip>
-      ) : (
+      <Tooltip label={'Add new book to shelf'}>
         <Button onClick={onOpen} variant={'outline'} {...rest}>
-          {children}
+          {useBreakpointValue({ base: '+', md: children })}
         </Button>
-      )}
+      </Tooltip>
     </>
   );
 }

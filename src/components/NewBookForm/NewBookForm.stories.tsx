@@ -5,15 +5,18 @@ import { Matcher } from '@testing-library/react';
 
 import { screen, userEvent } from '@storybook/testing-library';
 
-import { Alert, AlertIcon, Button, useBreakpointValue } from '@chakra-ui/react';
+import { Alert, AlertIcon, useBreakpointValue } from '@chakra-ui/react';
 
 import {
   NewBookForm,
   NewBookFormControls,
   NewBookFormSubmissionButton,
-} from './NewBookForm';
+} from '.';
 
-import { AddNewBookModal } from '../AddNewBookModal/AddNewBookModal';
+import {
+  AddNewBookModal,
+  AddNewBookModalButton,
+} from '@/components/AddNewBookModal';
 
 export default {
   component: NewBookForm,
@@ -42,24 +45,20 @@ const NonInteractiveTemplate: ComponentStory<typeof NewBookForm> = (args) => (
   </Preview>
 );
 
+const onSubmit = () => {
+  return;
+};
+
 export const Empty = NonInteractiveTemplate.bind({});
 
 Empty.args = {
-  onSubmit: () => ({
-    success: false,
-    error: null,
-    loading: false,
-  }),
+  onSubmit,
 };
 
 export const Filled = NonInteractiveTemplate.bind({});
 
 Filled.args = {
-  onSubmit: () => ({
-    success: true,
-    error: null,
-    loading: false,
-  }),
+  onSubmit,
 };
 
 const fillInput = (id: Matcher) => {
@@ -121,11 +120,7 @@ const InteractiveTemplate: ComponentStory<typeof NewBookForm> = (args) => (
 export const OnError = InteractiveTemplate.bind({});
 
 OnError.args = {
-  onSubmit: () => ({
-    success: false,
-    error: { message: 'You can not add books to the shelf.' },
-    loading: false,
-  }),
+  onSubmit,
 };
 
 const fillInWithSampleData = () => {
@@ -150,11 +145,7 @@ OnError.play = fillInWithSampleData;
 export const OnSuccess = InteractiveTemplate.bind({});
 
 OnSuccess.args = {
-  onSubmit: () => ({
-    success: true,
-    error: null,
-    loading: false,
-  }),
+  onSubmit,
 };
 
 OnSuccess.play = fillInWithSampleData;
@@ -162,11 +153,7 @@ OnSuccess.play = fillInWithSampleData;
 const ConsumerTemplate: ComponentStory<typeof NewBookForm> = (args) => (
   <Preview>
     <AddNewBookModal {...args}>
-      {({ onOpen }) => (
-        <Button onClick={onOpen} variant={'outline'}>
-          + Create new book
-        </Button>
-      )}
+      <AddNewBookModalButton>+ Create new book</AddNewBookModalButton>
     </AddNewBookModal>
   </Preview>
 );
@@ -174,9 +161,7 @@ const ConsumerTemplate: ComponentStory<typeof NewBookForm> = (args) => (
 export const OnModal = ConsumerTemplate.bind({});
 
 OnModal.args = {
-  onSubmit: () => ({
-    success: true,
-    error: null,
-    loading: false,
-  }),
+  onSubmit: () => {
+    return new Promise((resolve) => setTimeout(resolve, 4000));
+  },
 };

@@ -17,6 +17,7 @@ const RETURN_BOOK = gql`
     }
   }
 `;
+
 const RENT_BOOK = gql`
   mutation RentBook($bookId: ID!) {
     rentBook(bookId: $bookId) {
@@ -34,6 +35,7 @@ const RENT_BOOK = gql`
     }
   }
 `;
+
 const PROCESS_BOOK = gql`
   mutation ProcessBook($bookId: ID!) {
     processBook(bookId: $bookId) {
@@ -51,4 +53,24 @@ const PROCESS_BOOK = gql`
     }
   }
 `;
-export { RETURN_BOOK, RENT_BOOK, PROCESS_BOOK };
+
+const CREATE_BOOK = gql`
+  mutation CreateBook($bookData: BookData) {
+    createBook(bookData: $bookData) {
+      ... on Success {
+        id
+      }
+
+      ... on MissingPermissionsError {
+        msg
+        requiredPermsInt
+      }
+
+      ... on Error {
+        msg
+      }
+    }
+  }
+`;
+
+export { RETURN_BOOK, RENT_BOOK, PROCESS_BOOK, CREATE_BOOK };
