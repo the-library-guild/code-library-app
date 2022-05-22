@@ -1,16 +1,14 @@
 import React from 'react';
 import NextLink from 'next/link';
 import {
-  Box,
   Flex,
-  Spacer,
+  Text,
   Button,
   useColorModeValue,
-  Stat,
-  StatLabel,
-  StatHelpText,
-  StatNumber,
   Link,
+  Heading,
+  Stack,
+  Badge,
 } from '@chakra-ui/react';
 
 import { useBookState } from '.';
@@ -36,16 +34,16 @@ const BookCard = function BookCard({
   action,
 }: BookCardProps) {
   return (
-    <Box
+    <Stack
       as={'article'}
       rounded={'lg'}
       bg={useColorModeValue('white', 'gray.700')}
-      boxShadow={'lg'}
-      p={3}
+      boxShadow={'dark-lg'}
+      p={4}
+      spacing={'2'}
     >
-      <Stat>
-        <StatLabel>{book.designation}</StatLabel>
-        <StatNumber>
+      <Flex justify={'space-between'} align={'center'}>
+        <Heading fontSize={'xl'}>
           <NextLink
             href={{
               pathname: '/books/[id]',
@@ -60,21 +58,25 @@ const BookCard = function BookCard({
               {book.title}
             </Link>
           </NextLink>
-        </StatNumber>
-        <StatHelpText>{book.subTitle}</StatHelpText>
-        <StatHelpText color={color}>{label}</StatHelpText>
-      </Stat>
-      {isExpanded && (
-        <Flex>
-          <Spacer />
-          {hasAction && (
-            <Button marginLeft={'auto'} onClick={action}>
-              {actionLabel}
-            </Button>
-          )}
-        </Flex>
-      )}
-    </Box>
+        </Heading>
+        <Badge colorScheme={'green'} variant={'outline'}>
+          {book.designation}
+        </Badge>
+      </Flex>
+      <Text noOfLines={[2, 1]} fontSize={'medium'}>
+        {book.subTitle}
+      </Text>
+      <Flex align={'center'} justify={'space-between'} pt={6}>
+        <Text py={2} color={color}>
+          {label}
+        </Text>
+        {isExpanded && hasAction && (
+          <>
+            <Button onClick={action}>{actionLabel}</Button>
+          </>
+        )}
+      </Flex>
+    </Stack>
   );
 };
 

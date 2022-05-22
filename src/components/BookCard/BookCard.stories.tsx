@@ -3,6 +3,7 @@ import { ComponentMeta, ComponentStory } from '@storybook/react';
 import { BookLifecycleStatus } from '@/services/code-library-server/books';
 
 import { BookCardComponent as BookCard } from './BookCard';
+import { Stack } from '@chakra-ui/react';
 
 export default {
   component: BookCard,
@@ -10,7 +11,11 @@ export default {
 } as ComponentMeta<typeof BookCard>;
 
 const Preview = ({ children }) => {
-  return <div style={{ padding: '1rem', marginTop: '2rem' }}>{children}</div>;
+  return (
+    <Stack p={'1rem'} mt={'2rem'}>
+      {children}
+    </Stack>
+  );
 };
 
 const book = {
@@ -24,13 +29,15 @@ const book = {
   isbn: '',
 };
 
-const NonInteractiveTemplate: ComponentStory<typeof BookCard> = (args) => (
+const SingleNonInteractiveTemplate: ComponentStory<typeof BookCard> = (
+  args
+) => (
   <Preview>
     <BookCard {...args} />
   </Preview>
 );
 
-export const Available = NonInteractiveTemplate.bind({});
+export const Available = SingleNonInteractiveTemplate.bind({});
 
 Available.args = {
   book,
@@ -38,7 +45,7 @@ Available.args = {
   label: 'Available',
 };
 
-export const Borrowed = NonInteractiveTemplate.bind({});
+export const Borrowed = SingleNonInteractiveTemplate.bind({});
 
 Borrowed.args = {
   book,
@@ -46,14 +53,44 @@ Borrowed.args = {
   label: 'Borrowed',
 };
 
-export const Expanded = NonInteractiveTemplate.bind({});
+export const WithActionButton = SingleNonInteractiveTemplate.bind({});
 
-Expanded.args = {
+WithActionButton.args = {
   book,
-  color: 'red.300',
-  label: 'Borrowed',
+  color: 'green.300',
+  label: 'Available',
   isExpanded: true,
   hasAction: true,
   action: false,
   actionLabel: 'Borrow',
+};
+
+const bookWithLongDescription = {
+  ...book,
+  subTitle:
+    'Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas cum aliquam eveniet, nihil numquam nulla, assumenda alias ratione aspernatur quod debitis aliquid impedit adipisci, enim illo qui maiores voluptatem ipsam.',
+};
+
+export const WithLongDescription = SingleNonInteractiveTemplate.bind({});
+
+WithLongDescription.args = {
+  ...WithActionButton.args,
+  book: bookWithLongDescription,
+};
+
+const MultipleSingleNonInteractiveTemplate: ComponentStory<typeof BookCard> = (
+  args
+) => (
+  <Preview>
+    <BookCard {...args} />
+    <BookCard {...args} />
+    <BookCard {...args} />
+    <BookCard {...args} />
+  </Preview>
+);
+
+export const Multiple = MultipleSingleNonInteractiveTemplate.bind({});
+
+Multiple.args = {
+  ...WithActionButton.args,
 };
