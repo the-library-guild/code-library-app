@@ -44,33 +44,33 @@ export function useNewBookSubmission() {
 
   // Make onSubmit as simple as possible and handle
   // submission state outside the form component.
-  const onSubmit = (data) => {
-    const result = submit(data);
+  // const onSubmit = (data) => {
+  //   const result = submit(data);
 
-    if (loading) {
-      return {
-        loading,
-        success: false,
-        error,
-      };
-    }
+  //   if (loading) {
+  //     return {
+  //       loading,
+  //       success: false,
+  //       error,
+  //     };
+  //   }
 
-    if (error) {
-      return {
-        loading,
-        success: false,
-        error,
-      };
-    }
+  //   if (error) {
+  //     return {
+  //       loading,
+  //       success: false,
+  //       error,
+  //     };
+  //   }
 
-    if (result.id) {
-      return {
-        loading,
-        success: true,
-        error,
-      };
-    }
-  };
+  //   if (result.id) {
+  //     return {
+  //       loading,
+  //       success: true,
+  //       error,
+  //     };
+  //   }
+  // };
 
   useEffect(() => {
     if (loading) return;
