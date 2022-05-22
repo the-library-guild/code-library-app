@@ -1,5 +1,7 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
+import { BookLifecycleStatus } from '@/services/code-library-server/books';
+
 import { BookCardComponent as BookCard } from './BookCard';
 
 export default {
@@ -12,46 +14,14 @@ const Preview = ({ children }) => {
 };
 
 const book = {
-  _id: 'fake-book-id',
-  name: 'The Only Book',
-  rentable: {
-    stateTags: ['Available'],
-  },
-  media: {
-    contentTags: ['', '', '', 'PM'],
-    tagline: 'The only book you will ever need',
-    publishedDate: new Date('now'),
-    contentDesc: '',
-  },
-};
-
-const useBookStateValueSample = {
-  hasAction: false,
-  action: false,
-  actionLabel: '',
-  color: 'green.300',
-  label: 'Available',
-};
-
-const useUserInfoValueSample = {
-  user: {
-    bookingLimit: 2,
-    email: 'marcelo.teixeira@code.berlin',
-    exp: 1655312227,
-    iat: 1652720227,
-    image:
-      'https://lh3.googleusercontent.com/a-/AOh14GjZEjXY1n-mNsmCnoYbEVgwh75kCOCpUeFYYJc0=s96-c',
-    name: 'Marcelo Teixeira dos Santos',
-    permsInt: 16,
-    role: 'librarian',
-  },
-  status: 'authenticated',
-  isLoading: false,
-  isLoggedIn: true,
-  hasPerms: (perms: number) => {
-    console.log(perms);
-    return true;
-  },
+  id: 'fake-book-id',
+  title: 'The Only Book',
+  subTitle: 'The only book you will ever need',
+  designation: 'PM',
+  status: 'Available' as BookLifecycleStatus,
+  subjectArea: 'Phylosophy',
+  quantity: 1,
+  isbn: '',
 };
 
 const NonInteractiveTemplate: ComponentStory<typeof BookCard> = (args) => (
