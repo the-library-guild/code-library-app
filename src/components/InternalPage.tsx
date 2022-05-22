@@ -200,20 +200,14 @@ function useAppViewToggle(): UseToggleAppViewValue {
 }
 
 function LibrarianActionsBar() {
-  const onSubmit = () => ({
-    success: true,
-    error: null,
-    loading: false,
-  });
+  const onSubmit = () => {
+    return;
+  };
 
   return (
     <Flex justify={'flex-end'}>
       <AddNewBookModal onSubmit={onSubmit}>
-        {({ onOpen }) => (
-          <AddNewBookModalButton onOpen={onOpen}>
-            Add New Book
-          </AddNewBookModalButton>
-        )}
+        <AddNewBookModalButton>+ Add new book</AddNewBookModalButton>
       </AddNewBookModal>
     </Flex>
   );
