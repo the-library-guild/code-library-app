@@ -5,7 +5,7 @@ import { Matcher } from '@testing-library/react';
 
 import { screen, userEvent } from '@storybook/testing-library';
 
-import { Alert, AlertIcon, useBreakpointValue } from '@chakra-ui/react';
+import { useBreakpointValue } from '@chakra-ui/react';
 
 import {
   NewBookForm,
