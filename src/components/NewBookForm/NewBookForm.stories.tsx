@@ -97,59 +97,6 @@ Filled.play = async () => {
   await fillInput(/subject area/i).withText(sample.subject);
 };
 
-const InteractiveTemplate: ComponentStory<typeof NewBookForm> = (args) => (
-  <Preview>
-    <Alert status={'info'} variant={'subtle'} my={4}>
-      <AlertIcon />
-      Click the &quot;Create&quot; button to see what happens
-    </Alert>
-    <NewBookForm onSubmit={args.onSubmit}>
-      <NewBookFormControls pt={6}>
-        <NewBookFormSubmissionButton
-          role="button"
-          isLoading={false}
-          loadingText={'Creating'}
-        >
-          Create
-        </NewBookFormSubmissionButton>
-      </NewBookFormControls>
-    </NewBookForm>
-  </Preview>
-);
-
-export const OnError = InteractiveTemplate.bind({});
-
-OnError.args = {
-  onSubmit,
-};
-
-const fillInWithSampleData = () => {
-  (screen.getByLabelText(/book id/i) as HTMLInputElement).value = sample.bookId;
-  (screen.getByLabelText(/main title/i) as HTMLInputElement).value =
-    sample.mainTitle;
-  (screen.getByLabelText(/sub title/i) as HTMLInputElement).value =
-    sample.subTitle;
-  (screen.getByLabelText(/author/i) as HTMLInputElement).value = sample.author;
-  (screen.getByLabelText(/publisher/i) as HTMLInputElement).value =
-    sample.publisher;
-  (screen.getByLabelText(/year of publication/i) as HTMLInputElement).value =
-    sample.publicationYear;
-  (screen.getByLabelText(/language/i) as HTMLInputElement).value =
-    sample.language;
-  (screen.getByLabelText(/subject area/i) as HTMLInputElement).value =
-    sample.subject;
-};
-
-OnError.play = fillInWithSampleData;
-
-export const OnSuccess = InteractiveTemplate.bind({});
-
-OnSuccess.args = {
-  onSubmit,
-};
-
-OnSuccess.play = fillInWithSampleData;
-
 const ConsumerTemplate: ComponentStory<typeof NewBookForm> = (args) => (
   <Preview>
     <AddNewBookModal {...args}>
@@ -158,9 +105,9 @@ const ConsumerTemplate: ComponentStory<typeof NewBookForm> = (args) => (
   </Preview>
 );
 
-export const OnModal = ConsumerTemplate.bind({});
+export const InModal = ConsumerTemplate.bind({});
 
-OnModal.args = {
+InModal.args = {
   onSubmit: () => {
     return new Promise((resolve) => setTimeout(resolve, 4000));
   },

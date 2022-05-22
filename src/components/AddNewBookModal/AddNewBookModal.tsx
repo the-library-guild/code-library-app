@@ -93,12 +93,10 @@ export function AddNewBookModalButton({ children, ...rest }: ButtonProps) {
   const { onOpen } = useModal();
 
   return (
-    <>
-      <Tooltip label={'Add new book to shelf'}>
-        <Button onClick={onOpen} variant={'outline'} {...rest}>
-          {useBreakpointValue({ base: '+', md: children })}
-        </Button>
-      </Tooltip>
-    </>
+    <Tooltip label={'Add new book to shelf'}>
+      <Button onClick={onOpen} variant={'outline'} {...rest}>
+        {children}
+      </Button>
+    </Tooltip>
   );
 }
