@@ -1,3 +1,4 @@
+import { ReactNode, SyntheticEvent, useState } from 'react';
 import {
   Button,
   ButtonProps,
@@ -7,12 +8,11 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
-  Skeleton,
   Stack,
 } from '@chakra-ui/react';
 
-import { ReactNode, SyntheticEvent, useState } from 'react';
-import { valueOf } from './NewBookForm.helpers';
+import { LoadingOverlay } from '@/components/LoadingOverlay';
+import { fromFieldsToValues, resetValues } from './NewBookForm.helpers';
 
 export type NewBookSubmissionResponse = {
   success: boolean;
@@ -48,114 +48,102 @@ export function NewBookForm({ onSubmit, children }: NewBookFormProps) {
 
     const { ...fields } = event.currentTarget.elements;
 
-    const entries = Object.values(fields).reduce((curr, field) => {
-      const fieldIsNotAnInput = !(field instanceof HTMLInputElement);
-      if (fieldIsNotAnInput) return curr;
-
-      const fieldNameIsEmpty = field.name == '';
-      if (fieldNameIsEmpty) return curr;
-
-      return {
-        ...curr,
-        [field.name]: valueOf(field),
-      };
-    }, {}) as NewBookFormValues;
+    const entries = fromFieldsToValues(fields) as NewBookFormValues;
 
     setSubmitting(true);
 
     await onSubmit({ ...entries });
 
     setSubmitting(false);
+
+    resetValues(fields);
   }
 
   return (
-    <Stack spacing={4} align={'center'}>
-      <Skeleton isLoaded={!submitting}>
-        <form
-          id="new-book-form"
-          role={'form'}
-          style={{
-            width: '100%',
-            display: 'flex',
-            gap: '1rem',
-            flexDirection: 'column',
-          }}
-          onSubmit={handleSubmission}
-        >
-          <FormControl isDisabled={submitting}>
-            <FormLabel htmlFor="book-id">Book ID</FormLabel>
-            <Input type="text" name="bookId" id="book-id" placeholder="STS17" />
-            <FormErrorMessage>Book ID is requried</FormErrorMessage>
-          </FormControl>
+    <Stack spacing={4} align={'center'} w={'100%'}>
+      <LoadingOverlay loading={submitting} helpText={'Submitting'} />
+      <form
+        id="new-book-form"
+        role={'form'}
+        style={{
+          width: '100%',
+          display: 'flex',
+          gap: '1rem',
+          flexDirection: 'column',
+        }}
+        onSubmit={handleSubmission}
+      >
+        <FormControl isDisabled={submitting}>
+          <FormLabel htmlFor="book-id">Book ID</FormLabel>
+          <Input type="text" name="bookId" id="book-id" placeholder="STS17" />
+          <FormErrorMessage>Book ID is requried</FormErrorMessage>
+        </FormControl>
 
-          <FormControl isDisabled={submitting}>
-            <FormLabel htmlFor="main-title">Main Title</FormLabel>
-            <Input
-              type="text"
-              name="mainTitle"
-              id="main-title"
-              placeholder="La radiologie et la guerre"
-            />
-          </FormControl>
+        <FormControl isDisabled={submitting}>
+          <FormLabel htmlFor="main-title">Main Title</FormLabel>
+          <Input
+            type="text"
+            name="mainTitle"
+            id="main-title"
+            placeholder="La radiologie et la guerre"
+          />
+        </FormControl>
 
-          <FormControl isDisabled={submitting}>
-            <FormLabel htmlFor="sub-title">Sub Title</FormLabel>
-            <Input
-              type="text"
-              name="subTitle"
-              id="sub-title"
-              placeholder="Depuis la découverte des rayons X, en 1895, les méthodes de la radiologie, progressivement élaborées par les médecins, ont été appliquées avec succès sous la forme de radio-diagnostic et de radiothérapie."
-            />
-          </FormControl>
+        <FormControl isDisabled={submitting}>
+          <FormLabel htmlFor="sub-title">Sub Title</FormLabel>
+          <Input
+            type="text"
+            name="subTitle"
+            id="sub-title"
+            placeholder="Depuis la découverte des rayons X, en 1895, les méthodes de la radiologie, progressivement élaborées par les médecins, ont été appliquées avec succès sous la forme de radio-diagnostic et de radiothérapie."
+          />
+        </FormControl>
 
-          <FormControl isDisabled={submitting}>
-            <FormLabel htmlFor="author">Author</FormLabel>
-            <Input
-              type="text"
-              name="author"
-              id="author"
-              placeholder="Marie Curie"
-            />
-          </FormControl>
+        <FormControl isDisabled={submitting}>
+          <FormLabel htmlFor="author">Author</FormLabel>
+          <Input
+            type="text"
+            name="author"
+            id="author"
+            placeholder="Marie Curie"
+          />
+        </FormControl>
 
-          <FormControl isDisabled={submitting}>
-            <FormLabel htmlFor="publisher">Publisher</FormLabel>
-            <Input
-              type="text"
-              name="publisher"
-              id="publisher"
-              placeholder="Library of Alexandria"
-            />
-          </FormControl>
+        <FormControl isDisabled={submitting}>
+          <FormLabel htmlFor="publisher">Publisher</FormLabel>
+          <Input
+            type="text"
+            name="publisher"
+            id="publisher"
+            placeholder="Library of Alexandria"
+          />
+        </FormControl>
 
-          <FormControl isDisabled={submitting}>
-            <FormLabel htmlFor="publication-year">
-              Year of Publication
-            </FormLabel>
-            <Input
-              type="text"
-              name="publicationYear"
-              id="publication-year"
-              placeholder="1921"
-            />
-          </FormControl>
+        <FormControl isDisabled={submitting}>
+          <FormLabel htmlFor="publication-year">Year of Publication</FormLabel>
+          <Input
+            type="text"
+            name="publicationYear"
+            id="publication-year"
+            placeholder="1921"
+          />
+        </FormControl>
 
-          <FormControl isDisabled={submitting}>
-            <FormLabel htmlFor="language">Language</FormLabel>
-            <Input type="text" name="language" id="language" placeholder="fr" />
-          </FormControl>
+        <FormControl isDisabled={submitting}>
+          <FormLabel htmlFor="language">Language</FormLabel>
+          <Input type="text" name="language" id="language" placeholder="fr" />
+        </FormControl>
 
-          <FormControl isDisabled={submitting}>
-            <FormLabel htmlFor="subject">Subject Area</FormLabel>
-            <Input
-              type="text"
-              name="subject"
-              id="subject"
-              placeholder="War story/Fantasy"
-            />
-          </FormControl>
-        </form>
-      </Skeleton>
+        <FormControl isDisabled={submitting}>
+          <FormLabel htmlFor="subject">Subject Area</FormLabel>
+          <Input
+            type="text"
+            name="subject"
+            id="subject"
+            placeholder="War story/Fantasy"
+          />
+        </FormControl>
+      </form>
       {children}
     </Stack>
   );

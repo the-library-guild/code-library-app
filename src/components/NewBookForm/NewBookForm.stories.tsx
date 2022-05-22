@@ -1,7 +1,7 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 // eslint-disable-next-line storybook/use-storybook-testing-library
-import { Matcher } from '@testing-library/react';
+import { fireEvent, Matcher } from '@testing-library/react';
 
 import { screen, userEvent } from '@storybook/testing-library';
 
@@ -95,6 +95,29 @@ Filled.play = async () => {
   await fillInput(/year of publication/i).withText(sample.publicationYear);
   await fillInput(/language/i).withText(sample.language);
   await fillInput(/subject area/i).withText(sample.subject);
+};
+
+export const Submitting = NonInteractiveTemplate.bind({});
+
+Submitting.args = {
+  onSubmit: () => {
+    return new Promise((resolve) => setTimeout(resolve, 4000));
+  },
+};
+
+Submitting.play = async () => {
+  await fillInput(/book id/i).withText(sample.bookId);
+  await fillInput(/main title/i).withText(sample.mainTitle);
+  await fillInput(/sub title/i).withText(sample.subTitle);
+  await fillInput(/author/i).withText(sample.author);
+  await fillInput(/publisher/i).withText(sample.publisher);
+  await fillInput(/year of publication/i).withText(sample.publicationYear);
+  await fillInput(/language/i).withText(sample.language);
+  await fillInput(/subject area/i).withText(sample.subject);
+
+  const submissionButton = screen.getByText(/create/i);
+
+  await userEvent.click(submissionButton);
 };
 
 const ConsumerTemplate: ComponentStory<typeof NewBookForm> = (args) => (
