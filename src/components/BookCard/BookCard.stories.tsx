@@ -12,7 +12,7 @@ export default {
 
 const Preview = ({ children }) => {
   return (
-    <Stack p={'1rem'} mt={'2rem'}>
+    <Stack p={['1rem', '2rem']} mt={'2.5rem'}>
       {children}
     </Stack>
   );

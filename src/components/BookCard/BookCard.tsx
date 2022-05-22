@@ -41,6 +41,7 @@ const BookCard = function BookCard({
       boxShadow={'dark-lg'}
       p={4}
       spacing={'2'}
+      maxW={900}
     >
       <Flex justify={'space-between'} align={'center'}>
         <Heading fontSize={'xl'}>
