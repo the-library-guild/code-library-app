@@ -116,25 +116,7 @@ export const handlers = [
   }),
 
   server.mutation(CREATE_BOOK, (req, res, ctx) => {
-    // return res(
-    //   ctx.data({
-    //     createBook: {
-    //       __typename: 'Success',
-    //       id: req.body.variables,
-    //     },
-    //   })
-    // );
     const { bookData } = req.body.variables;
-
-    if (bookData.name.search(/unauthorized/i) !== -1) {
-      return ctx.data({
-        createBook: {
-          __typename: 'MissingPermissionsError',
-          msg: 'You are not allowed to create new books',
-          requiredPermsInt: Perm.MANAGE_BOOKS,
-        },
-      });
-    }
 
     if (bookData.name.search(/unauthorized/i) !== -1) {
       return res(

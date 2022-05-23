@@ -31,7 +31,7 @@ export type NewBookSubmissionResponse = {
 
 export type NewBookFormOnSubmit = (
   values: NewBookFormValues
-) => Promise<Record<string, any>> | Record<string, any>;
+) => Promise<Record<string, any>> | Record<string, any> | void;
 
 export type NewBookFormProps = {
   onSubmit: NewBookFormOnSubmit;
@@ -224,7 +224,7 @@ export function NewBookFormLoader({ children }: { children: ReactNode }) {
             title: 'Sucess',
             description: `New book ${other.id} created!`,
             status: 'success',
-            duration: 3000,
+            duration: 1000,
             isClosable: true,
             position: 'top-right',
             variant: 'top-accent',
@@ -235,7 +235,7 @@ export function NewBookFormLoader({ children }: { children: ReactNode }) {
             title: 'Unauthorized',
             description: other.msg,
             status: 'error',
-            duration: 3000,
+            duration: 1000,
             isClosable: true,
             position: 'top-right',
             variant: 'top-accent',
@@ -246,7 +246,7 @@ export function NewBookFormLoader({ children }: { children: ReactNode }) {
             title: 'Error',
             description: other.msg,
             status: 'error',
-            duration: 3000,
+            duration: 1000,
             isClosable: true,
             position: 'top-right',
             variant: 'top-accent',

@@ -127,7 +127,8 @@ describe('NewBookFormLoader', () => {
       </ApolloProvider>
     );
   };
-  it('notifies new book creation', async () => {
+
+  it('notifies the success of a new book creation', async () => {
     const { findByText, findByLabelText } = renderForm();
 
     user.type(await findByLabelText(/book id/i), sample.bookId);
@@ -142,6 +143,28 @@ describe('NewBookFormLoader', () => {
     user.click(await findByText(/create/i, { selector: 'button' }));
 
     expect(await findByText(/new book/i)).toBeInTheDocument();
+    expect(
+      await findByText(new RegExp(sample.mainTitle, 'i'))
+    ).toBeInTheDocument();
+  });
+
+  it('notifies when user is not authorized to create new books', async () => {
+    const { findByText, findByLabelText } = renderForm();
+
+    sample.mainTitle = 'unauthorized';
+
+    user.type(await findByLabelText(/book id/i), sample.bookId);
+    user.type(await findByLabelText(/main title/i), sample.mainTitle);
+    user.type(await findByLabelText(/sub title/i), sample.subTitle);
+    user.type(await findByLabelText(/author/i), sample.author);
+    user.type(await findByLabelText(/publisher/i), sample.publisher);
+    user.type(await findByLabelText(/year.*/i), sample.publicationYear);
+    user.type(await findByLabelText(/language/i), sample.language);
+    user.type(await findByLabelText(/subject area/i), sample.subject);
+
+    user.click(await findByText(/create/i, { selector: 'button' }));
+
+    expect(await findByText(/not allowed/i)).toBeInTheDocument();
     expect(
       await findByText(new RegExp(sample.mainTitle, 'i'))
     ).toBeInTheDocument();
