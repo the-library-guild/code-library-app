@@ -51,6 +51,10 @@ export type NewBookFormValues = {
 
 const NewBookFormContext = createContext({ submitting: false });
 
+export function useNewBookForm() {
+  return useContext(NewBookFormContext);
+}
+
 export function NewBookForm({ onSubmit, children }: NewBookFormProps) {
   const [submitting, setSubmitting] = useState(false);
 
@@ -174,7 +178,7 @@ export function NewBookFormSubmissionButton({
   children,
   ...rest
 }: ButtonProps) {
-  const { submitting } = useContext(NewBookFormContext);
+  const { submitting } = useNewBookForm();
 
   return (
     <Button
@@ -206,7 +210,7 @@ export function NewBookFormLoader({ children }: { children: ReactNode }) {
     if (status.error) {
       toast({
         title: 'Error',
-        description: status.error.message,
+        description: 'Something went wrong with our service. Try again later.',
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -221,7 +225,7 @@ export function NewBookFormLoader({ children }: { children: ReactNode }) {
       switch (type) {
         case 'Success':
           toast({
-            title: 'Sucess',
+            title: 'Success',
             description: `New book ${other.id} created!`,
             status: 'success',
             duration: 1000,
@@ -254,6 +258,8 @@ export function NewBookFormLoader({ children }: { children: ReactNode }) {
           break;
       }
     }
+
+    return () => toast.closeAll();
   }, [status, toast]);
 
   return (
