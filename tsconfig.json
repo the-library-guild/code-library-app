@@ -7,7 +7,8 @@
       "@/services/*": ["services/*"],
       "@/pages/*": ["pages/*"],
       "@/views/*": ["views/*"],
-      "@/helpers/*": ["helpers/*"]
+      "@/helpers/*": ["helpers/*"],
+      "@/mocks/*": ["mocks/*"]
     },
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
