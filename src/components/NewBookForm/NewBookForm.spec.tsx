@@ -1,5 +1,3 @@
-import 'whatwg-fetch';
-
 import { render, screen, waitFor } from '@testing-library/react';
 
 import user from '@testing-library/user-event';
@@ -76,9 +74,12 @@ describe('NewBookForm', () => {
 
     user.click(await findByText(/create/i, { selector: 'button' }));
 
-    await waitFor(() => {
-      expect(args.onSubmit).toHaveBeenCalled();
-    });
+    await waitFor(
+      () => {
+        expect(args.onSubmit).toHaveBeenCalled();
+      },
+      { timeout: 500 }
+    );
     expect(args.onSubmit).toHaveBeenCalledWith(expectedValues);
   });
 
@@ -97,9 +98,12 @@ describe('NewBookForm', () => {
     const createButton = await findByText(/create/i, { selector: 'button' });
     user.click(createButton);
 
-    await waitFor(() => {
-      expect(createButton).toBeDisabled();
-    });
+    await waitFor(
+      () => {
+        expect(createButton).toBeDisabled();
+      },
+      { timeout: 500 }
+    );
   });
 });
 
