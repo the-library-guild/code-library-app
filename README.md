@@ -7,6 +7,8 @@
   </a>
 </p>
 
+![GitHub Workflow Status](https://github.com/the-library-guild/code-library-app/actions/workflows/validation.yml/badge.svg)
+
 This is the UI of CODE's Library Management App.
 It's an ongoing development taken by students at CODE University of Applied Sciences.
 The library is named after the famous Treedom of SpongeBob SquarePants, which portraits the small size of our physical installation.
