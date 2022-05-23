@@ -1,6 +1,6 @@
 import { loadEnvConfig } from '@next/env'
 
-export default async () => {
+export default () => {
   const projectDir = process.cwd()
   loadEnvConfig(projectDir)
 }
