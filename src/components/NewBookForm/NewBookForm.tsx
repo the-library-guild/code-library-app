@@ -69,7 +69,7 @@ export function NewBookForm({ onSubmit, children }: NewBookFormProps) {
 
   return (
     <Stack spacing={4} align={'center'} w={'100%'}>
-      <LoadingOverlay loading={submitting} helpText={'Submitting'} />
+      <LoadingOverlay loading={submitting} helpText={'Creating'} />
       <form
         id="new-book-form"
         role={'form'}
@@ -182,7 +182,6 @@ export function NewBookFormSubmissionButton({
       _hover={{
         color: 'gray.100',
       }}
-      isLoading={submitting}
       isDisabled={submitting}
       {...rest}
     >

@@ -1,4 +1,8 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+
+import user from '@testing-library/user-event';
+
+import { worker as server } from '@/mocks/node';
 
 import {
   NewBookForm,
@@ -9,6 +13,21 @@ import {
 const args = {
   onSubmit: jest.fn(),
 };
+
+const sample = {
+  bookId: 'A11Y04',
+  mainTitle: 'Inclusive Designing',
+  subTitle: 'Joining Usability, Accessibility, and Inclusion',
+  author: 'P. M. Langdon, J. Lazar, A. Heylighen, H. Dong',
+  publisher: 'Springer',
+  publicationYear: '2014',
+  language: 'en',
+  subject: 'Engineering/Design/Accessibility',
+};
+
+beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
+afterAll(() => server.close());
+afterEach(() => server.resetHandlers());
 
 describe('NewBookForm', () => {
   beforeEach(() => jest.clearAllMocks());
@@ -46,52 +65,44 @@ describe('NewBookForm', () => {
 
   it('calls the onSubmit callback when submission button is clicked', async () => {
     const expectedValues = expect.objectContaining({
-      bookId: 'STS17',
-      mainTitle: expect.any(String),
-      subTitle: expect.any(String),
-      author: expect.any(String),
-      publisher: expect.any(String),
-      publicationYear: expect.any(Number),
-      language: expect.any(String),
-      subject: ['War story', 'Fantasy'],
+      ...sample,
+      publicationYear: 2014,
+      subject: ['Engineering', 'Design', 'Accessibility'],
     });
 
-    const { getByText, getByLabelText } = renderForm();
+    const { findByText, findByLabelText } = renderForm();
 
-    (getByLabelText(/book id/i) as HTMLInputElement).value = 'STS17';
-    (getByLabelText(/main title/i) as HTMLInputElement).value = '';
-    (getByLabelText(/sub title/i) as HTMLInputElement).value = '';
-    (getByLabelText(/author/i) as HTMLInputElement).value = '';
-    (getByLabelText(/publisher/i) as HTMLInputElement).value = '';
-    (getByLabelText(/year of publication/i) as HTMLInputElement).value = '';
-    (getByLabelText(/language/i) as HTMLInputElement).value = '';
-    (getByLabelText(/subject area/i) as HTMLInputElement).value =
-      'War story/Fantasy';
+    user.type(await findByLabelText(/book id/i), sample.bookId);
+    user.type(await findByLabelText(/main title/i), sample.mainTitle);
+    user.type(await findByLabelText(/sub title/i), sample.subTitle);
+    user.type(await findByLabelText(/author/i), sample.author);
+    user.type(await findByLabelText(/publisher/i), sample.publisher);
+    user.type(await findByLabelText(/year.*/i), sample.publicationYear);
+    user.type(await findByLabelText(/language/i), sample.language);
+    user.type(await findByLabelText(/subject area/i), sample.subject);
 
-    const createButton = getByText(/create/i);
-    fireEvent.click(createButton);
+    user.click(await findByText(/create/i, { selector: 'button' }));
 
     await waitFor(() => {
       expect(args.onSubmit).toHaveBeenCalled();
-      expect(args.onSubmit).toHaveBeenCalledWith(expectedValues);
     });
+    expect(args.onSubmit).toHaveBeenCalledWith(expectedValues);
   });
 
   it('disables submission button while submitting form', async () => {
-    const { getByText, getByLabelText } = renderForm();
+    const { findByText, findByLabelText } = renderForm();
 
-    (getByLabelText(/book id/i) as HTMLInputElement).value = 'STS17';
-    (getByLabelText(/main title/i) as HTMLInputElement).value = '';
-    (getByLabelText(/sub title/i) as HTMLInputElement).value = '';
-    (getByLabelText(/author/i) as HTMLInputElement).value = '';
-    (getByLabelText(/publisher/i) as HTMLInputElement).value = '';
-    (getByLabelText(/year of publication/i) as HTMLInputElement).value = '';
-    (getByLabelText(/language/i) as HTMLInputElement).value = '';
-    (getByLabelText(/subject area/i) as HTMLInputElement).value =
-      'War story/Fantasy';
+    user.type(await findByLabelText(/book id/i), sample.bookId);
+    user.type(await findByLabelText(/main title/i), sample.mainTitle);
+    user.type(await findByLabelText(/sub title/i), sample.subTitle);
+    user.type(await findByLabelText(/author/i), sample.author);
+    user.type(await findByLabelText(/publisher/i), sample.publisher);
+    user.type(await findByLabelText(/year.*/i), sample.publicationYear);
+    user.type(await findByLabelText(/language/i), sample.language);
+    user.type(await findByLabelText(/subject area/i), sample.subject);
 
-    const createButton = getByText(/create/i);
-    fireEvent.click(createButton);
+    const createButton = await findByText(/create/i, { selector: 'button' });
+    user.click(createButton);
 
     await waitFor(() => {
       expect(createButton).toBeDisabled();
