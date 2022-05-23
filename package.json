@@ -10,6 +10,8 @@
     "build": "next build",
     "start": "next start",
     "test": "jest --watch",
+    "test:ci": "jest",
+    "test:coverate": "jest --coverage",
     "lint": "next lint --fix",
     "prettify": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "storybook": "start-storybook -p 6006",
