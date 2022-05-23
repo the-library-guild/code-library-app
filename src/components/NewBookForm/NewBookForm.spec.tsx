@@ -17,13 +17,7 @@ describe('NewBookForm', () => {
     return render(
       <NewBookForm {...args}>
         <NewBookFormControls>
-          <NewBookFormSubmissionButton
-            role="button"
-            isLoading={false}
-            loadingText={'Creating'}
-          >
-            Create
-          </NewBookFormSubmissionButton>
+          <NewBookFormSubmissionButton>Create</NewBookFormSubmissionButton>
         </NewBookFormControls>
       </NewBookForm>
     );
@@ -80,6 +74,27 @@ describe('NewBookForm', () => {
     await waitFor(() => {
       expect(args.onSubmit).toHaveBeenCalled();
       expect(args.onSubmit).toHaveBeenCalledWith(expectedValues);
+    });
+  });
+
+  it('disables submission button while submitting form', async () => {
+    const { getByText, getByLabelText } = renderForm();
+
+    (getByLabelText(/book id/i) as HTMLInputElement).value = 'STS17';
+    (getByLabelText(/main title/i) as HTMLInputElement).value = '';
+    (getByLabelText(/sub title/i) as HTMLInputElement).value = '';
+    (getByLabelText(/author/i) as HTMLInputElement).value = '';
+    (getByLabelText(/publisher/i) as HTMLInputElement).value = '';
+    (getByLabelText(/year of publication/i) as HTMLInputElement).value = '';
+    (getByLabelText(/language/i) as HTMLInputElement).value = '';
+    (getByLabelText(/subject area/i) as HTMLInputElement).value =
+      'War story/Fantasy';
+
+    const createButton = getByText(/create/i);
+    fireEvent.click(createButton);
+
+    await waitFor(() => {
+      expect(createButton).toBeDisabled();
     });
   });
 });

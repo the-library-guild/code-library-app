@@ -1,4 +1,10 @@
-import { ReactNode, SyntheticEvent, useState } from 'react';
+import {
+  createContext,
+  ReactNode,
+  SyntheticEvent,
+  useContext,
+  useState,
+} from 'react';
 import {
   Button,
   ButtonProps,
@@ -12,7 +18,7 @@ import {
 } from '@chakra-ui/react';
 
 import { LoadingOverlay } from '@/components/LoadingOverlay';
-import { fromFieldsToValues, resetValues } from './NewBookForm.helpers';
+import { fromFieldsToValues, resetValues } from '.';
 
 export type NewBookSubmissionResponse = {
   success: boolean;
@@ -39,6 +45,8 @@ export type NewBookFormValues = {
   language: string;
   subject: string;
 };
+
+const NewBookFormContext = createContext({ submitting: false });
 
 export function NewBookForm({ onSubmit, children }: NewBookFormProps) {
   const [submitting, setSubmitting] = useState(false);
@@ -144,7 +152,9 @@ export function NewBookForm({ onSubmit, children }: NewBookFormProps) {
           />
         </FormControl>
       </form>
-      {children}
+      <NewBookFormContext.Provider value={{ submitting }}>
+        {children}
+      </NewBookFormContext.Provider>
     </Stack>
   );
 }
@@ -161,6 +171,8 @@ export function NewBookFormSubmissionButton({
   children,
   ...rest
 }: ButtonProps) {
+  const { submitting } = useContext(NewBookFormContext);
+
   return (
     <Button
       form="new-book-form"
@@ -170,6 +182,8 @@ export function NewBookFormSubmissionButton({
       _hover={{
         color: 'gray.100',
       }}
+      isLoading={submitting}
+      isDisabled={submitting}
       {...rest}
     >
       {children}
