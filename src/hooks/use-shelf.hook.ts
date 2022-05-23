@@ -1,11 +1,14 @@
 import { useQuery } from '@apollo/client';
 
-import { Book, fromResponse } from '../services/code-library-server/books';
-import { GET_SHELF } from '../services/code-library-server/queries';
+import {
+  GET_SHELF,
+  BookResource,
+  fromResponse,
+} from '@/services/code-library-server';
 
 interface getShelfResponse {
   getShelf: {
-    children: Book[];
+    children: BookResource[];
   };
 }
 
@@ -19,7 +22,7 @@ export function useShelf(options: any = {}) {
     }
   );
 
-  const response = (data?.getShelf?.children ?? []) as Book[];
+  const response = (data?.getShelf?.children ?? []) as BookResource[];
   const books = fromResponse(response);
 
   return { loading, error, books, refetch };
