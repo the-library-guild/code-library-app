@@ -54,23 +54,4 @@ const PROCESS_BOOK = gql`
   }
 `;
 
-const CREATE_BOOK = gql`
-  mutation CreateBook($bookData: BookData) {
-    createBook(bookData: $bookData) {
-      ... on Success {
-        id
-      }
-
-      ... on MissingPermissionsError {
-        msg
-        requiredPermsInt
-      }
-
-      ... on Error {
-        msg
-      }
-    }
-  }
-`;
-
-export { RETURN_BOOK, RENT_BOOK, PROCESS_BOOK, CREATE_BOOK };
+export { RETURN_BOOK, RENT_BOOK, PROCESS_BOOK };

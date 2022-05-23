@@ -17,6 +17,6 @@ export const CodeLibraryServer = new ApolloClient({
 export * from './queries';
 export * from './mutations';
 export * from './books';
-export * from './create-book.hook';
+export * from './use-create-book.hook';
 
 export default CodeLibraryServer;

@@ -3,7 +3,7 @@ import { gql, useMutation } from '@apollo/client';
 
 import { NewBookFormValues } from '@/components/NewBookForm';
 
-const CREATE_BOOK = gql`
+export const CREATE_BOOK = gql`
   mutation CreateBook($bookData: BookData) {
     createBook(bookData: $bookData) {
       ... on Success {
