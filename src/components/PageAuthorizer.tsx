@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 
 import { useRouter } from 'next/router';
 
 import { FullPageSpinner } from './FullPageSpinner';
 import { AppUser, useUserInfo } from '../hooks/use-user-info.hook';
-import { ReactJSXElement } from '@emotion/react/types/jsx-namespace';
 
 interface Props {
   requiredPermissions: number;
-  children: (props: PageAuthorizerRenderProps) => ReactJSXElement;
+  children: (props: PageAuthorizerRenderProps) => ReactElement;
 }
 
 interface PageAuthorizerRenderProps {
