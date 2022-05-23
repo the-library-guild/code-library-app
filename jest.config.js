@@ -9,11 +9,11 @@ const customJestConfig = {
   moduleDirectories: ['node_modules', '<rootDir>/'],
   testEnvironment: 'jest-environment-jsdom',
   moduleNameMapper: {
-  '^@/components/(.*)$': '<rootDir>/components/$1',
-  '^@/hooks/(.*)$': '<rootDir>/hooks/$1',
-  '^@/services/(.*)$': '<rootDir>/services/$1',
-  '^@/pages/(.*)$': '<rootDir>/pages/$1',
-  '^@/helpers/(.*)$': '<rootDir>/helpers/$1',
+  '^@/components/(.*)$': '<rootDir>/src/components/$1',
+  '^@/hooks/(.*)$': '<rootDir>/src/hooks/$1',
+  '^@/services/(.*)$': '<rootDir>/src/services/$1',
+  '^@/pages/(.*)$': '<rootDir>/src/pages/$1',
+  '^@/helpers/(.*)$': '<rootDir>/src/helpers/$1',
 }
 }
 

@@ -1,3 +1,1 @@
-import { LoadingOverlay } from './LoadingOverlay';
-
-export { LoadingOverlay };
+export * from './LoadingOverlay';
