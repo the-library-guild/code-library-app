@@ -42,7 +42,6 @@ const bookSample = {
     contentDesc: 'Autism/Disorder',
     creators: ['Steve Silberman'],
     publisher: 'Allen&Unwin',
-    publishedDate: null,
     language: 'en',
   },
   rentable: {
@@ -90,6 +89,42 @@ const books = new Map([
 
 const server = graphql.link('http://localhost:3000/api/graphql');
 
+type MissingPermissions = {
+  msg: string;
+  requiredPermsInt: number;
+};
+
+type Error = {
+  __typename: string;
+  msg: string;
+};
+
+type Success = {
+  __typename: string;
+  id: string;
+};
+
+type CreateBookMutation = {
+  createBook: MissingPermissions | Error | Success;
+};
+
+type CreateBookMutationVariables = {
+  bookData: {
+    name: string;
+    tags: string[];
+    media: {
+      contentTags: string[];
+      creators: string[];
+      publisher: string;
+      language: string;
+      contentDesc: string;
+      subTitle?: string;
+      tagline: string;
+      publishedDate?: number;
+    };
+  };
+};
+
 export const handlers = [
   server.query(GET_SHELF, (_, res, ctx) => {
     return res(
@@ -115,58 +150,61 @@ export const handlers = [
     return res.networkError(`Could not find book with id ${bookId}`);
   }),
 
-  server.mutation(CREATE_BOOK, (req, res, ctx) => {
-    const { bookData } = req.body.variables;
+  server.mutation<CreateBookMutation, CreateBookMutationVariables>(
+    CREATE_BOOK,
+    (req, res, ctx) => {
+      const { bookData } = req.variables;
 
-    if (bookData.name.search(/unauthorized/i) !== -1) {
-      return res(
-        ctx.data({
-          createBook: {
-            __typename: 'MissingPermissionsError',
-            msg: 'You are not allowed to create new books',
-            requiredPermsInt: Perm.MANAGE_BOOKS,
-          },
-        })
-      );
-    }
+      if (bookData.name.search(/unauthorized/i) !== -1) {
+        return res(
+          ctx.data({
+            createBook: {
+              __typename: 'MissingPermissionsError',
+              msg: 'You are not allowed to create new books',
+              requiredPermsInt: Perm.MANAGE_BOOKS,
+            },
+          })
+        );
+      }
 
-    if (bookData.name.search(/error/i) !== -1) {
-      return res(
-        ctx.data({
-          createBook: {
-            __typename: 'Error',
-            msg: 'Book ID already taken!',
-          },
-        })
-      );
-    }
+      if (bookData.name.search(/error/i) !== -1) {
+        return res(
+          ctx.data({
+            createBook: {
+              __typename: 'Error',
+              msg: 'Book ID already taken!',
+            },
+          })
+        );
+      }
 
-    const newBook = {
-      ...bookSample,
-      _id: bookData.name,
-      parent: { ...parentContainerSample },
-      name: bookData.name,
-      desc: 'New book',
-      tags: bookData.tags,
-      media: { ...bookData.media },
-      rentable: {
-        dueDate: null,
-        stateTags: ['Available'],
-        rentedDate: null,
-      },
-      childrenIds: [],
-      children: [],
-    };
-
-    books.set(bookData.name, newBook);
-
-    return res(
-      ctx.data({
-        createBook: {
-          __typename: 'Success',
-          id: newBook._id,
+      const newBook = {
+        ...bookSample,
+        _id: bookData.name,
+        parent: { ...parentContainerSample },
+        name: bookData.name,
+        desc: 'New book',
+        tags: bookData.tags,
+        media: { ...bookData.media },
+        rentable: {
+          dueDate: null,
+          stateTags: ['Available'],
+          rentedDate: null,
         },
-      })
-    );
-  }),
+        childrenIds: [],
+        children: [],
+      };
+
+      books.set(bookData.name, newBook);
+
+      return res(
+        ctx.data({
+          createBook: {
+            __typename: 'Success',
+            id: newBook._id,
+          },
+        })
+      );
+    }
+  ),
 ];
