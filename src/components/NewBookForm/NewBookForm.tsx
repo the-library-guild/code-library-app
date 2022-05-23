@@ -3,6 +3,7 @@ import {
   ReactNode,
   SyntheticEvent,
   useContext,
+  useEffect,
   useState,
 } from 'react';
 import {
@@ -15,10 +16,12 @@ import {
   FormLabel,
   Input,
   Stack,
+  useToast,
 } from '@chakra-ui/react';
 
 import { LoadingOverlay } from '@/components/LoadingOverlay';
 import { fromFieldsToValues, resetValues } from '.';
+import { useCreateBook } from '@/services/code-library-server';
 
 export type NewBookSubmissionResponse = {
   success: boolean;
@@ -28,7 +31,7 @@ export type NewBookSubmissionResponse = {
 
 export type NewBookFormOnSubmit = (
   values: NewBookFormValues
-) => Promise<void> | void;
+) => Promise<Record<string, any>> | Record<string, any>;
 
 export type NewBookFormProps = {
   onSubmit: NewBookFormOnSubmit;
@@ -43,7 +46,7 @@ export type NewBookFormValues = {
   publisher: string;
   publicationYear: number;
   language: string;
-  subject: string;
+  subject: string[];
 };
 
 const NewBookFormContext = createContext({ submitting: false });
@@ -187,5 +190,75 @@ export function NewBookFormSubmissionButton({
     >
       {children}
     </Button>
+  );
+}
+
+export function NewBookFormLoader({ children }: { children: ReactNode }) {
+  const { createBook, ...status } = useCreateBook();
+
+  const toast = useToast();
+
+  useEffect(() => {
+    if (status.loading) {
+      return;
+    }
+
+    if (status.error) {
+      toast({
+        title: 'Error',
+        description: status.error.message,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top-right',
+        variant: 'top-accent',
+      });
+    }
+
+    if (status.data) {
+      const { __typename: type, ...other } = status.data.createBook;
+
+      switch (type) {
+        case 'Success':
+          toast({
+            title: 'Sucess',
+            description: `New book ${other.id} created!`,
+            status: 'success',
+            duration: 3000,
+            isClosable: true,
+            position: 'top-right',
+            variant: 'top-accent',
+          });
+          break;
+        case 'MissingPermissionsError':
+          toast({
+            title: 'Unauthorized',
+            description: other.msg,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+            position: 'top-right',
+            variant: 'top-accent',
+          });
+          break;
+        default:
+          toast({
+            title: 'Error',
+            description: other.msg,
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+            position: 'top-right',
+            variant: 'top-accent',
+          });
+          break;
+      }
+    }
+  }, [status, toast]);
+
+  return (
+    <>
+      <NewBookForm onSubmit={createBook}>{children}</NewBookForm>
+    </>
   );
 }

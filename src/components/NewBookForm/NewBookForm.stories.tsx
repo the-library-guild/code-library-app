@@ -1,7 +1,7 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 // eslint-disable-next-line storybook/use-storybook-testing-library
-import { fireEvent, Matcher } from '@testing-library/react';
+import { Matcher } from '@testing-library/react';
 
 import { screen, userEvent } from '@storybook/testing-library';
 

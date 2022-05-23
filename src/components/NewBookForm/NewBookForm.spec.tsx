@@ -1,3 +1,5 @@
+import 'whatwg-fetch';
+
 import { render, screen, waitFor } from '@testing-library/react';
 
 import user from '@testing-library/user-event';
@@ -6,9 +8,12 @@ import { worker as server } from '@/mocks/node';
 
 import {
   NewBookForm,
+  NewBookFormLoader,
   NewBookFormControls,
   NewBookFormSubmissionButton,
 } from '.';
+import { ApolloProvider } from '@apollo/client';
+import CodeLibraryServer from '@/services/code-library-server';
 
 const args = {
   onSubmit: jest.fn(),
@@ -24,10 +29,6 @@ const sample = {
   language: 'en',
   subject: 'Engineering/Design/Accessibility',
 };
-
-beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
-afterAll(() => server.close());
-afterEach(() => server.resetHandlers());
 
 describe('NewBookForm', () => {
   beforeEach(() => jest.clearAllMocks());
@@ -107,5 +108,42 @@ describe('NewBookForm', () => {
     await waitFor(() => {
       expect(createButton).toBeDisabled();
     });
+  });
+});
+
+describe('NewBookFormLoader', () => {
+  beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
+  afterAll(() => server.close());
+  afterEach(() => server.resetHandlers());
+
+  const renderForm = () => {
+    return render(
+      <ApolloProvider client={CodeLibraryServer}>
+        <NewBookFormLoader {...args}>
+          <NewBookFormControls>
+            <NewBookFormSubmissionButton>Create</NewBookFormSubmissionButton>
+          </NewBookFormControls>
+        </NewBookFormLoader>
+      </ApolloProvider>
+    );
+  };
+  it('notifies new book creation', async () => {
+    const { findByText, findByLabelText } = renderForm();
+
+    user.type(await findByLabelText(/book id/i), sample.bookId);
+    user.type(await findByLabelText(/main title/i), sample.mainTitle);
+    user.type(await findByLabelText(/sub title/i), sample.subTitle);
+    user.type(await findByLabelText(/author/i), sample.author);
+    user.type(await findByLabelText(/publisher/i), sample.publisher);
+    user.type(await findByLabelText(/year.*/i), sample.publicationYear);
+    user.type(await findByLabelText(/language/i), sample.language);
+    user.type(await findByLabelText(/subject area/i), sample.subject);
+
+    user.click(await findByText(/create/i, { selector: 'button' }));
+
+    expect(await findByText(/new book/i)).toBeInTheDocument();
+    expect(
+      await findByText(new RegExp(sample.mainTitle, 'i'))
+    ).toBeInTheDocument();
   });
 });
