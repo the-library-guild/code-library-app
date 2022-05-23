@@ -2,19 +2,27 @@ name: Build & Validate The CODE Library App UI
 
 on:
   push:
-    branches: ['!main']
+    branches: ['main']
   workflow_dispatch: # Allow manual invocation of the workflow
 
 jobs:
-  build-container:
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+  # build-container:
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
 
-      - name: Build & Publish Container
-        env:
-          IMAGE_NAME: code-library-app
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          docker build --tag $IMAGE_NAME:$IMAGE_TAG --build-arg NEXT_PUBLIC_CLIENT_URL=${{ secrets.NEXT_PUBLIC_CLIENT_URL }} .
+  #     - name: Build & Publish Container
+  #       env:
+  #         IMAGE_NAME: code-library-app
+  #         IMAGE_TAG: ${{ github.sha }}
+  #       run: |
+  #         docker build --tag $IMAGE_NAME:$IMAGE_TAG --build-arg NEXT_PUBLIC_CLIENT_URL=${{ secrets.NEXT_PUBLIC_CLIENT_URL }} .
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: npm ci
+      - name: Run tests
+        run: npm test
