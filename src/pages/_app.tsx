@@ -29,16 +29,6 @@ type CustomAppProps = AppProps & {
 };
 
 function App({ Component, pageProps }: CustomAppProps) {
-  useEffect(() => {
-    async function loadWorker() {
-      const worker = (await import('../mocks/browser')).worker;
-      worker.start();
-    }
-    if (process.env.NODE_ENV === 'development') {
-      loadWorker();
-    }
-  }, []);
-
   return (
     <SessionProvider session={pageProps.session} refetchInterval={0}>
       <ApolloProvider client={CodeLibraryServer}>

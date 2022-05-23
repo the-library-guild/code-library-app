@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect } from 'react';
 
 import {
   Box,
@@ -35,6 +35,7 @@ import {
   AddNewBookModal,
   AddNewBookModalButton,
 } from './AddNewBookModal/AddNewBookModal';
+import CodeLibraryServer, { GET_SHELF } from '@/services/code-library-server';
 
 const isDevelopmentEnvironment = process.env.NODE_ENV === 'development';
 
@@ -49,6 +50,18 @@ export function InternalPage({ user, children }: InternalPageProps) {
   const { isOpen, onClose, onOpen } = useDisclosure();
 
   const isLibrarian = user.role === LIBRARIAN_ROLE;
+
+  useEffect(() => {
+    async function loadWorker() {
+      const worker = (await import('../mocks/browser')).worker;
+      worker.start();
+    }
+    if (process.env.NODE_ENV === 'development') {
+      loadWorker();
+    }
+
+    CodeLibraryServer.refetchQueries({ include: [GET_SHELF] });
+  }, []);
 
   return (
     <Flex as={'header'} w={'100vw'} h={'100vh'} direction={'column'}>
