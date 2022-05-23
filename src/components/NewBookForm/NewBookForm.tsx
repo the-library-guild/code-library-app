@@ -23,12 +23,6 @@ import { LoadingOverlay } from '@/components/LoadingOverlay';
 import { fromFieldsToValues, resetValues } from '.';
 import { useCreateBook } from '@/services/code-library-server';
 
-export type NewBookSubmissionResponse = {
-  success: boolean;
-  error: { message: string } | null;
-  loading: boolean;
-};
-
 export type NewBookFormOnSubmit = (
   values: NewBookFormValues
 ) => Promise<Record<string, any>> | Record<string, any> | void;
@@ -49,7 +43,9 @@ export type NewBookFormValues = {
   subject: string[];
 };
 
-const NewBookFormContext = createContext({ submitting: false });
+const NewBookFormContext = createContext({
+  submitting: false,
+});
 
 export function useNewBookForm() {
   return useContext(NewBookFormContext);
@@ -220,13 +216,13 @@ export function NewBookFormLoader({ children }: { children: ReactNode }) {
     }
 
     if (status.data) {
-      const { __typename: type, ...other } = status.data.createBook;
+      const { __typename: type, ...response } = status.data.createBook;
 
       switch (type) {
         case 'Success':
           toast({
             title: 'Success',
-            description: `New book ${other.id} created!`,
+            description: `New book ${response.id} created!`,
             status: 'success',
             duration: 1000,
             isClosable: true,
@@ -237,7 +233,7 @@ export function NewBookFormLoader({ children }: { children: ReactNode }) {
         case 'MissingPermissionsError':
           toast({
             title: 'Unauthorized',
-            description: other.msg,
+            description: response.msg,
             status: 'error',
             duration: 1000,
             isClosable: true,
@@ -245,10 +241,10 @@ export function NewBookFormLoader({ children }: { children: ReactNode }) {
             variant: 'top-accent',
           });
           break;
-        default:
+        case 'Error':
           toast({
             title: 'Error',
-            description: other.msg,
+            description: response.msg,
             status: 'error',
             duration: 1000,
             isClosable: true,
