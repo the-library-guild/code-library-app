@@ -7,6 +7,8 @@ import { screen, userEvent } from '@storybook/testing-library';
 
 import { useBreakpointValue } from '@chakra-ui/react';
 
+import { book } from './NewBookForm.examples';
+
 import {
   NewBookForm,
   NewBookFormControls,
@@ -75,26 +77,15 @@ const fillInput = (id: Matcher) => {
   };
 };
 
-const sample = {
-  bookId: 'A11Y04',
-  mainTitle: 'Inclusive Designing',
-  subTitle: 'Joining Usability, Accessibility, and Inclusion',
-  author: 'P. M. Langdon, J. Lazar, A. Heylighen, H. Dong',
-  publisher: 'Springer',
-  publicationYear: '2014',
-  language: 'en',
-  subject: 'Engineering/Design/Accessibility',
-};
-
 Filled.play = async () => {
-  await fillInput(/book id/i).withText(sample.bookId);
-  await fillInput(/main title/i).withText(sample.mainTitle);
-  await fillInput(/sub title/i).withText(sample.subTitle);
-  await fillInput(/author/i).withText(sample.author);
-  await fillInput(/publisher/i).withText(sample.publisher);
-  await fillInput(/year of publication/i).withText(sample.publicationYear);
-  await fillInput(/language/i).withText(sample.language);
-  await fillInput(/subject area/i).withText(sample.subject);
+  await fillInput(/book id/i).withText(book.bookId);
+  await fillInput(/main title/i).withText(book.mainTitle);
+  await fillInput(/sub title/i).withText(book.subTitle);
+  await fillInput(/author/i).withText(book.author);
+  await fillInput(/publisher/i).withText(book.publisher);
+  await fillInput(/year of publication/i).withText(book.publicationYear);
+  await fillInput(/language/i).withText(book.language);
+  await fillInput(/subject area/i).withText(book.subject);
 };
 
 export const Submitting = NonInteractiveTemplate.bind({});
@@ -106,14 +97,14 @@ Submitting.args = {
 };
 
 Submitting.play = async () => {
-  await fillInput(/book id/i).withText(sample.bookId);
-  await fillInput(/main title/i).withText(sample.mainTitle);
-  await fillInput(/sub title/i).withText(sample.subTitle);
-  await fillInput(/author/i).withText(sample.author);
-  await fillInput(/publisher/i).withText(sample.publisher);
-  await fillInput(/year of publication/i).withText(sample.publicationYear);
-  await fillInput(/language/i).withText(sample.language);
-  await fillInput(/subject area/i).withText(sample.subject);
+  await fillInput(/book id/i).withText(book.bookId);
+  await fillInput(/main title/i).withText(book.mainTitle);
+  await fillInput(/sub title/i).withText(book.subTitle);
+  await fillInput(/author/i).withText(book.author);
+  await fillInput(/publisher/i).withText(book.publisher);
+  await fillInput(/year of publication/i).withText(book.publicationYear);
+  await fillInput(/language/i).withText(book.language);
+  await fillInput(/subject area/i).withText(book.subject);
 
   const submissionButton = screen.getByText(/create/i);
 
