@@ -4,12 +4,11 @@ services:
   app:
     build:
       context: .
-      target: development
+      target: testing
     env_file: .env.local
+    # entrypoint: 'node .next/standalone/server.js'
     ports:
       - 3000:3000
-    volumes:
-      - ./:/app
     networks:
       - codelibrary_network
 
@@ -24,7 +23,8 @@ services:
       - codelibrary_network
   api:
     restart: always
-    image: gcr.io/code-library-343215/code-library-api:latest
+    # image: gcr.io/code-library-343215/code-library-api:latest
+    image: code-library-server/sandbox:latest
     container_name: app_backend
     networks:
       - codelibrary_network
