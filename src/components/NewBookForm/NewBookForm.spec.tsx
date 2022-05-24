@@ -20,6 +20,9 @@ const args = {
   onSubmit: jest.fn(),
 };
 
+beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
+afterAll(() => server.close());
+
 describe('NewBookForm', () => {
   beforeEach(() => jest.clearAllMocks());
 
@@ -108,8 +111,6 @@ describe('NewBookForm', () => {
 });
 
 describe('NewBookFormLoader', () => {
-  beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
-  afterAll(() => server.close());
   afterEach(() => server.resetHandlers());
 
   const renderForm = () => {
