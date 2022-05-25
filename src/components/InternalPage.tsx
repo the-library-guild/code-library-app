@@ -89,11 +89,12 @@ export function InternalPage({ user, children }: InternalPageProps) {
             {isLibrarian && <LibrarianActionsBar />}
             <ToggleColorModeButton />
             <UserDropdown user={user}>
-              {isDevelopmentEnvironment ? (
+              <ProductionAppActions />
+              {/* {isDevelopmentEnvironment ? (
                 <MakingAppActions />
               ) : (
                 <ProductionAppActions />
-              )}
+              )} */}
             </UserDropdown>
           </HeaderRightSideNode>
         </Header>

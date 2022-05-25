@@ -17,7 +17,10 @@ export const STUDENT_ROLE = 'student';
 export const LIBRARIAN_ROLE = 'librarian';
 export const ADMIN_ROLE = 'admin';
 
-type UserRole = typeof STUDENT_ROLE | typeof LIBRARIAN_ROLE | typeof ADMIN_ROLE;
+export type UserRole =
+  | typeof STUDENT_ROLE
+  | typeof LIBRARIAN_ROLE
+  | typeof ADMIN_ROLE;
 export interface UserInfoValue {
   user: AppUser;
   status: 'authenticated' | 'loading' | 'unauthenticated';

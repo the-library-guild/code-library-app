@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Perm } from 'code-library-perms';
 import { useShelf } from '@/hooks/use-shelf.hook';
-import { ShelfView } from '@/views/ShelfView';
+import { ShelfView } from '@/components/ShelfView';
 function ShelfLoader() {
   const { loading, error, books } = useShelf();
 
