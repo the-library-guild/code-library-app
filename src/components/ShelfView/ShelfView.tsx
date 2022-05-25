@@ -10,7 +10,6 @@ import { BooksContainer } from '@/components/BooksContainer';
 import { InfiniteScroll } from '@/components/InfiniteScroll';
 import { ResultsCount } from '@/components/ResultsCount';
 import { Book } from '@/services/code-library-server/books';
-import { Header, HeaderLeftSideNode } from '../Sidebar/Header';
 
 type ShelfViewProps = {
   loading: boolean;
@@ -32,9 +31,6 @@ function ShelfView({ loading, error, books }: ShelfViewProps) {
   return (
     <>
       <Stack w={'100%'}>
-        <Header p={0} w={'100%'}>
-          <HeaderLeftSideNode>Shelf</HeaderLeftSideNode>
-        </Header>
         <Stack spacing={4} width="100%" px={4}>
           <SearchBox
             searchTerm={search.searchTerm}
