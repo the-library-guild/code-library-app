@@ -6,11 +6,12 @@ import {
   IconButton,
   useDisclosure,
   MenuItem,
+  Heading,
 } from '@chakra-ui/react';
 
 import { signOut } from 'next-auth/react';
 
-import { FaBook, FaSignOutAlt } from 'react-icons/fa';
+import { FaSignOutAlt } from 'react-icons/fa';
 
 import { Content } from './Content';
 import { Sidebar } from '../components/Sidebar/Sidebar';
@@ -29,25 +30,28 @@ import { AppUser, LIBRARIAN_ROLE } from '../hooks/use-user-info.hook';
 import { ToggleColorModeButton } from './ToggleColorMode';
 import { UserDropdown } from './Sidebar/UserDropdown';
 import { HomeLink } from './Sidebar/HomeLink';
-import { LIBRARIAN_VIEW, useMakingAppContext } from '../making-app-context';
-import { useRouter } from 'next/router';
 import {
   AddNewBookModal,
   AddNewBookModalButton,
 } from './AddNewBookModal/AddNewBookModal';
 import CodeLibraryServer, { GET_SHELF } from '@/services/code-library-server';
 
-const isDevelopmentEnvironment = process.env.NODE_ENV === 'development';
-
 interface InternalPageProps {
   children: ReactElement;
+  title?: string;
   user: AppUser;
 }
 
-export function InternalPage({ user, children }: InternalPageProps) {
+export function InternalPage({
+  user,
+  title = 'Shelf',
+  children,
+}: InternalPageProps) {
   const lightOrDark = useColorModeVariant();
 
   const { isOpen, onClose, onOpen } = useDisclosure();
+
+  console.log('authUser', user);
 
   const isLibrarian = user.role === LIBRARIAN_ROLE;
 
@@ -63,8 +67,18 @@ export function InternalPage({ user, children }: InternalPageProps) {
     CodeLibraryServer.refetchQueries({ include: [GET_SHELF] });
   }, []);
 
+  const onSubmit = () => {
+    return new Promise((resolve) => setTimeout(resolve, 5000));
+  };
+
   return (
-    <Flex as={'header'} w={'100vw'} h={'100vh'} direction={'column'}>
+    <Flex
+      as={'header'}
+      w={'100vw'}
+      maxW={'100%'}
+      h={'100vh'}
+      direction={'column'}
+    >
       <Box minH="100vh" bg={lightOrDark('white', 'gray.800')}>
         <Sidebar onClose={onClose} isOpen={isOpen}>
           {isLibrarian ? (
@@ -86,16 +100,31 @@ export function InternalPage({ user, children }: InternalPageProps) {
             <HomeLink />
           </HeaderLeftSideNode>
           <HeaderRightSideNode>
-            {isLibrarian && <LibrarianActionsBar />}
-            <ToggleColorModeButton />
             <UserDropdown user={user}>
-              <ProductionAppActions />
-              {/* {isDevelopmentEnvironment ? (
-                <MakingAppActions />
-              ) : (
-                <ProductionAppActions />
-              )} */}
+              <MenuItem icon={<FaSignOutAlt />} onClick={() => signOut()}>
+                Logout
+              </MenuItem>
+              <ToggleColorModeButton
+                position={'absolute'}
+                top={0}
+                right={0}
+                p={6}
+              />
             </UserDropdown>
+          </HeaderRightSideNode>
+        </Header>
+        <Header border={'none'} bg={'none'}>
+          <HeaderLeftSideNode>
+            <Heading fontSize={'2xl'} fontWeight={'normal'}>
+              {title}
+            </Heading>
+          </HeaderLeftSideNode>
+          <HeaderRightSideNode>
+            {isLibrarian && (
+              <AddNewBookModal onSubmit={onSubmit}>
+                <AddNewBookModalButton>+ Add new book</AddNewBookModalButton>
+              </AddNewBookModal>
+            )}
           </HeaderRightSideNode>
         </Header>
         <Flex
@@ -155,74 +184,5 @@ function LibrarianOptions({ onClose }: SidebarOptionsProps) {
         Return box
       </SidebarItem>
     </>
-  );
-}
-
-function MakingAppActions() {
-  const { toggleAppView, toggleAppViewLabel } = useAppViewToggle();
-
-  return (
-    <>
-      <MenuItem icon={<FaBook />} onClick={() => toggleAppView()}>
-        {toggleAppViewLabel}
-      </MenuItem>
-      <MenuItem icon={<FaSignOutAlt />} onClick={() => signOut()}>
-        Logout
-      </MenuItem>
-    </>
-  );
-}
-
-function ProductionAppActions() {
-  return (
-    <>
-      <MenuItem icon={<FaSignOutAlt />} onClick={() => signOut()}>
-        Logout
-      </MenuItem>
-    </>
-  );
-}
-
-type UseToggleAppViewValue = {
-  toggleAppView: () => void;
-  toggleAppViewLabel: string;
-};
-
-function useAppViewToggle(): UseToggleAppViewValue {
-  const { currentView, switchToLibrarianView, switchToStudentView } =
-    useMakingAppContext();
-
-  const { push } = useRouter();
-
-  const isLibrarianView = currentView === LIBRARIAN_VIEW;
-
-  const toggleAppView = () => {
-    if (isLibrarianView) {
-      switchToStudentView();
-    } else {
-      switchToLibrarianView();
-    }
-
-    push('/shelf');
-  };
-
-  const toggleAppViewLabel = isLibrarianView
-    ? 'View as student'
-    : 'View as librarian';
-
-  return { toggleAppView, toggleAppViewLabel };
-}
-
-function LibrarianActionsBar() {
-  const onSubmit = () => {
-    return;
-  };
-
-  return (
-    <Flex justify={'flex-end'}>
-      <AddNewBookModal onSubmit={onSubmit}>
-        <AddNewBookModalButton>+ Add new book</AddNewBookModalButton>
-      </AddNewBookModal>
-    </Flex>
   );
 }
