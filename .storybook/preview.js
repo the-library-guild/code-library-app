@@ -1,6 +1,7 @@
 import { ChakraProvider } from "@chakra-ui/react"
 
 import { theme } from '../src/helpers/theme';
+import { MakingAppContextProvider } from '../src/making-app-context';
 
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
@@ -17,7 +18,9 @@ export const parameters = {
 export const decorators = [
   (Story) => (
     <ChakraProvider theme={theme}>
-      <Story />
+      <MakingAppContextProvider>
+        <Story />
+      </MakingAppContextProvider>
     </ChakraProvider>
   )
 ]
