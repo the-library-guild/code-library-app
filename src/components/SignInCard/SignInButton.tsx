@@ -15,9 +15,9 @@ export function SignInButton({ ...rest }: SignInButtonProps) {
     <Button
       onClick={() => signIn('google')}
       bg={'primary.100'}
-      color={'gray.700'}
+      color={'gray.900'}
       width={'100%'}
-      px="10"
+      p={6}
       _hover={{
         bg: 'primary.200',
       }}
