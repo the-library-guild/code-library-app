@@ -4,7 +4,7 @@ import Head from 'next/head';
 
 import type { AppProps } from 'next/app';
 
-import { ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider, Stack, Text } from '@chakra-ui/react';
 
 import { SessionProvider } from 'next-auth/react';
 
@@ -15,13 +15,12 @@ import { CodeLibraryServer } from '../services/code-library-server';
 import { PageAuthorizer } from '../components/PageAuthorizer';
 import { NextPage } from 'next';
 import { InternalPage } from '../components/InternalPage';
-import { ExternalPage } from '../components/ExternalPage';
-import { PermissionDenied } from '../components/PermissionDenied';
 import { MakingAppContextProvider } from '../making-app-context';
 import { theme } from '@/helpers/theme';
 
 type NextPageWithLayout = NextPage & {
   permissions: number;
+  title: string;
 };
 
 type CustomAppProps = AppProps & {
@@ -59,20 +58,20 @@ function LibraryApp({ Component, pageProps }: LibraryAppProps) {
     <PageAuthorizer requiredPermissions={Component.permissions}>
       {({ user, hasRequiredPermissions }) => {
         return (
-          <InternalPage user={user}>
+          <InternalPage user={user} title={Component.title}>
             {hasRequiredPermissions ? (
               <Component {...pageProps} />
             ) : (
-              <PermissionDenied />
+              <Stack spacing={4} width="100%">
+                <Text>Unfortunately you can not access this feature :(</Text>
+              </Stack>
             )}
           </InternalPage>
         );
       }}
     </PageAuthorizer>
   ) : (
-    <ExternalPage>
-      <Component {...pageProps} />
-    </ExternalPage>
+    <Component {...pageProps} />
   );
 }
 
