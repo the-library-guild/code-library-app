@@ -1,6 +1,6 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
-import { ShelfView } from './ShelfView';
+import { ShelfScreen } from './ShelfScreen';
 import { InternalPage } from '../InternalPage';
 import {
   LIBRARIAN_ROLE,
@@ -14,9 +14,9 @@ import { SessionProvider } from 'next-auth/react';
 import { ApolloProvider } from '@apollo/client';
 
 export default {
-  component: ShelfView,
+  component: ShelfScreen,
   title: 'Screens/Shelf',
-} as ComponentMeta<typeof ShelfView>;
+} as ComponentMeta<typeof ShelfScreen>;
 
 const sampleUser = {
   email: 'john.doe@code.berlin',
@@ -56,9 +56,9 @@ const Preview = ({ user, children }) => {
   );
 };
 
-const StudentsTemplate: ComponentStory<typeof ShelfView> = (args) => (
+const StudentsTemplate: ComponentStory<typeof ShelfScreen> = (args) => (
   <Preview user={sampleUser}>
-    <ShelfView {...args} />
+    <ShelfScreen {...args} />
   </Preview>
 );
 
@@ -69,9 +69,9 @@ Students.args = {
   books: Array.from({ length: 10 }, () => ({ ...book })),
 };
 
-const LibrariansTemplate: ComponentStory<typeof ShelfView> = (args) => (
+const LibrariansTemplate: ComponentStory<typeof ShelfScreen> = (args) => (
   <Preview user={{ ...sampleUser, role: LIBRARIAN_ROLE as UserRole }}>
-    <ShelfView {...args} />
+    <ShelfScreen {...args} />
   </Preview>
 );
 

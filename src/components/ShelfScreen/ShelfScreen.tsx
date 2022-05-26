@@ -11,13 +11,13 @@ import { InfiniteScroll } from '@/components/InfiniteScroll';
 import { ResultsCount } from '@/components/ResultsCount';
 import { Book } from '@/services/code-library-server/books';
 
-type ShelfViewProps = {
+type ShelfScreenProps = {
   loading: boolean;
   error: ApolloError | undefined;
   books: Book[];
 };
 
-function ShelfView({ loading, error, books }: ShelfViewProps) {
+function ShelfScreen({ loading, error, books }: ShelfScreenProps) {
   const { results, ...search } = useSearch();
 
   useEffect(() => {
@@ -59,4 +59,4 @@ function ShelfView({ loading, error, books }: ShelfViewProps) {
   );
 }
 
-export { ShelfView };
+export { ShelfScreen };
