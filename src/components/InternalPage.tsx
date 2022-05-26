@@ -51,8 +51,6 @@ export function InternalPage({
 
   const { isOpen, onClose, onOpen } = useDisclosure();
 
-  console.log('authUser', user);
-
   const isLibrarian = user.role === LIBRARIAN_ROLE;
 
   useEffect(() => {
