@@ -16,12 +16,12 @@ Default.args = {
   error: undefined,
 };
 
-export const InternalError = Template.bind({});
-InternalError.args = {
+export const InternalServerError = Template.bind({});
+InternalServerError.args = {
   error: ['Callback'],
 };
 
-export const BadEmail = Template.bind({});
-BadEmail.args = {
+export const InvalidCredentials = Template.bind({});
+InvalidCredentials.args = {
   error: ['Signin'],
 };

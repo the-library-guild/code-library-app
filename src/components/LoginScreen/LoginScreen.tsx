@@ -6,8 +6,8 @@ import { SignInCard } from '@/components/SignInCard/SignInCard';
 
 const messageByError = {
   Signin: 'Try signing in with a different account.',
-  Callback: 'Something went badly wrong. Please try again later.',
-  Default: 'Unable to sign in.',
+  Callback: 'Something is off with our servers. Please try again later.',
+  Default: 'Unable to log you in.',
 };
 
 const messageFor = (e: LoginError) =>
@@ -25,7 +25,7 @@ export function LoginScreen({ error }) {
 
     errors.map((error: LoginError) => {
       showToast({
-        title: 'Error',
+        title: 'Unsuccessful login',
         description: messageFor(error),
         status: 'error',
         duration: 3000,
