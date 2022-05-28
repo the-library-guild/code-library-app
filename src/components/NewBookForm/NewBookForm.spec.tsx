@@ -4,35 +4,39 @@ import user from '@testing-library/user-event';
 
 import { ApolloProvider } from '@apollo/client';
 
+import { graphql } from 'msw';
+
 import { worker as server } from '@/mocks/node';
 
 import {
   book,
   NewBookForm,
-  NewBookFormLoader,
   NewBookFormControls,
   NewBookFormSubmissionButton,
 } from '.';
 
-import CodeLibraryServer from '@/services/code-library-server';
+import CodeLibraryServer, { CREATE_BOOK } from '@/services/code-library-server';
 
 const args = {
-  onSubmit: jest.fn(),
+  onSuccess: jest.fn(),
+  onError: jest.fn(),
 };
 
 beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
 afterAll(() => server.close());
 
 describe('NewBookForm', () => {
-  beforeEach(() => jest.clearAllMocks());
+  afterEach(() => server.resetHandlers());
 
   const renderForm = () => {
     return render(
-      <NewBookForm {...args}>
-        <NewBookFormControls>
-          <NewBookFormSubmissionButton>Create</NewBookFormSubmissionButton>
-        </NewBookFormControls>
-      </NewBookForm>
+      <ApolloProvider client={CodeLibraryServer}>
+        <NewBookForm {...args}>
+          <NewBookFormControls>
+            <NewBookFormSubmissionButton>Create</NewBookFormSubmissionButton>
+          </NewBookFormControls>
+        </NewBookForm>
+      </ApolloProvider>
     );
   };
 
@@ -57,33 +61,39 @@ describe('NewBookForm', () => {
     expect(getByLabelText(/subject area/i)).toBeInTheDocument();
   });
 
-  it('calls onSubmit with input values when submission button is clicked', async () => {
-    const expectedValues = expect.objectContaining({
-      ...book,
-      publicationYear: 2014,
-      subject: ['Engineering', 'Design', 'Accessibility'],
-    });
-
-    const { findByText, findByLabelText } = renderForm();
+  it('calls onSuccess after submission', async () => {
+    const { getByText, findByLabelText } = renderForm();
 
     user.type(await findByLabelText(/book id/i), book.bookId);
     user.type(await findByLabelText(/main title/i), book.mainTitle);
-    user.type(await findByLabelText(/sub title/i), book.subTitle);
-    user.type(await findByLabelText(/author/i), book.author);
-    user.type(await findByLabelText(/publisher/i), book.publisher);
-    user.type(await findByLabelText(/year.*/i), book.publicationYear);
-    user.type(await findByLabelText(/language/i), book.language);
-    user.type(await findByLabelText(/subject area/i), book.subject);
 
-    user.click(await findByText(/create/i, { selector: 'button' }));
+    const createButton = getByText(/create/i, { selector: 'button' });
+    user.click(createButton);
 
-    await waitFor(
-      () => {
-        expect(args.onSubmit).toHaveBeenCalled();
-      },
-      { timeout: 500 }
+    await waitFor(() => expect(args.onSuccess).toHaveBeenCalled());
+
+    expect(args.onSuccess).toHaveBeenCalledWith({
+      newId: 'Inclusive Designing',
+    });
+  });
+
+  it('calls onError when submission failes', async () => {
+    server.use(
+      graphql.mutation(CREATE_BOOK, (_, res) => {
+        return res.networkError('Oh snap... something went wrong');
+      })
     );
-    expect(args.onSubmit).toHaveBeenCalledWith(expectedValues);
+    const { getByText } = renderForm();
+
+    const createButton = getByText(/create/i, { selector: 'button' });
+    user.click(createButton);
+
+    await waitFor(() => expect(args.onError).toHaveBeenCalled());
+
+    expect(args.onError).toHaveBeenCalledWith({
+      title: 'Network Error',
+      description: 'Something went wrong with our service. Try again later.',
+    });
   });
 
   it('disables submission button while submitting form information', async () => {
@@ -107,79 +117,5 @@ describe('NewBookForm', () => {
       },
       { timeout: 500 }
     );
-  });
-});
-
-describe('NewBookFormLoader', () => {
-  afterEach(() => server.resetHandlers());
-
-  const renderForm = () => {
-    return render(
-      <ApolloProvider client={CodeLibraryServer}>
-        <NewBookFormLoader {...args}>
-          <NewBookFormControls>
-            <NewBookFormSubmissionButton>Create</NewBookFormSubmissionButton>
-          </NewBookFormControls>
-        </NewBookFormLoader>
-      </ApolloProvider>
-    );
-  };
-
-  it('notifies the success of a new book submission', async () => {
-    const { findByText, findByLabelText } = renderForm();
-
-    user.type(await findByLabelText(/book id/i), book.bookId);
-    user.type(await findByLabelText(/main title/i), book.mainTitle);
-    user.type(await findByLabelText(/sub title/i), book.subTitle);
-    user.type(await findByLabelText(/author/i), book.author);
-    user.type(await findByLabelText(/publisher/i), book.publisher);
-    user.type(await findByLabelText(/year.*/i), book.publicationYear);
-    user.type(await findByLabelText(/language/i), book.language);
-    user.type(await findByLabelText(/subject area/i), book.subject);
-
-    user.click(await findByText(/create/i, { selector: 'button' }));
-
-    expect(await findByText(/new book/i)).toBeInTheDocument();
-    expect(
-      await findByText(new RegExp(book.mainTitle, 'i'))
-    ).toBeInTheDocument();
-  });
-
-  it('instructs unauthorized users', async () => {
-    const { findByText, findByLabelText } = renderForm();
-
-    book.mainTitle = 'unauthorized';
-
-    user.type(await findByLabelText(/book id/i), book.bookId);
-    user.type(await findByLabelText(/main title/i), book.mainTitle);
-    user.type(await findByLabelText(/sub title/i), book.subTitle);
-    user.type(await findByLabelText(/author/i), book.author);
-    user.type(await findByLabelText(/publisher/i), book.publisher);
-    user.type(await findByLabelText(/year.*/i), book.publicationYear);
-    user.type(await findByLabelText(/language/i), book.language);
-    user.type(await findByLabelText(/subject area/i), book.subject);
-
-    user.click(await findByText(/create/i, { selector: 'button' }));
-
-    expect(await findByText(/not allowed/i)).toBeInTheDocument();
-  });
-
-  it('flags relevant errors', async () => {
-    const { findByText, findByLabelText } = renderForm();
-
-    book.mainTitle = 'error';
-
-    user.type(await findByLabelText(/book id/i), book.bookId);
-    user.type(await findByLabelText(/main title/i), book.mainTitle);
-    user.type(await findByLabelText(/sub title/i), book.subTitle);
-    user.type(await findByLabelText(/author/i), book.author);
-    user.type(await findByLabelText(/publisher/i), book.publisher);
-    user.type(await findByLabelText(/year.*/i), book.publicationYear);
-    user.type(await findByLabelText(/language/i), book.language);
-    user.type(await findByLabelText(/subject area/i), book.subject);
-
-    user.click(await findByText(/create/i, { selector: 'button' }));
-
-    expect(await findByText(/error/i)).toBeInTheDocument();
   });
 });

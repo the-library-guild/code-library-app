@@ -1,10 +1,10 @@
 import {
   createContext,
+  FormEvent,
   ReactNode,
-  SyntheticEvent,
   useContext,
   useEffect,
-  useState,
+  useRef,
 } from 'react';
 import {
   Button,
@@ -16,19 +16,24 @@ import {
   FormLabel,
   Input,
   Stack,
-  useToast,
 } from '@chakra-ui/react';
 
 import { LoadingOverlay } from '@/components/LoadingOverlay';
-import { fromFieldsToValues, resetValues } from '.';
+
 import { useCreateBook } from '@/services/code-library-server';
 
-export type NewBookFormOnSubmit = (
-  values: NewBookFormValues
-) => Promise<Record<string, any>> | Record<string, any> | void;
+import { fromFieldsToValues, resetValues } from './NewBookForm.helpers';
+
+type OnErrorArgs = {
+  title: string;
+  description: string;
+};
+
+type OnSuccessArgs = { newId: string };
 
 export type NewBookFormProps = {
-  onSubmit: NewBookFormOnSubmit;
+  onSuccess?: ({ newId }: OnSuccessArgs) => void;
+  onError?: ({ title, description }: OnErrorArgs) => void;
   children?: ReactNode;
 };
 
@@ -47,35 +52,51 @@ const NewBookFormContext = createContext({
   submitting: false,
 });
 
-export function useNewBookForm() {
-  return useContext(NewBookFormContext);
-}
+const doNothing = () => {
+  return;
+};
 
-export function NewBookForm({ onSubmit, children }: NewBookFormProps) {
-  const [submitting, setSubmitting] = useState(false);
+export function NewBookForm({
+  onSuccess = doNothing,
+  onError = doNothing,
+  children,
+}: NewBookFormProps) {
+  const { createBook, ...status } = useCreateBook();
 
-  async function handleSubmission(event: SyntheticEvent<HTMLFormElement>) {
+  const formRef = useRef<HTMLFormElement>(null);
+
+  async function handleSubmission(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const { ...fields } = event.currentTarget.elements;
 
     const entries = fromFieldsToValues(fields) as NewBookFormValues;
 
-    setSubmitting(true);
-
-    await onSubmit({ ...entries });
-
-    setSubmitting(false);
-
-    resetValues(fields);
+    try {
+      await createBook({ ...entries });
+      // eslint-disable-next-line no-empty
+    } catch (error) {}
   }
+
+  useEffect(() => {
+    if (status.success && formRef.current) {
+      const { ...fields } = formRef.current.elements;
+      resetValues(fields);
+      onSuccess({ ...status.success });
+    }
+
+    if (status.error) {
+      onError({ ...status.error });
+    }
+  }, [formRef, onSuccess, onError, status]);
 
   return (
     <Stack spacing={4} align={'center'} w={'100%'}>
-      <LoadingOverlay loading={submitting} helpText={'Creating'} />
+      <LoadingOverlay loading={status.loading} helpText={'Creating'} />
       <form
         id="new-book-form"
         role={'form'}
+        ref={formRef}
         style={{
           width: '100%',
           display: 'flex',
@@ -84,13 +105,13 @@ export function NewBookForm({ onSubmit, children }: NewBookFormProps) {
         }}
         onSubmit={handleSubmission}
       >
-        <FormControl isDisabled={submitting}>
+        <FormControl isDisabled={status.loading}>
           <FormLabel htmlFor="book-id">Book ID</FormLabel>
           <Input type="text" name="bookId" id="book-id" placeholder="STS17" />
           <FormErrorMessage>Book ID is requried</FormErrorMessage>
         </FormControl>
 
-        <FormControl isDisabled={submitting}>
+        <FormControl isDisabled={status.loading}>
           <FormLabel htmlFor="main-title">Main Title</FormLabel>
           <Input
             type="text"
@@ -100,7 +121,7 @@ export function NewBookForm({ onSubmit, children }: NewBookFormProps) {
           />
         </FormControl>
 
-        <FormControl isDisabled={submitting}>
+        <FormControl isDisabled={status.loading}>
           <FormLabel htmlFor="sub-title">Sub Title</FormLabel>
           <Input
             type="text"
@@ -110,7 +131,7 @@ export function NewBookForm({ onSubmit, children }: NewBookFormProps) {
           />
         </FormControl>
 
-        <FormControl isDisabled={submitting}>
+        <FormControl isDisabled={status.loading}>
           <FormLabel htmlFor="author">Author</FormLabel>
           <Input
             type="text"
@@ -120,7 +141,7 @@ export function NewBookForm({ onSubmit, children }: NewBookFormProps) {
           />
         </FormControl>
 
-        <FormControl isDisabled={submitting}>
+        <FormControl isDisabled={status.loading}>
           <FormLabel htmlFor="publisher">Publisher</FormLabel>
           <Input
             type="text"
@@ -130,7 +151,7 @@ export function NewBookForm({ onSubmit, children }: NewBookFormProps) {
           />
         </FormControl>
 
-        <FormControl isDisabled={submitting}>
+        <FormControl isDisabled={status.loading}>
           <FormLabel htmlFor="publication-year">Year of Publication</FormLabel>
           <Input
             type="text"
@@ -140,12 +161,12 @@ export function NewBookForm({ onSubmit, children }: NewBookFormProps) {
           />
         </FormControl>
 
-        <FormControl isDisabled={submitting}>
+        <FormControl isDisabled={status.loading}>
           <FormLabel htmlFor="language">Language</FormLabel>
           <Input type="text" name="language" id="language" placeholder="fr" />
         </FormControl>
 
-        <FormControl isDisabled={submitting}>
+        <FormControl isDisabled={status.loading}>
           <FormLabel htmlFor="subject">Subject Area</FormLabel>
           <Input
             type="text"
@@ -155,11 +176,15 @@ export function NewBookForm({ onSubmit, children }: NewBookFormProps) {
           />
         </FormControl>
       </form>
-      <NewBookFormContext.Provider value={{ submitting }}>
+      <NewBookFormContext.Provider value={{ submitting: status.loading }}>
         {children}
       </NewBookFormContext.Provider>
     </Stack>
   );
+}
+
+export function useNewBookForm() {
+  return useContext(NewBookFormContext);
 }
 
 export function NewBookFormControls({ children, ...rest }: FlexProps) {
@@ -182,85 +207,11 @@ export function NewBookFormSubmissionButton({
       type={'submit'}
       bg={'primary.100'}
       color={'gray.900'}
-      _hover={{
-        color: 'gray.100',
-      }}
       isDisabled={submitting}
+      _hover={{ color: 'gray.100' }}
       {...rest}
     >
       {children}
     </Button>
-  );
-}
-
-export function NewBookFormLoader({ children }: { children: ReactNode }) {
-  const { createBook, ...status } = useCreateBook();
-
-  const toast = useToast();
-
-  useEffect(() => {
-    if (status.loading) {
-      return;
-    }
-
-    if (status.error) {
-      toast({
-        title: 'Error',
-        description: 'Something went wrong with our service. Try again later.',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-        position: 'top-right',
-        variant: 'top-accent',
-      });
-    }
-
-    if (status.data) {
-      const { __typename: type, ...response } = status.data.createBook;
-
-      switch (type) {
-        case 'Success':
-          toast({
-            title: 'Success',
-            description: `New book ${response.id} created!`,
-            status: 'success',
-            duration: 1000,
-            isClosable: true,
-            position: 'top-right',
-            variant: 'top-accent',
-          });
-          break;
-        case 'MissingPermissionsError':
-          toast({
-            title: 'Unauthorized',
-            description: response.msg,
-            status: 'error',
-            duration: 1000,
-            isClosable: true,
-            position: 'top-right',
-            variant: 'top-accent',
-          });
-          break;
-        case 'Error':
-          toast({
-            title: 'Error',
-            description: response.msg,
-            status: 'error',
-            duration: 1000,
-            isClosable: true,
-            position: 'top-right',
-            variant: 'top-accent',
-          });
-          break;
-      }
-    }
-
-    return () => toast.closeAll();
-  }, [status, toast]);
-
-  return (
-    <>
-      <NewBookForm onSubmit={createBook}>{children}</NewBookForm>
-    </>
   );
 }

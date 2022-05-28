@@ -19,13 +19,11 @@ import {
 import {
   NewBookForm,
   NewBookFormControls,
-  NewBookFormOnSubmit,
-  NewBookFormValues,
   NewBookFormSubmissionButton,
 } from '@/components/NewBookForm';
+import { useToasts } from '@/hooks/use-toasts';
 
-type AddNewBookModalProps = {
-  onSubmit: NewBookFormOnSubmit;
+type NewBookFormDialogProps = {
   children: ReactNode;
 };
 
@@ -35,25 +33,29 @@ type ModalContextValue = {
   onClose: () => void;
 };
 
-const ModalContext = createContext<ModalContextValue>({
-  isOpen: false,
-  onOpen: () => {
-    return;
-  },
-  onClose: () => {
-    return;
-  },
-});
+const ModalContext = createContext<ModalContextValue>({} as ModalContextValue);
 
-export function AddNewBookModal({ onSubmit, children }: AddNewBookModalProps) {
+export function NewBookFormDialog({ children }: NewBookFormDialogProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const value = { isOpen, onOpen, onClose };
+  const { showError, showSuccess } = useToasts();
 
-  const submitAndClose = async (values: NewBookFormValues) => {
-    await onSubmit(values);
+  const onSuccess = ({ newId }) => {
+    showSuccess({
+      title: 'Success',
+      description: `New book ${newId} created!`,
+    });
     onClose();
   };
+
+  const onError = ({ title, description }) => {
+    showError({
+      title,
+      description,
+    });
+  };
+
+  const value = { isOpen, onOpen, onClose };
 
   return (
     <>
@@ -72,9 +74,8 @@ export function AddNewBookModal({ onSubmit, children }: AddNewBookModalProps) {
           <ModalHeader>New Book</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <NewBookForm onSubmit={submitAndClose} />
+            <NewBookForm onSuccess={onSuccess} onError={onError} />
           </ModalBody>
-
           <ModalFooter>
             <NewBookFormControls>
               <Button onClick={onClose}>Cancel</Button>
@@ -89,7 +90,7 @@ export function AddNewBookModal({ onSubmit, children }: AddNewBookModalProps) {
 
 export const useModal = () => useContext(ModalContext);
 
-export function AddNewBookModalButton({ children, ...rest }: ButtonProps) {
+export function NewBookFormDialogButton({ children, ...rest }: ButtonProps) {
   const { onOpen } = useModal();
 
   return (

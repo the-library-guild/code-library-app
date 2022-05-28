@@ -1,7 +1,8 @@
 import { ComponentMeta, ComponentStory } from '@storybook/react';
 
-// eslint-disable-next-line storybook/use-storybook-testing-library
-import { Matcher } from '@testing-library/react';
+import { graphql } from 'msw';
+
+import { ApolloProvider } from '@apollo/client';
 
 import { screen, userEvent } from '@storybook/testing-library';
 
@@ -15,10 +16,11 @@ import {
   NewBookFormSubmissionButton,
 } from '.';
 
+import CodeLibraryServer, { CREATE_BOOK } from '@/services/code-library-server';
 import {
-  AddNewBookModal,
-  AddNewBookModalButton,
-} from '@/components/AddNewBookModal';
+  NewBookFormDialog,
+  NewBookFormDialogButton,
+} from './NewBookFormDialog';
 
 export default {
   component: NewBookForm,
@@ -33,37 +35,62 @@ const Preview = ({ children }) => {
 
 const NonInteractiveTemplate: ComponentStory<typeof NewBookForm> = (args) => (
   <Preview>
-    <NewBookForm onSubmit={args.onSubmit}>
-      <NewBookFormControls pt={6}>
-        <NewBookFormSubmissionButton
-          role="button"
-          isLoading={false}
-          loadingText={'Creating'}
-        >
-          Create
-        </NewBookFormSubmissionButton>
-      </NewBookFormControls>
-    </NewBookForm>
+    <ApolloProvider client={CodeLibraryServer}>
+      <NewBookForm {...args}>
+        <NewBookFormControls pt={6}>
+          <NewBookFormSubmissionButton
+            role="button"
+            isLoading={false}
+            loadingText={'Creating'}
+          >
+            Create
+          </NewBookFormSubmissionButton>
+        </NewBookFormControls>
+      </NewBookForm>
+    </ApolloProvider>
   </Preview>
 );
 
-const onSubmit = () => {
-  return;
-};
+export const Default = NonInteractiveTemplate.bind({});
+Default.parameters = {
+  msw: {
+    handlers: [
+      graphql.mutation(CREATE_BOOK, (req, res, ctx) => {
+        const { bookData } = req.variables;
 
-export const Empty = NonInteractiveTemplate.bind({});
+        const bookId = bookData.media.contentTags[1] || undefined;
 
-Empty.args = {
-  onSubmit,
+        if (bookId === undefined) {
+          return res(
+            ctx.data({
+              createBook: {
+                __typename: 'Error',
+                msg: 'Book ID is required',
+              },
+            })
+          );
+        }
+
+        return res(
+          ctx.data({
+            createBook: {
+              __typename: 'Success',
+              id: bookId,
+            },
+          })
+        );
+      }),
+    ],
+  },
 };
 
 export const Filled = NonInteractiveTemplate.bind({});
 
-Filled.args = {
-  onSubmit,
+Filled.parameters = {
+  ...Default.parameters,
 };
 
-const fillInput = (id: Matcher) => {
+const fillInput = (id: RegExp) => {
   const input = screen.getByLabelText(id);
 
   const withText = async (text: string) => {
@@ -90,9 +117,25 @@ Filled.play = async () => {
 
 export const Submitting = NonInteractiveTemplate.bind({});
 
-Submitting.args = {
-  onSubmit: () => {
-    return new Promise((resolve) => setTimeout(resolve, 4000));
+Submitting.parameters = {
+  msw: {
+    handlers: [
+      graphql.mutation(CREATE_BOOK, (req, res, ctx) => {
+        const { bookData } = req.variables;
+
+        const bookId = bookData.media.contentTags[1] || undefined;
+
+        return res(
+          ctx.delay(4000),
+          ctx.data({
+            createBook: {
+              __typename: 'Success',
+              id: bookId,
+            },
+          })
+        );
+      }),
+    ],
   },
 };
 
@@ -106,23 +149,52 @@ Submitting.play = async () => {
   await fillInput(/language/i).withText(book.language);
   await fillInput(/subject area/i).withText(book.subject);
 
-  const submissionButton = screen.getByText(/create/i);
+  const submissionButton = screen.getByText(/create/i, { selector: 'button' });
 
   await userEvent.click(submissionButton);
 };
 
-const ConsumerTemplate: ComponentStory<typeof NewBookForm> = (args) => (
+const DialogTemplate: ComponentStory<typeof NewBookFormDialog> = (args) => (
   <Preview>
-    <AddNewBookModal {...args}>
-      <AddNewBookModalButton>+ Create new book</AddNewBookModalButton>
-    </AddNewBookModal>
+    <ApolloProvider client={CodeLibraryServer}>
+      <NewBookFormDialog {...args}>
+        <NewBookFormDialogButton>+ Create new book</NewBookFormDialogButton>
+      </NewBookFormDialog>
+    </ApolloProvider>
   </Preview>
 );
 
-export const InModal = ConsumerTemplate.bind({});
+export const Dialog = DialogTemplate.bind({});
+Dialog.parameters = {
+  msw: {
+    handlers: [
+      graphql.mutation(CREATE_BOOK, (req, res, ctx) => {
+        const { bookData } = req.variables;
 
-InModal.args = {
-  onSubmit: () => {
-    return new Promise((resolve) => setTimeout(resolve, 4000));
+        const bookId = bookData.media.contentTags[1] || undefined;
+
+        if (bookId === undefined) {
+          return res(
+            ctx.delay(2000),
+            ctx.data({
+              createBook: {
+                __typename: 'Error',
+                msg: 'Book ID is required',
+              },
+            })
+          );
+        }
+
+        return res(
+          ctx.delay(2000),
+          ctx.data({
+            createBook: {
+              __typename: 'Success',
+              id: bookId,
+            },
+          })
+        );
+      }),
+    ],
   },
 };

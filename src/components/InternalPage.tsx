@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from 'react';
+import React, { ReactElement } from 'react';
 
 import {
   Box,
@@ -13,28 +13,29 @@ import { signOut } from 'next-auth/react';
 
 import { FaSignOutAlt } from 'react-icons/fa';
 
-import { Content } from './Content';
-import { Sidebar } from '../components/Sidebar/Sidebar';
-import { ErrorBoundary } from './ErrorBoundary';
+import { FiBox, FiCompass, FiMenu, FiTrendingUp } from 'react-icons/fi';
+
 import {
   Header,
   HeaderLeftSideNode,
   HeaderRightSideNode,
-} from './Sidebar/Header';
-import { SidebarItem } from './Sidebar/SidebarItem';
-import { FiBox, FiCompass, FiMenu, FiTrendingUp } from 'react-icons/fi';
-import { useColorModeVariant } from '../hooks/use-color-mode-variant.hook';
-import { BORROWED, RETURN_BOX, SHELF } from '../helpers/routes';
-
-import { AppUser, LIBRARIAN_ROLE } from '../hooks/use-user-info.hook';
-import { ToggleColorModeButton } from './ToggleColorMode';
-import { UserDropdown } from './Sidebar/UserDropdown';
-import { HomeLink } from './Sidebar/HomeLink';
+  UserDropdown,
+  HomeLink,
+  Sidebar,
+  SidebarItem,
+} from '@/components/Sidebar';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { Content } from '@/components/Content';
+import { ToggleColorModeButton } from '@/components/ToggleColorMode';
 import {
-  AddNewBookModal,
-  AddNewBookModalButton,
-} from './AddNewBookModal/AddNewBookModal';
-import CodeLibraryServer, { GET_SHELF } from '@/services/code-library-server';
+  NewBookFormDialog,
+  NewBookFormDialogButton,
+} from '@/components/NewBookForm';
+
+import { BORROWED, RETURN_BOX, SHELF } from '@/helpers/routes';
+
+import { useColorModeVariant } from '@/hooks/use-color-mode-variant.hook';
+import { AppUser, LIBRARIAN_ROLE } from '@/hooks/use-user-info.hook';
 
 interface InternalPageProps {
   children: ReactElement;
@@ -103,9 +104,11 @@ export function InternalPage({
           </HeaderLeftSideNode>
           <HeaderRightSideNode>
             {isLibrarian && (
-              <AddNewBookModal onSubmit={onSubmit}>
-                <AddNewBookModalButton>+ Add new book</AddNewBookModalButton>
-              </AddNewBookModal>
+              <NewBookFormDialog>
+                <NewBookFormDialogButton>
+                  + Add new book
+                </NewBookFormDialogButton>
+              </NewBookFormDialog>
             )}
           </HeaderRightSideNode>
         </Header>
