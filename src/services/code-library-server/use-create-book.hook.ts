@@ -22,8 +22,22 @@ export const CREATE_BOOK = gql`
   }
 `;
 
-export function useCreateBook() {
-  const [createBook, { data, loading, error }] = useMutation(CREATE_BOOK);
+type CreateBookError = { title: string; description: string } | undefined;
+type CreateBookSuccess = { newId: string } | undefined;
+
+export type CreateBookStatus = {
+  error: CreateBookError;
+  success: CreateBookSuccess;
+  loading: boolean;
+  data: any;
+};
+
+export type CreateBookHook = CreateBookStatus & {
+  createBook: (values: NewBookFormValues) => void;
+};
+
+export function useCreateBook(): CreateBookHook {
+  const [createBook, { ...status }] = useMutation(CREATE_BOOK);
 
   const createBookFromFormValues = useCallback(
     (values: NewBookFormValues) => {
@@ -49,10 +63,44 @@ export function useCreateBook() {
     [createBook]
   );
 
+  let error: CreateBookError;
+  let success: CreateBookSuccess;
+
+  if (status.error) {
+    error = {
+      title: 'Network Error',
+      description: 'Something went wrong with our service. Try again later.',
+    };
+  }
+
+  if (status.data) {
+    const { __typename: type, ...response } = status.data.createBook;
+
+    switch (type) {
+      case 'Success':
+        success = { newId: response.id };
+        break;
+      case 'MissingPermissionsError':
+        error = {
+          title: 'Unauthorized',
+          description: response.msg,
+        };
+        break;
+      case 'Error':
+        error = {
+          title: 'Internal Error',
+          description: response.msg,
+        };
+        break;
+      default:
+    }
+  }
+
   return {
     createBook: createBookFromFormValues,
-    data,
-    loading,
+    data: status.data,
+    loading: status.loading,
     error,
+    success,
   };
 }
