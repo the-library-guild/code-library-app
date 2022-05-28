@@ -14,7 +14,7 @@
     "test:coverage": "jest --coverage",
     "lint": "next lint --fix",
     "prettify": "prettier --config .prettierrc 'src/**/*.ts' --write",
-    "storybook": "start-storybook -p 6006",
+    "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook"
   },
   "repository": {
@@ -88,6 +88,7 @@
     "jest": "^28.1.0",
     "jest-environment-jsdom": "^28.1.0",
     "msw": "^0.41.0",
+    "msw-storybook-addon": "^1.6.3",
     "prettier": "^2.6.2",
     "tsconfig-paths-webpack-plugin": "^3.5.2",
     "typescript": "^4.6.4",

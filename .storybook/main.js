@@ -24,4 +24,8 @@ module.exports = {
     ];
     return config;
   },
+  env: (config) => ({
+    ...config,
+    STORYBOOK_MODE: 'on',
+  }),
 }
