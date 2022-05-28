@@ -1,5 +1,16 @@
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 
+const inDevelopmentModeWithoutStorybook =
+  process.env.NODE_ENV === 'development' && process.env.STORYBOOK_MODE !== 'on';
+
+if (inDevelopmentModeWithoutStorybook) {
+  const loadWorker = async () => {
+    const worker = (await import('@/mocks/browser')).worker;
+    worker.start();
+  };
+  loadWorker();
+}
+
 const isCallingFromServer = typeof window === 'undefined';
 
 const uri = isCallingFromServer

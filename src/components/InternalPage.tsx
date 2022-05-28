@@ -53,22 +53,6 @@ export function InternalPage({
 
   const isLibrarian = user.role === LIBRARIAN_ROLE;
 
-  useEffect(() => {
-    async function loadWorker() {
-      const worker = (await import('../mocks/browser')).worker;
-      worker.start();
-    }
-    if (process.env.NODE_ENV === 'development') {
-      loadWorker();
-    }
-
-    CodeLibraryServer.refetchQueries({ include: [GET_SHELF] });
-  }, []);
-
-  const onSubmit = () => {
-    return new Promise((resolve) => setTimeout(resolve, 5000));
-  };
-
   return (
     <Flex
       as={'header'}
