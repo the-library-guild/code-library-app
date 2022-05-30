@@ -37,11 +37,11 @@ export type CreateBookHook = CreateBookStatus & {
 };
 
 export function useCreateBook(): CreateBookHook {
-  const [createBook, { ...status }] = useMutation(CREATE_BOOK);
+  const [createBookMutation, { ...status }] = useMutation(CREATE_BOOK);
 
-  const createBookFromFormValues = useCallback(
+  const createBook = useCallback(
     (values: NewBookFormValues) => {
-      return createBook({
+      return createBookMutation({
         variables: {
           bookData: {
             tags: ['book', 'borrowable', 'physical', 'media'],
@@ -60,7 +60,7 @@ export function useCreateBook(): CreateBookHook {
         },
       });
     },
-    [createBook]
+    [createBookMutation]
   );
 
   let error: CreateBookError;
@@ -97,7 +97,7 @@ export function useCreateBook(): CreateBookHook {
   }
 
   return {
-    createBook: createBookFromFormValues,
+    createBook,
     data: status.data,
     loading: status.loading,
     error,
