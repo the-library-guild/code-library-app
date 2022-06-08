@@ -26,6 +26,6 @@ module.exports = {
   },
   env: (config) => ({
     ...config,
-    STORYBOOK_MODE: 'on',
+    MSW_MODE: 'off',
   }),
 }

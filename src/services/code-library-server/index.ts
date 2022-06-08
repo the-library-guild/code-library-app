@@ -1,7 +1,9 @@
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 
 const inDevelopmentModeWithoutStorybook =
-  process.env.NODE_ENV === 'development' && process.env.STORYBOOK_MODE !== 'on';
+  process.env.NODE_ENV === 'development' &&
+  process.env.MSW_MODE === 'on' &&
+  typeof window !== 'undefined';
 
 if (inDevelopmentModeWithoutStorybook) {
   const loadWorker = async () => {
