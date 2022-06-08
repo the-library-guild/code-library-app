@@ -43,7 +43,7 @@ const BookCard = function BookCard({
       spacing={'2'}
     >
       <Flex justify={'space-between'} align={'center'}>
-        <Heading fontSize={'xl'}>
+        <Heading fontSize={'xl'} noOfLines={1}>
           <NextLink
             href={{
               pathname: '/books/[id]',

@@ -65,17 +65,19 @@ WithActionButton.args = {
   actionLabel: 'Borrow',
 };
 
-const bookWithLongDescription = {
+const bookWithLongText = {
   ...book,
+  title:
+    'Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas cum aliquam eveniet, nihil numquam nulla, assumenda alias ratione aspernatur quod debitis aliquid impedit adipisci, enim illo qui maiores voluptatem ipsam.',
   subTitle:
     'Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas cum aliquam eveniet, nihil numquam nulla, assumenda alias ratione aspernatur quod debitis aliquid impedit adipisci, enim illo qui maiores voluptatem ipsam.',
 };
 
-export const WithLongDescription = SingleNonInteractiveTemplate.bind({});
+export const WithLongText = SingleNonInteractiveTemplate.bind({});
 
-WithLongDescription.args = {
+WithLongText.args = {
   ...WithActionButton.args,
-  book: bookWithLongDescription,
+  book: bookWithLongText,
 };
 
 const MultipleSingleNonInteractiveTemplate: ComponentStory<typeof BookCard> = (
