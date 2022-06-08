@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 
-import { Flex, useColorModeValue, useToast } from '@chakra-ui/react';
+import { Flex, useColorModeValue } from '@chakra-ui/react';
 
 import { SignInCard } from '@/components/SignInCard/SignInCard';
+import { useToasts } from '@/hooks/use-toasts';
 
 const messageByError = {
   Signin: 'Try signing in with a different account.',
@@ -16,7 +17,7 @@ const messageFor = (e: LoginError) =>
 export type LoginError = 'Signin' | 'Callback';
 
 export function LoginScreen({ error }) {
-  const showToast = useToast();
+  const { showError, toastControls } = useToasts();
 
   useEffect(() => {
     if (error === undefined) return;
@@ -24,19 +25,14 @@ export function LoginScreen({ error }) {
     const errors = (Array.isArray(error) ? error : [error]) as LoginError[];
 
     errors.map((error: LoginError) => {
-      showToast({
+      showError({
         title: 'Unsuccessful login',
         description: messageFor(error),
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-        position: 'top-right',
-        variant: 'top-accent',
       });
     });
 
-    return () => showToast.closeAll();
-  }, [error, showToast]);
+    return () => toastControls.closeAll();
+  }, [error, showError, toastControls]);
 
   return (
     <Flex
