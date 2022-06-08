@@ -42,7 +42,6 @@
     "@apollo/client": "^3.6.2",
     "@chakra-ui/icons": "^1.1.7",
     "@chakra-ui/react": "^1.8.8",
-    "@chakra-ui/storybook-addon": "^1.0.3",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "chalk": "^5.0.1",
@@ -61,6 +60,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.17.10",
+    "@chakra-ui/storybook-addon": "^1.0.3",
     "@next/eslint-plugin-next": "^12.1.6",
     "@storybook/addon-actions": "^6.4.22",
     "@storybook/addon-essentials": "^5.3.21",
