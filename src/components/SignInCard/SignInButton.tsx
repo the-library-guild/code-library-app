@@ -1,16 +1,12 @@
 import React from 'react';
 
-import { ButtonHTMLAttributes } from 'react';
-
 import { signIn } from 'next-auth/react';
 
 import { FaGoogle } from 'react-icons/fa';
 
-import { Button, Icon } from '@chakra-ui/react';
+import { Button, ButtonProps, Icon } from '@chakra-ui/react';
 
-type SignInButtonProps = ButtonHTMLAttributes<HTMLButtonElement>;
-
-export function SignInButton({ ...rest }: SignInButtonProps) {
+export function SignInButton({ ...rest }: ButtonProps) {
   return (
     <Button
       onClick={() => signIn('google')}

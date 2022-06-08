@@ -9,12 +9,19 @@ import { ToggleColorModeButton } from '@/components/ToggleColorMode';
 
 export function SignInCard() {
   return (
-    <Stack spacing={12} mx={'auto'} w={'lg'} maxW={'100%'} px={[4, 8]}>
+    <Stack
+      spacing={12}
+      mx={'auto'}
+      w={'lg'}
+      maxW={'100%'}
+      px={[4, 8]}
+      align={'center'}
+    >
       <Stack align={'center'}>
-        <LibraryLogo />
+        <LibraryLogo width={'70%'} />
         <Heading fontSize={'4xl'}>Treedom Library</Heading>
       </Stack>
-      <SignInButton />
+      <SignInButton maxW={400} />
       <Flex align="end" justify={'center'}>
         <ToggleColorModeButton w={'2'} bg={'none'} />
       </Flex>
