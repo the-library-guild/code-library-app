@@ -72,7 +72,9 @@ const BookCard = function BookCard({
         </Text>
         {isExpanded && hasAction && (
           <>
-            <Button onClick={action}>{actionLabel}</Button>
+            <Button variant={'outline'} onClick={action}>
+              {actionLabel}
+            </Button>
           </>
         )}
       </Flex>

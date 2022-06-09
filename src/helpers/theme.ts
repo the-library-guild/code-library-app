@@ -13,4 +13,16 @@ export const theme = extendTheme({
       200: '#6577b2',
     },
   },
+  components: {
+    Button: {
+      variants: {
+        outline: {
+          _hover: { bg: 'none', filter: 'brightness(80%)' },
+        },
+        ghost: {
+          _hover: { bg: 'none', filter: 'brightness(80%)' },
+        },
+      },
+    },
+  },
 });

@@ -43,8 +43,9 @@ export const SidebarItem = ({
           role="group"
           cursor="pointer"
           _hover={{
-            bg: colorModeValue('gray.200', 'gray.600'),
-            color: colorModeValue('gray.800', 'gray.50'),
+            bg: 'none',
+            filter: 'brightness(80%)',
+            color: colorModeValue('gray.500', 'gray.50'),
           }}
           {...rest}
         >
@@ -53,7 +54,7 @@ export const SidebarItem = ({
               mr="4"
               fontSize="16"
               _groupHover={{
-                color: colorModeValue('gray.800', 'gray.50'),
+                color: colorModeValue('gray.500', 'gray.50'),
               }}
               as={icon}
             />
