@@ -23,6 +23,10 @@ module.exports = {
     ];
     return config;
   },
+  typescript: {
+    reactDocgen: false,
+    check: false,
+  },
   env: (config) => ({
     ...config,
     MSW_MODE: 'off',
