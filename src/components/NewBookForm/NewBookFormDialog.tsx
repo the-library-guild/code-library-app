@@ -70,7 +70,7 @@ export function NewBookFormDialog({ children }: NewBookFormDialogProps) {
         size={useBreakpointValue({ base: 'full', md: 'sm' })}
       >
         <ModalOverlay />
-        <ModalContent maxW={700} bg={useColorModeValue('white', 'gray.900')}>
+        <ModalContent maxW={500} bg={useColorModeValue('white', 'gray.900')}>
           <ModalHeader>New Book</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
@@ -78,7 +78,9 @@ export function NewBookFormDialog({ children }: NewBookFormDialogProps) {
           </ModalBody>
           <ModalFooter>
             <NewBookFormControls>
-              <Button onClick={onClose}>Cancel</Button>
+              <Button onClick={onClose} variant={'ghost'}>
+                Cancel
+              </Button>
               <NewBookFormSubmissionButton>Create</NewBookFormSubmissionButton>
             </NewBookFormControls>
           </ModalFooter>

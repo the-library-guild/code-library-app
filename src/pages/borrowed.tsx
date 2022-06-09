@@ -27,5 +27,6 @@ function BorrowedPage() {
 }
 
 BorrowedPage.permissions = Perm.VIEW_BOOKS;
+BorrowedPage.title = 'Borrowed';
 
 export default BorrowedPage;

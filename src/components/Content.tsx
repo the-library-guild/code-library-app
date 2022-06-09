@@ -8,7 +8,7 @@ interface ContentProps extends FlexProps {
 
 export function Content({ children, ...props }: ContentProps) {
   return (
-    <Flex maxW={780} w={'100%'} {...props}>
+    <Flex maxW={1200} w={'100%'} {...props}>
       {children}
     </Flex>
   );

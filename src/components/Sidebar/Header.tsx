@@ -1,6 +1,6 @@
-import React, { ReactNode } from 'react';
+import React, { PropsWithChildren, ReactNode } from 'react';
 
-import { Flex, FlexProps, HStack } from '@chakra-ui/react';
+import { Flex, FlexProps } from '@chakra-ui/react';
 import { useColorModeVariant } from '../../hooks/use-color-mode-variant.hook';
 
 interface HeaderProps extends FlexProps {
@@ -13,27 +13,34 @@ export const Header = ({ children, ...rest }: HeaderProps) => {
     <Flex
       px={4}
       w={'100%'}
-      height={20}
-      align={'center'}
+      height={14}
+      justify={'center'}
       bg={lightOrDark('white', 'gray.900')}
       borderBottomWidth="1px"
       borderBottomColor={lightOrDark('gray.200', 'gray.700')}
-      justifyContent={'space-between'}
       {...rest}
     >
-      {children}
+      <Flex maxW={1400} w={'100%'} justifyContent={'space-between'}>
+        {children}
+      </Flex>
     </Flex>
   );
 };
 
-export function HeaderLeftSideNode({ children }: { children: ReactNode }) {
+type HeaderNodeProps = PropsWithChildren & FlexProps;
+
+export function HeaderLeftSideNode({ children, ...rest }: HeaderNodeProps) {
   return (
-    <Flex justifyContent={'center'} alignItems={'center'} gap={'2'}>
+    <Flex alignItems={'center'} gap={'2'} {...rest}>
       {children}
     </Flex>
   );
 }
 
-export function HeaderRightSideNode({ children }: { children: ReactNode }) {
-  return <HStack>{children}</HStack>;
+export function HeaderRightSideNode({ children, ...rest }: HeaderNodeProps) {
+  return (
+    <Flex alignItems={'center'} gap={'2'} {...rest}>
+      {children}
+    </Flex>
+  );
 }

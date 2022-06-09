@@ -1,12 +1,13 @@
 import React, { ReactElement } from 'react';
 
 import {
-  Box,
   Flex,
   IconButton,
   useDisclosure,
   MenuItem,
-  Heading,
+  Grid,
+  GridItem,
+  Text,
 } from '@chakra-ui/react';
 
 import { signOut } from 'next-auth/react';
@@ -20,7 +21,6 @@ import {
   HeaderLeftSideNode,
   HeaderRightSideNode,
   UserDropdown,
-  HomeLink,
   Sidebar,
   SidebarItem,
 } from '@/components/Sidebar';
@@ -37,11 +37,11 @@ import { BORROWED, RETURN_BOX, SHELF } from '@/helpers/routes';
 import { useColorModeVariant } from '@/hooks/use-color-mode-variant.hook';
 import { AppUser, LIBRARIAN_ROLE } from '@/hooks/use-user-info.hook';
 
-interface InternalPageProps {
-  children: ReactElement;
-  title?: string;
+type InternalPageProps = {
   user: AppUser;
-}
+  title?: string;
+  children: ReactElement;
+};
 
 export function InternalPage({
   user,
@@ -55,14 +55,19 @@ export function InternalPage({
   const isLibrarian = user.role === LIBRARIAN_ROLE;
 
   return (
-    <Flex
-      as={'header'}
-      w={'100vw'}
+    <Grid
       maxW={'100%'}
       h={'100vh'}
-      direction={'column'}
+      templateRows="repeat(12, 1fr)"
+      templateColumns="repeat(5, 1fr)"
     >
-      <Box minH="100vh" bg={lightOrDark('white', 'gray.800')}>
+      {/* Sidebar */}
+      <GridItem
+        rowSpan={12}
+        colSpan={1}
+        minW={300}
+        display={{ base: 'none', lg: 'grid' }}
+      >
         <Sidebar onClose={onClose} isOpen={isOpen}>
           {isLibrarian ? (
             <LibrarianOptions onClose={onClose} />
@@ -70,54 +75,60 @@ export function InternalPage({
             <StudentsOptions onClose={onClose} />
           )}
         </Sidebar>
-        <Header>
-          <HeaderLeftSideNode>
+      </GridItem>
+      {/* Header */}
+      <GridItem colSpan={{ base: 5, lg: 4 }} rowSpan={1}>
+        <Header transition=".5s ease">
+          <HeaderLeftSideNode
+            justifyContent={{ base: 'start', lg: 'end' }}
+            w={'100%'}
+          >
             <IconButton
-              display={'flex'}
+              display={{ base: 'inline-flex', lg: 'none' }}
               onClick={onOpen}
               variant="ghost"
               fontSize={'2xl'}
               aria-label={'open menu'}
               icon={<FiMenu />}
             />
-            <HomeLink />
+            <PageTitle title={title} />
           </HeaderLeftSideNode>
-          <HeaderRightSideNode>
+          <HeaderRightSideNode w={'100%'} justifyContent={'end'}>
+            <ToggleColorModeButton />
             <UserDropdown user={user}>
               <MenuItem icon={<FaSignOutAlt />} onClick={() => signOut()}>
                 Logout
               </MenuItem>
-              <ToggleColorModeButton
-                position={'absolute'}
-                top={0}
-                right={0}
-                p={6}
-              />
             </UserDropdown>
           </HeaderRightSideNode>
         </Header>
-        <Header border={'none'} bg={'none'}>
-          <HeaderLeftSideNode>
-            <Heading fontSize={'2xl'} fontWeight={'normal'}>
-              {title}
-            </Heading>
-          </HeaderLeftSideNode>
-          <HeaderRightSideNode>
-            {isLibrarian && (
-              <NewBookFormDialog>
-                <NewBookFormDialogButton>
-                  + Add new book
-                </NewBookFormDialogButton>
-              </NewBookFormDialog>
-            )}
-          </HeaderRightSideNode>
-        </Header>
+      </GridItem>
+      {/* Content */}
+      <GridItem
+        colSpan={{ base: 5, lg: 4 }}
+        rowSpan={{ base: 11, lg: 11 }}
+        bg={lightOrDark('white', 'gray.800')}
+        scrollBehavior={'smooth'}
+        overflowY={'scroll'}
+        css={{
+          '&::-webkit-scrollbar': {
+            width: '4px',
+          },
+          '&::-webkit-scrollbar-track': {
+            width: '6px',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            background: 'var(--chakra-colors-whiteAlpha-700)',
+            borderRadius: '12px',
+          },
+        }}
+      >
         <Flex
           as={'main'}
           w={'100%'}
-          align={'center'}
+          p={{ base: 4, md: 8 }}
           justify={'center'}
-          bg={lightOrDark('white', 'gray.800')}
+          transition="1s ease"
         >
           <Content>
             <ErrorBoundary>
@@ -128,8 +139,8 @@ export function InternalPage({
             </ErrorBoundary>
           </Content>
         </Flex>
-      </Box>
-    </Flex>
+      </GridItem>
+    </Grid>
   );
 }
 interface SidebarOptionsProps {
@@ -139,35 +150,87 @@ interface SidebarOptionsProps {
 export function StudentsOptions({ onClose }: SidebarOptionsProps) {
   return (
     <>
-      <SidebarItem key={SHELF} icon={FiCompass} href={SHELF} onClose={onClose}>
-        Explore
-      </SidebarItem>
-      <SidebarItem
-        key={BORROWED}
-        icon={FiTrendingUp}
-        href={BORROWED}
-        onClose={onClose}
+      <Grid
+        minW={'100%'}
+        maxH={'100%'}
+        templateRows="repeat(12, 1fr)"
+        templateColumns="repeat(1, 1fr)"
       >
-        Books you borrowed
-      </SidebarItem>
+        <GridItem rowSpan={10}>
+          <SidebarItem
+            key={SHELF}
+            icon={FiCompass}
+            href={SHELF}
+            onClose={onClose}
+          >
+            Explore
+          </SidebarItem>
+          <SidebarItem
+            key={BORROWED}
+            icon={FiTrendingUp}
+            href={BORROWED}
+            onClose={onClose}
+          >
+            Books you borrowed
+          </SidebarItem>
+        </GridItem>
+        <GridItem rowSpan={2}></GridItem>
+      </Grid>
     </>
+  );
+}
+
+function PageTitle({ title }) {
+  return (
+    <Text as={'h2'} fontWeight={'medium'} fontSize={'xl'}>
+      {title}
+    </Text>
   );
 }
 
 function LibrarianOptions({ onClose }: SidebarOptionsProps) {
   return (
     <>
-      <SidebarItem key={SHELF} icon={FiCompass} href={SHELF} onClose={onClose}>
-        Explore
-      </SidebarItem>
-      <SidebarItem
-        key={RETURN_BOX}
-        icon={FiBox}
-        href={RETURN_BOX}
-        onClose={onClose}
+      <Grid
+        minW={'100%'}
+        maxH={'100%'}
+        templateRows="repeat(12, 1fr)"
+        templateColumns="repeat(1, 1fr)"
       >
-        Return box
-      </SidebarItem>
+        <GridItem rowSpan={10}>
+          <SidebarItem
+            key={SHELF}
+            icon={FiCompass}
+            href={SHELF}
+            onClose={onClose}
+          >
+            Explore
+          </SidebarItem>
+          <SidebarItem
+            key={RETURN_BOX}
+            icon={FiBox}
+            href={RETURN_BOX}
+            onClose={onClose}
+          >
+            Return box
+          </SidebarItem>
+        </GridItem>
+        <GridItem rowSpan={2}>
+          <Flex
+            direction={'column'}
+            px={12}
+            align={'center'}
+            justify={'start'}
+            maxH={'100%'}
+          >
+            <NewBookFormDialog>
+              <NewBookFormDialogButton w={'100%'}>
+                Add new book
+              </NewBookFormDialogButton>
+            </NewBookFormDialog>
+          </Flex>
+        </GridItem>
+      </Grid>
     </>
   );
 }

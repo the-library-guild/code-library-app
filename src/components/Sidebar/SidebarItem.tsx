@@ -1,4 +1,4 @@
-import React, { ReactText } from 'react';
+import React from 'react';
 import NextLink from 'next/link';
 import { IconType } from 'react-icons';
 import {
@@ -13,7 +13,7 @@ interface SidebarItemProps extends FlexProps {
   icon: IconType;
   href: string;
   onClose: () => void;
-  children: ReactText;
+  children: string;
 }
 export const SidebarItem = ({
   onClose,
@@ -37,8 +37,8 @@ export const SidebarItem = ({
       >
         <Flex
           align="center"
-          p="4"
-          mx="4"
+          py={4}
+          px={8}
           borderRadius="lg"
           role="group"
           cursor="pointer"

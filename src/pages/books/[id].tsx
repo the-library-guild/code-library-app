@@ -48,5 +48,6 @@ function BookDetailedPage() {
   );
 }
 BookDetailedPage.permissions = Perm.VIEW_BOOKS;
+BookDetailedPage.title = 'Details';
 
 export default BookDetailedPage;

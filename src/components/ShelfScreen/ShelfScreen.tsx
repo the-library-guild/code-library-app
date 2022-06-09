@@ -31,7 +31,7 @@ function ShelfScreen({ loading, error, books }: ShelfScreenProps) {
   return (
     <>
       <Stack w={'100%'}>
-        <Stack spacing={4} width="100%" px={4}>
+        <Stack spacing={4} width="100%">
           <SearchBox
             searchTerm={search.searchTerm}
             setSearchTerm={search.setSearchTerm}
@@ -42,7 +42,11 @@ function ShelfScreen({ loading, error, books }: ShelfScreenProps) {
               text={search.searchTerm ? 'Results' : 'Books in the shelf'}
             />
           )}
-          <Stack spacing={6} wordBreak="break-all" width="100%">
+          <Stack
+            spacing={{ base: 4, md: 6 }}
+            wordBreak="break-all"
+            width="100%"
+          >
             <InfiniteScroll results={results} loading={loading}>
               {({ booksToRender }) => {
                 return (
