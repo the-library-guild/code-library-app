@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Stack } from '@chakra-ui/react';
+import { Button, Stack, useColorModeValue } from '@chakra-ui/react';
 import { useQuery } from '@apollo/client';
 
 import { Perm } from 'code-library-perms';
@@ -13,7 +13,7 @@ import { Suspense } from '@/components/Suspense';
 import { toSchema } from '@/services/code-library-server/books';
 
 function BookDetailedPage() {
-  const { query } = useRouter();
+  const { query, back } = useRouter();
 
   const bookId = query.id as string;
 
@@ -36,6 +36,19 @@ function BookDetailedPage() {
   return (
     <Content>
       <Stack spacing={6} wordBreak="break-all" width="100%">
+        <Button
+          variant={'link'}
+          fontSize={'lg'}
+          fontWeight={'semibold'}
+          onClick={back}
+          justifyContent={'start'}
+          ml={2}
+          color={useColorModeValue('gray.800', 'white')}
+          _hover={{}}
+          _active={{}}
+        >
+          ← Back
+        </Button>
         <Suspense
           loading={loading}
           error={error}
