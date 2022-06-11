@@ -60,6 +60,8 @@ const doNothing = () => {
   return;
 };
 
+const initialValues = { bookId: '', designation: '' };
+
 export function NewBookForm({
   onSuccess = doNothing,
   onError = doNothing,
@@ -67,9 +69,10 @@ export function NewBookForm({
 }: NewBookFormProps) {
   const { createBook, ...status } = useCreateBook();
 
-  const [values, setValues] = useState({ bookId: '', designation: '' });
+  const [values, setValues] = useState(initialValues);
 
   const formRef = useRef<HTMLFormElement>(null);
+  const initialRef = useRef<HTMLInputElement>(null);
 
   async function handleSubmission(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -88,6 +91,7 @@ export function NewBookForm({
     if (status.success && formRef.current) {
       const { ...fields } = formRef.current.elements;
       resetValues(fields);
+      setValues(initialValues);
       onSuccess({ ...status.success });
     }
 
@@ -95,6 +99,12 @@ export function NewBookForm({
       onError({ ...status.error });
     }
   }, [formRef, onSuccess, onError, status]);
+
+  useEffect(() => {
+    if (initialRef.current) {
+      initialRef.current.focus();
+    }
+  }, []);
 
   const deriveDesignationFromBookId = (bookId: string) => {
     if (bookId.startsWith('A11Y')) {
@@ -136,14 +146,21 @@ export function NewBookForm({
     return '';
   };
 
-  const onBookIdChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const bookId = e.target.value as string;
-    const designation = deriveDesignationFromBookId(bookId);
+  const onChange = (e: ChangeEvent<HTMLInputElement>, name: string) => {
+    const value = e.target.value as string;
+
+    if (name === 'bookId') {
+      const designation = deriveDesignationFromBookId(value);
+      return setValues((prev) => ({
+        ...prev,
+        [name]: value,
+        designation,
+      }));
+    }
 
     setValues((prev) => ({
       ...prev,
-      bookId,
-      designation,
+      [name]: value,
     }));
   };
 
@@ -165,12 +182,13 @@ export function NewBookForm({
         <FormControl isDisabled={status.loading}>
           <FormLabel htmlFor="book-id">Book ID</FormLabel>
           <Input
+            ref={initialRef}
             type="text"
             name="bookId"
             id="book-id"
             placeholder="STS17"
             value={values.bookId}
-            onChange={onBookIdChange}
+            onChange={(e) => onChange(e, 'bookId')}
           />
           <FormErrorMessage>Book ID is requried</FormErrorMessage>
         </FormControl>
@@ -183,9 +201,7 @@ export function NewBookForm({
             id="designation"
             placeholder="i.e., STS, SE, PM"
             value={values.designation}
-            onChange={(e) =>
-              setValues((prev) => ({ ...prev, designation: e.target.value }))
-            }
+            onChange={(e) => onChange(e, 'designation')}
           />
           <FormErrorMessage>Designation is requried</FormErrorMessage>
         </FormControl>
