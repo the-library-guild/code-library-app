@@ -77,7 +77,7 @@ describe('NewBookForm', () => {
     });
   });
 
-  it('calls onError when submission failes', async () => {
+  it('calls onError when submission fails', async () => {
     server.use(
       graphql.mutation(CREATE_BOOK, (_, res) => {
         return res.networkError('Oh snap... something went wrong');
@@ -117,5 +117,31 @@ describe('NewBookForm', () => {
       },
       { timeout: 500 }
     );
+  });
+
+  describe('designation field autocomplete', () => {
+    it('matches A11Y for accessibility books', async () => {
+      const { findByLabelText } = renderForm();
+
+      user.type(await findByLabelText(/book id/i), 'A11Y04');
+
+      expect(await findByLabelText(/designation/i)).toHaveValue('A11Y');
+    });
+
+    it('matches SE for Software Engineering books', async () => {
+      const { findByLabelText } = renderForm();
+
+      user.type(await findByLabelText(/book id/i), 'SE123');
+
+      expect(await findByLabelText(/designation/i)).toHaveValue('SE');
+    });
+
+    it('leaves the field empty when no matching designation is found', async () => {
+      const { findByLabelText } = renderForm();
+
+      user.type(await findByLabelText(/book id/i), 'SOS123');
+
+      expect(await findByLabelText(/designation/i)).toHaveValue('');
+    });
   });
 });

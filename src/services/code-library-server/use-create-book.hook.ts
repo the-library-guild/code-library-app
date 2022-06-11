@@ -33,7 +33,7 @@ export type CreateBookStatus = {
 };
 
 export type CreateBookHook = CreateBookStatus & {
-  createBook: (values: NewBookFormValues) => void;
+  createBook: (values: NewBookFormValues) => Promise<void>;
 };
 
 export function useCreateBook(): CreateBookHook {
@@ -47,7 +47,7 @@ export function useCreateBook(): CreateBookHook {
             tags: ['book', 'borrowable', 'physical', 'media'],
             name: values.mainTitle,
             media: {
-              contentTags: ['', values.bookId, '', 'SE'],
+              contentTags: ['', values.bookId, '', values.designation],
               creators: [values.author],
               publisher: values.publisher,
               language: values.language,

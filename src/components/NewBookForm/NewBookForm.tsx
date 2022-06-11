@@ -1,11 +1,14 @@
 import {
+  ChangeEvent,
   createContext,
   FormEvent,
   ReactNode,
   useContext,
   useEffect,
   useRef,
+  useState,
 } from 'react';
+
 import {
   Button,
   ButtonProps,
@@ -39,6 +42,7 @@ export type NewBookFormProps = {
 
 export type NewBookFormValues = {
   bookId: string;
+  designation: string;
   mainTitle: string;
   subTitle: string;
   author: string;
@@ -62,6 +66,8 @@ export function NewBookForm({
   children,
 }: NewBookFormProps) {
   const { createBook, ...status } = useCreateBook();
+
+  const [values, setValues] = useState({ bookId: '', designation: '' });
 
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -90,6 +96,57 @@ export function NewBookForm({
     }
   }, [formRef, onSuccess, onError, status]);
 
+  const deriveDesignationFromBookId = (bookId: string) => {
+    if (bookId.startsWith('A11Y')) {
+      return 'A11Y';
+    }
+
+    if (bookId.startsWith('DH')) {
+      return 'DH';
+    }
+
+    if (bookId.startsWith('ENT')) {
+      return 'ENT';
+    }
+
+    if (bookId.startsWith('ID')) {
+      return 'ID';
+    }
+
+    if (bookId.startsWith('IS')) {
+      return 'IS';
+    }
+
+    if (bookId.startsWith('PM')) {
+      return 'PM';
+    }
+
+    if (bookId.startsWith('STS')) {
+      return 'STS';
+    }
+
+    if (bookId.startsWith('SE')) {
+      return 'SE';
+    }
+
+    if (bookId.startsWith('SUS')) {
+      return 'SUS';
+    }
+
+    return '';
+  };
+
+  const onBookIdChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const bookId = e.target.value as string;
+    const designation = deriveDesignationFromBookId(bookId);
+
+    setValues((prev) => ({
+      ...prev,
+      bookId,
+      designation,
+    }));
+  };
+
   return (
     <Stack spacing={4} align={'center'} w={'100%'}>
       <LoadingOverlay loading={status.loading} helpText={'Creating'} />
@@ -107,8 +164,30 @@ export function NewBookForm({
       >
         <FormControl isDisabled={status.loading}>
           <FormLabel htmlFor="book-id">Book ID</FormLabel>
-          <Input type="text" name="bookId" id="book-id" placeholder="STS17" />
+          <Input
+            type="text"
+            name="bookId"
+            id="book-id"
+            placeholder="STS17"
+            value={values.bookId}
+            onChange={onBookIdChange}
+          />
           <FormErrorMessage>Book ID is requried</FormErrorMessage>
+        </FormControl>
+
+        <FormControl isDisabled={status.loading}>
+          <FormLabel htmlFor="designation">Designation</FormLabel>
+          <Input
+            type="text"
+            name="designation"
+            id="designation"
+            placeholder="i.e., STS, SE, PM"
+            value={values.designation}
+            onChange={(e) =>
+              setValues((prev) => ({ ...prev, designation: e.target.value }))
+            }
+          />
+          <FormErrorMessage>Designation is requried</FormErrorMessage>
         </FormControl>
 
         <FormControl isDisabled={status.loading}>
@@ -213,5 +292,16 @@ export function NewBookFormSubmissionButton({
     >
       {children}
     </Button>
+  );
+}
+
+function Field({ loading, id, placeholder, children }) {
+  const name = (id: string) => id.replace(/-./g, (x) => x[1].toUpperCase());
+
+  return (
+    <FormControl isDisabled={loading}>
+      <FormLabel htmlFor={id}>{children}</FormLabel>
+      <Input type="text" name={name(id)} id={id} placeholder={placeholder} />
+    </FormControl>
   );
 }
