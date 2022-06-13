@@ -33,7 +33,7 @@ export type CreateBookStatus = {
 };
 
 export type CreateBookHook = CreateBookStatus & {
-  createBook: (values: NewBookFormValues) => Promise<void>;
+  createBook: (values: NewBookFormValues) => Promise<any>;
 };
 
 export function useCreateBook(): CreateBookHook {
