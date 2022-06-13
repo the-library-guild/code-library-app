@@ -19,7 +19,7 @@ const MakingAppContext = React.createContext<MakingAppContextValue | undefined>(
   undefined
 );
 
-const isNotDevelopmentEnvironment = process.env.NODE_ENV === 'development';
+const isNotDevelopmentEnvironment = process.env.NODE_ENV !== 'development';
 
 function MakingAppContextProvider({ children }: MakingAppContextProviderProps) {
   const [currentView, setCurrentView] = useState<CurrentView>(STUDENT_VIEW);
