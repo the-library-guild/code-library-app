@@ -26,7 +26,11 @@ import { LoadingOverlay } from '@/components/LoadingOverlay';
 
 import { useCreateBook } from '@/services/code-library-server';
 
-import { fromFieldsToValues, resetValues } from './NewBookForm.helpers';
+import {
+  deriveDesignationFromBookId,
+  fromFieldsToValues,
+  resetValues,
+} from './NewBookForm.helpers';
 
 type OnErrorArgs = {
   title: string;
@@ -61,34 +65,14 @@ const doNothing = () => {
   return;
 };
 
-const initialValues = { bookId: '', designation: '' };
-
-function useNewBookFormSubmission() {
-  const [values, setValues] = useState(initialValues);
-  const [submitting, setSubmitting] = useState(false);
-
-  const handlers = useMemo(
-    () => ({
-      start: () => setSubmitting(true),
-      end: () => setSubmitting(false),
-      setValues,
-      reset: () => setValues(initialValues),
-    }),
-    []
-  );
-
-  return [handlers, { values, submitting }] as const;
-}
-
 export function NewBookForm({
   onSuccess = doNothing,
   onError = doNothing,
   children,
 }: NewBookFormProps) {
   const { createBook, ...status } = useCreateBook();
-  const [submission, { values, submitting }] = useNewBookFormSubmission();
-  const formRef = useRef<HTMLFormElement>(null);
-  const initialRef = useRef<HTMLInputElement>(null);
+  const [submission, { values, initialInputRef, formRef }] =
+    useNewBookFormSubmission();
 
   async function handleSubmission(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -105,67 +89,19 @@ export function NewBookForm({
   }
 
   useEffect(() => {
-    if (submitting && status.success && formRef.current) {
-      const { ...fields } = formRef.current.elements;
-      resetValues(fields);
+    if (submission.pending && status.success) {
       onSuccess({ ...status.success });
       submission.end();
       submission.reset();
     }
-  }, [formRef, onSuccess, status, submission, submitting]);
+  }, [onSuccess, status, submission]);
 
   useEffect(() => {
-    if (submitting && status.error) {
+    if (submission.pending && status.error) {
       onError({ ...status.error });
       submission.end();
     }
-  }, [onError, status, submission, submitting]);
-
-  useEffect(() => {
-    if (initialRef.current) {
-      initialRef.current.focus();
-    }
-  }, []);
-
-  const deriveDesignationFromBookId = (bookId: string) => {
-    if (bookId.startsWith('A11Y')) {
-      return 'A11Y';
-    }
-
-    if (bookId.startsWith('DH')) {
-      return 'DH';
-    }
-
-    if (bookId.startsWith('ENT')) {
-      return 'ENT';
-    }
-
-    if (bookId.startsWith('ID')) {
-      return 'ID';
-    }
-
-    if (bookId.startsWith('IS')) {
-      return 'IS';
-    }
-
-    if (bookId.startsWith('PM')) {
-      return 'PM';
-    }
-
-    if (bookId.startsWith('STS')) {
-      return 'STS';
-    }
-
-    if (bookId.startsWith('SE')) {
-      return 'SE';
-    }
-
-    if (bookId.startsWith('SUS')) {
-      return 'SUS';
-    }
-
-    return '';
-  };
+  }, [onError, status, submission]);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>, name: string) => {
     const value = e.target.value as string;
@@ -179,7 +115,7 @@ export function NewBookForm({
       }));
     }
 
-    submission.setValues((prev) => ({
+    return submission.setValues((prev) => ({
       ...prev,
       [name]: value,
     }));
@@ -203,7 +139,7 @@ export function NewBookForm({
         <FormControl isDisabled={status.loading}>
           <FormLabel htmlFor="book-id">Book ID</FormLabel>
           <Input
-            ref={initialRef}
+            ref={initialInputRef}
             type="text"
             name="bookId"
             id="book-id"
@@ -292,7 +228,7 @@ export function NewBookForm({
           />
         </FormControl>
       </form>
-      <NewBookFormContext.Provider value={{ submitting }}>
+      <NewBookFormContext.Provider value={{ submitting: submission.pending }}>
         {children}
       </NewBookFormContext.Provider>
     </Stack>
@@ -330,4 +266,39 @@ export function NewBookFormSubmissionButton({
       {children}
     </Button>
   );
+}
+
+const initialValues = { bookId: '', designation: '' };
+
+function useNewBookFormSubmission() {
+  const [values, setValues] = useState(initialValues);
+  const [submitting, setSubmitting] = useState(false);
+
+  const formRef = useRef<HTMLFormElement>(null);
+  const initialInputRef = useRef<HTMLInputElement>(null);
+
+  const handlers = useMemo(
+    () => ({
+      start: () => setSubmitting(true),
+      end: () => setSubmitting(false),
+      pending: submitting,
+      setValues,
+      reset: () => {
+        if (formRef.current) {
+          const { ...fields } = formRef.current.elements;
+          resetValues(fields);
+        }
+        setValues(initialValues);
+      },
+    }),
+    [submitting]
+  );
+
+  useEffect(() => {
+    if (initialInputRef.current) {
+      initialInputRef.current.focus();
+    }
+  }, [initialInputRef]);
+
+  return [handlers, { values, formRef, initialInputRef }] as const;
 }
