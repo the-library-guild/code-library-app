@@ -62,6 +62,13 @@ interface UserInfoValue {
   hasPerms: (perm: number | number[]) => boolean;
 }
 
+declare global {
+  interface Window {
+    userInfoFromToken: any;
+    computedUserInfo: any;
+  }
+}
+
 function useBookState(book: Book, userInfo: UserInfoValue): useBookStateValue {
   // TODO: canBorrow = false if user has exceeded their booking limit
   // Shall we add number of rentable books to the JWT token?
@@ -87,6 +94,10 @@ function useBookState(book: Book, userInfo: UserInfoValue): useBookStateValue {
     canProcess,
     canReturn,
   };
+
+  window.userInfoFromToken = userInfo || {};
+  window.computedUserInfo = info || {};
+
   const label = reduceLabel(info);
 
   const [lightColor, darkColor] = reduceColors(info);
