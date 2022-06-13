@@ -105,9 +105,10 @@ export function InternalPage({
       </GridItem>
       {/* Content */}
       <GridItem
+        minH={'100vh'}
         colSpan={{ base: 5, lg: 4 }}
         rowSpan={{ base: 11, lg: 11 }}
-        bg={lightOrDark('white', 'gray.800')}
+        bg={lightOrDark('gray.50', 'gray.800')}
         scrollBehavior={'smooth'}
         overflowY={'scroll'}
         css={{
