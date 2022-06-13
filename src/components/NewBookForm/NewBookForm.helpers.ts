@@ -41,3 +41,43 @@ export const resetValues = (fields: HTMLFormControlsCollection) => {
     field.value = '';
   });
 };
+
+export const deriveDesignationFromBookId = (bookId: string) => {
+  if (bookId.startsWith('A11Y')) {
+    return 'A11Y';
+  }
+
+  if (bookId.startsWith('DH')) {
+    return 'DH';
+  }
+
+  if (bookId.startsWith('ENT')) {
+    return 'ENT';
+  }
+
+  if (bookId.startsWith('ID')) {
+    return 'ID';
+  }
+
+  if (bookId.startsWith('IS')) {
+    return 'IS';
+  }
+
+  if (bookId.startsWith('PM')) {
+    return 'PM';
+  }
+
+  if (bookId.startsWith('STS')) {
+    return 'STS';
+  }
+
+  if (bookId.startsWith('SE')) {
+    return 'SE';
+  }
+
+  if (bookId.startsWith('SUS')) {
+    return 'SUS';
+  }
+
+  return '';
+};
