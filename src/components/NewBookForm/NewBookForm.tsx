@@ -5,6 +5,7 @@ import {
   ReactNode,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -62,15 +63,30 @@ const doNothing = () => {
 
 const initialValues = { bookId: '', designation: '' };
 
+function useNewBookFormSubmission() {
+  const [values, setValues] = useState(initialValues);
+  const [submitting, setSubmitting] = useState(false);
+
+  const handlers = useMemo(
+    () => ({
+      start: () => setSubmitting(true),
+      end: () => setSubmitting(false),
+      setValues,
+      reset: () => setValues(initialValues),
+    }),
+    []
+  );
+
+  return [handlers, { values, submitting }] as const;
+}
+
 export function NewBookForm({
   onSuccess = doNothing,
   onError = doNothing,
   children,
 }: NewBookFormProps) {
   const { createBook, ...status } = useCreateBook();
-
-  const [values, setValues] = useState(initialValues);
-
+  const [submission, { values, submitting }] = useNewBookFormSubmission();
   const formRef = useRef<HTMLFormElement>(null);
   const initialRef = useRef<HTMLInputElement>(null);
 
@@ -78,8 +94,9 @@ export function NewBookForm({
     event.preventDefault();
 
     const { ...fields } = event.currentTarget.elements;
-
     const entries = fromFieldsToValues(fields) as NewBookFormValues;
+
+    submission.start();
 
     try {
       await createBook({ ...entries });
@@ -88,17 +105,21 @@ export function NewBookForm({
   }
 
   useEffect(() => {
-    if (status.success && formRef.current) {
+    if (submitting && status.success && formRef.current) {
       const { ...fields } = formRef.current.elements;
       resetValues(fields);
-      setValues(initialValues);
       onSuccess({ ...status.success });
+      submission.end();
+      submission.reset();
     }
+  }, [formRef, onSuccess, status, submission, submitting]);
 
-    if (status.error) {
+  useEffect(() => {
+    if (submitting && status.error) {
       onError({ ...status.error });
+      submission.end();
     }
-  }, [formRef, onSuccess, onError, status]);
+  }, [onError, status, submission, submitting]);
 
   useEffect(() => {
     if (initialRef.current) {
@@ -151,14 +172,14 @@ export function NewBookForm({
 
     if (name === 'bookId') {
       const designation = deriveDesignationFromBookId(value);
-      return setValues((prev) => ({
+      return submission.setValues((prev) => ({
         ...prev,
         [name]: value,
         designation,
       }));
     }
 
-    setValues((prev) => ({
+    submission.setValues((prev) => ({
       ...prev,
       [name]: value,
     }));
@@ -271,7 +292,7 @@ export function NewBookForm({
           />
         </FormControl>
       </form>
-      <NewBookFormContext.Provider value={{ submitting: status.loading }}>
+      <NewBookFormContext.Provider value={{ submitting }}>
         {children}
       </NewBookFormContext.Provider>
     </Stack>
@@ -308,16 +329,5 @@ export function NewBookFormSubmissionButton({
     >
       {children}
     </Button>
-  );
-}
-
-function Field({ loading, id, placeholder, children }) {
-  const name = (id: string) => id.replace(/-./g, (x) => x[1].toUpperCase());
-
-  return (
-    <FormControl isDisabled={loading}>
-      <FormLabel htmlFor={id}>{children}</FormLabel>
-      <Input type="text" name={name(id)} id={id} placeholder={placeholder} />
-    </FormControl>
   );
 }
