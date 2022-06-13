@@ -4,7 +4,7 @@ start: .env.local npm-install clean
 
 .PHONY: start
 rebuild:
-  docker-compose build --no-cache
+	docker-compose build --no-cache
 
 .env.local:
 	cp .env.dist .env.local
@@ -20,3 +20,9 @@ clean:
 .PHONY: npm-install
 npm-install:
 	docker compose -f docker-compose.helpers.yml run --rm npm
+
+.PHONY: run-server
+run-server:
+	docker compose up -d
+	cd ../code-library-server && npm start
+

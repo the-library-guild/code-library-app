@@ -1,16 +1,16 @@
 version: '3'
 
 services:
-  app:
-    build:
-      context: .
-      target: testing
-    env_file: .env.local
-    # entrypoint: 'node .next/standalone/server.js'
-    ports:
-      - 3000:3000
-    networks:
-      - codelibrary_network
+  # app:
+  #   build:
+  #     context: .
+  #     target: testing
+  #   env_file: .env.local
+  #   # entrypoint: 'node .next/standalone/server.js'
+  #   ports:
+  #     - 3000:3000
+  #   networks:
+  #     - codelibrary_network
 
   mongo:
     image: mongo
@@ -21,19 +21,17 @@ services:
       - mongo-store:/data/db
     networks:
       - codelibrary_network
-  api:
-    restart: always
-    # image: gcr.io/code-library-343215/code-library-api:latest
-    image: code-library-server/sandbox:latest
-    container_name: app_backend
-    networks:
-      - codelibrary_network
-    ports:
-      - 4000:4000
-    env_file:
-      - .env.local
-    depends_on:
-      - mongo
+  # api:
+  #   restart: always
+  #   container_name: app_backend
+  #   networks:
+  #     - codelibrary_network
+  #   ports:
+  #     - 4000:4000
+  #   env_file:
+  #     - .env.local
+  #   depends_on:
+  #     - mongo
 
 volumes:
   mongo-store:
