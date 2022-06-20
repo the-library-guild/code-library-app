@@ -45,7 +45,7 @@ export function useUserInfo(): UserInfoValue {
     case STUDENT_VIEW:
       infoFromToken = {
         ...session?.user,
-        permsInt: Perm.VIEW_BOOKS,
+        permsInt: Perm.RENT_BOOKS,
       } as JWT;
       break;
     case LIBRARIAN_VIEW:
