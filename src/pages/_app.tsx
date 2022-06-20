@@ -63,7 +63,7 @@ function LibraryApp({ Component, pageProps }: LibraryAppProps) {
               <Component {...pageProps} />
             ) : (
               <Stack spacing={4} width="100%">
-                <Text>Unfortunately you can not access this feature :(</Text>
+                <Text>Unfortunately you do not access this feature :(</Text>
               </Stack>
             )}
           </InternalPage>
