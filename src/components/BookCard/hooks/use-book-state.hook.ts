@@ -8,7 +8,7 @@ import {
   PROCESS_BOOK,
   RENT_BOOK,
   RETURN_BOOK,
-} from '../../../services/code-library-server/mutations';
+} from '@/services/code-library-server/mutations';
 
 interface Info {
   isBorrowed: boolean;
@@ -70,10 +70,6 @@ declare global {
 }
 
 function useBookState(book: Book, userInfo: UserInfoValue): useBookStateValue {
-  // TODO: canBorrow = false if user has exceeded their booking limit
-  // Shall we add number of rentable books to the JWT token?
-  // TODO: implement env.ANYONE_CAN_RETURN (also in backend), which will influence canReturn
-
   const text = (text: string) => ({
     includes: (match: string) => text === match,
   });
@@ -105,14 +101,14 @@ function useBookState(book: Book, userInfo: UserInfoValue): useBookStateValue {
 
   const [actionLabel, actionQuery] = reduceActionQuery(info);
 
-  const hasAction = actionLabel !== '';
-
   const [rawAction, { loading, error }] = useMutation(actionQuery, {
     variables: { bookId: book?.id },
     refetchQueries: 'all',
   });
 
-  const action = hasAction && !loading && !error && rawAction;
+  const hasAction = actionLabel !== '' && !loading && !error;
+
+  const action = hasAction ? rawAction : undefined;
 
   return { label, color, hasAction, actionLabel, action };
 }
