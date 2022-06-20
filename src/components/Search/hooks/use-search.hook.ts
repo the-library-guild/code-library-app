@@ -15,6 +15,7 @@ const bySearchTerm = (searchTerm: string) => (book: Book) => {
     book.subjectArea,
     book.subTitle,
     book.title,
+    book.authors,
   ].filter(Boolean) as string[];
 
   return relevantFields.some((tag: string) =>

@@ -9,6 +9,7 @@ export interface BookResource {
     tagline: string;
     publishedDate: Date;
     contentDesc: string;
+    creators?: string;
   };
 }
 
@@ -19,6 +20,7 @@ export type Book = {
   title: string;
   subTitle?: string;
   designation?: string;
+  authors?: string;
   status: BookLifecycleStatus;
   subjectArea?: string;
   quantity: number;
@@ -77,11 +79,18 @@ const isbn = (book: BookResource) => {
   return '';
 };
 
+const authors = (book: BookResource) => {
+  const creators = book?.media?.creators;
+
+  return creators ? creators[0] : '';
+};
+
 export const toSchema = (book: BookResource) => {
   return {
     id: book?._id,
     title: book?.name,
     subTitle: shorten(book?.media?.tagline, 100), // potentially to be called description
+    authors: authors(book),
     designation: designation(book),
     status: status(book),
     subjectArea: subjectArea(book),

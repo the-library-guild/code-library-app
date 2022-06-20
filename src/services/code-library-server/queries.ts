@@ -16,6 +16,7 @@ const GET_BOOK = gql`
         tagline
         publishedDate
         contentDesc
+        creators
       }
     }
   }
@@ -39,6 +40,7 @@ const GET_SHELF = gql`
           tagline
           publishedDate
           contentDesc
+          creators
         }
       }
     }
@@ -61,6 +63,7 @@ const GET_RETURN_BOX = gql`
           tagline
           publishedDate
           contentDesc
+          creators
         }
       }
     }
@@ -85,6 +88,7 @@ const GET_USER_BOOKS = gql`
           tagline
           publishedDate
           contentDesc
+          creators
         }
       }
     }
