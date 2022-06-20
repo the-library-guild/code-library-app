@@ -37,17 +37,16 @@ function BookDetailedPage() {
     <Content>
       <Stack spacing={6} wordBreak="break-all" width="100%">
         <Button
-          variant={'link'}
-          fontSize={'lg'}
+          variant={'outline'}
           fontWeight={'semibold'}
-          onClick={back}
-          justifyContent={'start'}
-          ml={2}
+          fontSize={'lg'}
+          rounded={'lg'}
+          size={'lg'}
           color={useColorModeValue('gray.800', 'white')}
-          _hover={{}}
-          _active={{}}
+          w={8}
+          onClick={back}
         >
-          ← Back
+          ←
         </Button>
         <Suspense
           loading={loading}
