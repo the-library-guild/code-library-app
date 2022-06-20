@@ -1,6 +1,6 @@
 import { NextPage } from 'next';
 
-import { Button, ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider } from '@chakra-ui/react';
 
 import { AppProps as NextAppProps } from 'next/app';
 
@@ -33,11 +33,7 @@ export function LibraryApp({ Component, pageProps }: AppProps) {
             {hasRequiredPermissions ? (
               <Component {...pageProps} />
             ) : (
-              <PermissionDeniedWidget>
-                <Button as={'a'} href={'/shelf'} w={'100%'}>
-                  Explore our shelf
-                </Button>
-              </PermissionDeniedWidget>
+              <PermissionDeniedWidget />
             )}
           </InternalPage>
         );

@@ -1,17 +1,19 @@
 import React, { PropsWithChildren } from 'react';
 
-import { Icon, Stack, Text } from '@chakra-ui/react';
+import Link from 'next/link';
+
+import { Button, Icon, Stack, Text } from '@chakra-ui/react';
 
 import { FaLock } from 'react-icons/fa';
 
-const DEFAULT_TEXT = `Unfortunately you do not have access to this feature :(`;
+const DEFAULT_TITLE = `Unfortunately you do not have access to this feature :(`;
 
 type PermissionDeniedWidgetProps = PropsWithChildren<{
-  text?: string;
+  title?: string;
 }>;
 
 export function PermissionDeniedWidget({
-  text = DEFAULT_TEXT,
+  title = DEFAULT_TITLE,
   children,
 }: PermissionDeniedWidgetProps) {
   return (
@@ -24,8 +26,15 @@ export function PermissionDeniedWidget({
       p={8}
     >
       <Icon as={FaLock} w={8} h={8} />
-      <Text fontSize={'lg'}>{text}</Text>
-      {children}
+      <Text fontSize={'lg'}>{title}</Text>
+      <Text fontSize={'sm'} textAlign={'center'}>
+        {children}
+      </Text>
+      <Link href={'/shelf'} passHref>
+        <Button as={'a'} w={'100%'}>
+          Explore our shelf
+        </Button>
+      </Link>
     </Stack>
   );
 }
