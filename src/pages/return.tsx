@@ -1,31 +1,27 @@
 import React from 'react';
-import { Stack } from '@chakra-ui/react';
 
 import { Perm } from 'code-library-perms';
+import { useShelf } from '@/hooks/use-shelf.hook';
+import { Book } from '@/services/code-library-server';
+import { ReturnBoxScreen } from '@/components/ReturnBoxScreen';
 
-import { Content } from '../components/Content';
-import { useUserInfo } from '../hooks/use-user-info.hook';
-import { useUserBorrowedBooks } from '../hooks/use-borrowed-books.hook';
-import { BooksContainer } from '../components/BooksContainer';
-import { ResultsCount } from '../components/ResultsCount';
-
+const text = (text: string) => ({
+  includes: (match: string) => text === match,
+});
 function ReturnBoxPage() {
-  const { user } = useUserInfo();
+  const { loading, error, books } = useShelf();
 
-  const { loading, error, books } = useUserBorrowedBooks(user.email);
+  const byProcessingStatus = (book: Book) =>
+    text(book.status).includes('Processing');
+
+  const booksOnReturnBox = books.filter(byProcessingStatus);
 
   return (
-    <Content>
-      <Stack spacing={4} width="100%">
-        <ResultsCount count={books.length} text={'Books borrowed by you'} />
-        <Stack spacing={6} wordBreak="break-all" width="100%">
-          <BooksContainer {...{ loading, error, books }} />
-        </Stack>
-      </Stack>
-    </Content>
+    <ReturnBoxScreen loading={loading} error={error} books={booksOnReturnBox} />
   );
 }
 
+ReturnBoxPage.title = 'ReturnBox';
 ReturnBoxPage.permissions = Perm.MANAGE_BOOKS;
 
 export default ReturnBoxPage;
