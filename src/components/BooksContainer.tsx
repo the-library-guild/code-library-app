@@ -10,12 +10,14 @@ interface BooksProps {
   loading: boolean;
   error: any;
   books: Book[];
+  withActions?: boolean;
 }
 
 export const BooksContainer = React.memo(function BooksContainer({
   loading,
   error,
   books,
+  withActions = false,
 }: BooksProps) {
   const noBooksOnShelf = books?.length === 0;
 
@@ -27,7 +29,7 @@ export const BooksContainer = React.memo(function BooksContainer({
       fallback={<LocalSpinner />}
     >
       {books.map((book) => (
-        <BookCard key={book?.id} book={book} />
+        <BookCard key={book?.id} book={book} isExpanded={withActions} />
       ))}
       {noBooksOnShelf && <EmptyShelf />}
     </Suspense>
