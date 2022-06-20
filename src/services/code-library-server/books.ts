@@ -41,7 +41,7 @@ const shorten = (str: string, maxLength: number): string => {
 const tags = (book: BookResource) => book?.media?.contentTags;
 
 const designation = (book: BookResource) =>
-  tags(book) ? tags(book)[3] : 'Unknown';
+  tags(book) && tags(book)[3] !== '' ? tags(book)[3] : 'Unknown';
 
 const status = (book: BookResource): BookLifecycleStatus => {
   const stateTags = book?.rentable?.stateTags ?? [];
