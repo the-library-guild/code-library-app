@@ -31,6 +31,5 @@ declare module 'next-auth/jwt' {
     bookingLimit: number;
     exp: number;
     iat: number;
-    _doc: { childrenIds: string[] };
   }
 }

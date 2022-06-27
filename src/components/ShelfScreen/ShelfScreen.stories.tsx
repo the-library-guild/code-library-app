@@ -28,7 +28,6 @@ const sampleUser = {
   role: STUDENT_ROLE as UserRole,
   exp: 0,
   iat: 0,
-  _doc: { childrenIds: [] },
 };
 
 const book = {
