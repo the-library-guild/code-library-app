@@ -1,14 +1,8 @@
-import { gql, useMutation } from '@apollo/client';
 import { useColorModeValue } from '@chakra-ui/react';
 
 import { Perm } from 'code-library-perms';
 
 import { Book } from '@/services/code-library-server/books';
-import {
-  PROCESS_BOOK,
-  RENT_BOOK,
-  RETURN_BOOK,
-} from '@/services/code-library-server/mutations';
 
 interface Info {
   isBorrowed: boolean;
@@ -22,7 +16,6 @@ interface useBookStateValue {
   label: string;
   color: string;
   hasAction: boolean;
-  actionLabel: string;
   action: any;
 }
 
@@ -35,27 +28,16 @@ function reduceLabel(i: Info) {
 }
 function reduceColors(i: Info) {
   if (i.isAvailable) return ['green.400', 'green.300'];
+  if (i.isProcessing) return ['yellow.600', 'yellow.300'];
 
   return ['red.600', 'red.300'];
 }
-function reduceActionQuery(i: Info): [string, any] {
-  if (i.isProcessing && i.canProcess) return ['Return to Shelf', PROCESS_BOOK];
-  if (i.isAvailable && i.canRent) return ['Borrow', RENT_BOOK];
-  if (i.isBorrowed && i.canReturn) return ['Return', RETURN_BOOK];
+function reduceActionQuery(i: Info): string {
+  if (i.isProcessing && i.canProcess) return 'Return to Shelf';
+  if (i.isAvailable && i.canRent) return 'Borrow';
+  if (i.isBorrowed && i.canReturn) return 'Return';
 
-  return [
-    '',
-    // TODO: find a more elegant solution for mutation Placeholder
-    gql`
-      mutation Placeholder {
-        processBook(bookId: "lal") {
-          ... on Success {
-            id
-          }
-        }
-      }
-    `,
-  ];
+  return '';
 }
 
 interface UserInfoValue {
@@ -99,17 +81,10 @@ function useBookState(book: Book, userInfo: UserInfoValue): useBookStateValue {
   const [lightColor, darkColor] = reduceColors(info);
   const color = useColorModeValue(lightColor, darkColor);
 
-  const [actionLabel, actionQuery] = reduceActionQuery(info);
+  const action = reduceActionQuery(info);
 
-  const [rawAction, { loading, error }] = useMutation(actionQuery, {
-    variables: { bookId: book?.id },
-    refetchQueries: 'all',
-  });
+  const hasAction = action !== '';
 
-  const hasAction = actionLabel !== '' && !loading && !error;
-
-  const action = hasAction ? rawAction : undefined;
-
-  return { label, color, hasAction, actionLabel, action };
+  return { label, color, hasAction, action };
 }
 export { useBookState };

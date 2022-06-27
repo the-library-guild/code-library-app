@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
+
 import NextLink from 'next/link';
+
+import { UrlObject } from 'url';
+
 import {
   Flex,
   Text,
-  Button,
   useColorModeValue,
   Link,
   Heading,
@@ -11,28 +14,26 @@ import {
   Badge,
 } from '@chakra-ui/react';
 
-import { useBookState } from '.';
-import { useUserInfo } from '../../hooks/use-user-info.hook';
+import { useUserInfo } from '@/hooks/use-user-info.hook';
 import { Book } from '@/services/code-library-server/books';
+import { useBookState } from '.';
+import { BorrowBookButton } from './BorrowBookButton';
+import { BookLifeCycleContextProvider } from './BookLifeCycleContext';
+import { ReturnBookButton } from './ReturnBookButton';
+import { SortBookButton } from './SortBookButton';
 
 interface BookCardProps {
   book: Book;
   isExpanded?: boolean;
-  label: string;
-  color: string;
-  hasAction: boolean;
-  actionLabel: string;
-  action: any;
 }
-const BookCard = function BookCard({
-  book,
-  isExpanded = false,
-  label,
-  color,
-  hasAction,
-  actionLabel,
-  action,
-}: BookCardProps) {
+
+export function BookCard({ book, isExpanded = false }: BookCardProps) {
+  const userInfo = useUserInfo();
+
+  const { label, color, hasAction, action } = useBookState(book, userInfo);
+
+  const { bookingLimit } = userInfo.user;
+
   return (
     <Stack
       as={'article'}
@@ -44,20 +45,14 @@ const BookCard = function BookCard({
     >
       <Flex justify={'space-between'} align={'center'}>
         <Heading fontSize={'xl'} noOfLines={1}>
-          <NextLink
+          <NavigationLink
             href={{
               pathname: '/books/[id]',
               query: { id: book?.id },
             }}
-            passHref
           >
-            <Link
-              style={{ textDecoration: 'none' }}
-              _focus={{ boxShadow: 'none' }}
-            >
-              {book.title}
-            </Link>
-          </NextLink>
+            {book.title}
+          </NavigationLink>
         </Heading>
         <Badge colorScheme={'green'} variant={'outline'}>
           {book.designation}
@@ -67,45 +62,46 @@ const BookCard = function BookCard({
         {book.subTitle}
       </Text>
       <Flex align={'center'} justify={'space-between'} pt={6}>
-        <Text py={2} color={color}>
+        <Text py={2} color={color} fontWeight={'semibold'}>
           {label}
         </Text>
         {isExpanded && hasAction && (
           <>
-            <Button variant={'outline'} onClick={action}>
-              {actionLabel}
-            </Button>
+            <BookLifeCycleContextProvider bookingLimit={bookingLimit}>
+              <ActionButton action={action} bookId={book?.id} />
+            </BookLifeCycleContextProvider>
           </>
         )}
       </Flex>
     </Stack>
   );
-};
-
-interface BookCardLoaderProps {
-  book: Book;
-  isExpanded?: boolean;
 }
 
-const BookCardLoader = ({ book, isExpanded = false }: BookCardLoaderProps) => {
-  const userInfo = useUserInfo();
-
-  const { label, color, hasAction, actionLabel, action } = useBookState(
-    book,
-    userInfo
-  );
-
+function NavigationLink({
+  href,
+  children,
+}: PropsWithChildren<{ href: string | UrlObject }>) {
   return (
-    <BookCard
-      book={book}
-      isExpanded={isExpanded}
-      label={label}
-      color={color}
-      hasAction={hasAction}
-      actionLabel={actionLabel}
-      action={action}
-    />
+    <NextLink href={href} passHref>
+      <Link style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
+        {children}
+      </Link>
+    </NextLink>
   );
-};
+}
 
-export { BookCardLoader as BookCard, BookCard as BookCardComponent };
+function ActionButton({ action, bookId }: { action: string; bookId: string }) {
+  if (action === 'Borrow') {
+    return <BorrowBookButton bookId={bookId} />;
+  }
+
+  if (action === 'Return') {
+    return <ReturnBookButton bookId={bookId} />;
+  }
+
+  if (action === 'Return to Shelf') {
+    return <SortBookButton bookId={bookId} />;
+  }
+
+  return null;
+}
