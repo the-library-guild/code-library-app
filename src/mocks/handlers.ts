@@ -1,7 +1,13 @@
 import { graphql } from 'msw';
 
 import { GET_BOOK, GET_SHELF } from '@/services/code-library-server/queries';
-import { CREATE_BOOK } from '@/services/code-library-server';
+import {
+  CREATE_BOOK,
+  PROCESS_BOOK,
+  RENT_BOOK,
+  RETURN_BOOK,
+} from '@/services/code-library-server';
+
 import { Perm } from 'code-library-perms';
 
 const parentContainerSample = {
@@ -28,7 +34,7 @@ const parentContainerSample = {
   parent: null,
 };
 
-const bookSample = {
+export const bookSample = {
   __typename: 'Item',
   _id: '628a9ac2a811078ae8f9d46a',
   name: 'NeuroTribes',
@@ -53,7 +59,9 @@ const bookSample = {
   children: [],
 };
 
-const books = new Map([
+const borrowed = new Map([]);
+
+const books = new Map<string, typeof bookSample>([
   [
     '628a9ac2a811078ae8f9d46a',
     {
@@ -207,4 +215,115 @@ export const handlers = [
       );
     }
   ),
+
+  server.mutation(RENT_BOOK, (req, res, ctx) => {
+    const { bookId } = req.variables;
+
+    if (books.has(bookId)) {
+      const bookToRent = books.get(bookId) as typeof bookSample;
+
+      books.set(bookId, {
+        ...bookToRent,
+        rentable: {
+          ...bookToRent.rentable,
+          stateTags: ['Borrowed'],
+        },
+      });
+
+      borrowed.set(bookId, new Date().toDateString());
+
+      return res(
+        ctx.delay(3000),
+        ctx.data({
+          rentBook: {
+            __typename: 'Success',
+            id: bookId,
+          },
+        })
+      );
+    }
+
+    return res(
+      ctx.data({
+        rentBook: {
+          __typename: 'Error',
+          msg: `Could not find book with id ${bookId}`,
+        },
+      })
+    );
+  }),
+
+  server.mutation(RETURN_BOOK, (req, res, ctx) => {
+    const { bookId } = req.variables;
+
+    if (books.has(bookId)) {
+      const bookToRent = books.get(bookId) as typeof bookSample;
+
+      books.set(bookId, {
+        ...bookToRent,
+        rentable: {
+          ...bookToRent.rentable,
+          stateTags: ['Processing'],
+        },
+      });
+
+      borrowed.delete(bookId);
+
+      return res(
+        ctx.delay(3000),
+        ctx.data({
+          returnBook: {
+            __typename: 'Success',
+            id: bookId,
+          },
+        })
+      );
+    }
+
+    return res(
+      ctx.data({
+        returnBook: {
+          __typename: 'Error',
+          msg: `Could not find book with id ${bookId}`,
+        },
+      })
+    );
+  }),
+
+  server.mutation(PROCESS_BOOK, (req, res, ctx) => {
+    const { bookId } = req.variables;
+
+    if (books.has(bookId)) {
+      const bookToProcess = books.get(bookId) as typeof bookSample;
+
+      books.set(bookId, {
+        ...bookToProcess,
+        rentable: {
+          ...bookToProcess.rentable,
+          stateTags: ['Available'],
+        },
+      });
+
+      borrowed.delete(bookId);
+
+      return res(
+        ctx.delay(3000),
+        ctx.data({
+          processBook: {
+            __typename: 'Success',
+            id: bookId,
+          },
+        })
+      );
+    }
+
+    return res(
+      ctx.data({
+        processBook: {
+          __typename: 'Error',
+          msg: `Could not find book with id ${bookId}`,
+        },
+      })
+    );
+  }),
 ];
