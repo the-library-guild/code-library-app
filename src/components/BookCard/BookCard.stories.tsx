@@ -2,8 +2,12 @@ import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 import { BookLifecycleStatus } from '@/services/code-library-server/books';
 
-import { BookCardComponent as BookCard } from './BookCard';
+import { BookCard } from './BookCard';
 import { Stack } from '@chakra-ui/react';
+import { mockSession } from '@/mocks/auth.handlers';
+import { CodeLibraryServer } from '@/services/code-library-server';
+import { ApolloProvider } from '@apollo/client';
+import { SessionProvider } from 'next-auth/react';
 
 export default {
   component: BookCard,
@@ -12,9 +16,13 @@ export default {
 
 const Preview = ({ children }) => {
   return (
-    <Stack p={['1rem', '2rem']} mt={'2.5rem'}>
-      {children}
-    </Stack>
+    <SessionProvider session={mockSession} refetchInterval={0}>
+      <ApolloProvider client={CodeLibraryServer}>
+        <Stack p={['1rem', '2rem']} mt={'2.5rem'}>
+          {children}
+        </Stack>
+      </ApolloProvider>
+    </SessionProvider>
   );
 };
 
@@ -29,40 +37,38 @@ const book = {
   isbn: '',
 };
 
-const SingleNonInteractiveTemplate: ComponentStory<typeof BookCard> = (
-  args
-) => (
+const Template: ComponentStory<typeof BookCard> = (args) => (
   <Preview>
     <BookCard {...args} />
   </Preview>
 );
 
-export const Available = SingleNonInteractiveTemplate.bind({});
-
+export const Available = Template.bind({});
 Available.args = {
   book,
-  color: 'green.300',
-  label: 'Available',
 };
 
-export const Borrowed = SingleNonInteractiveTemplate.bind({});
-
+export const Borrowed = Template.bind({});
 Borrowed.args = {
-  book,
-  color: 'red.300',
-  label: 'Borrowed',
+  book: {
+    ...book,
+    status: 'Borrowed',
+  },
 };
 
-export const WithActionButton = SingleNonInteractiveTemplate.bind({});
+export const Processing = Template.bind({});
+Processing.args = {
+  book: {
+    ...book,
+    status: 'Processing',
+  },
+};
+
+export const WithActionButton = Template.bind({});
 
 WithActionButton.args = {
   book,
-  color: 'green.300',
-  label: 'Available',
   isExpanded: true,
-  hasAction: true,
-  action: false,
-  actionLabel: 'Borrow',
 };
 
 const bookWithLongText = {
@@ -73,26 +79,9 @@ const bookWithLongText = {
     'Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas cum aliquam eveniet, nihil numquam nulla, assumenda alias ratione aspernatur quod debitis aliquid impedit adipisci, enim illo qui maiores voluptatem ipsam.',
 };
 
-export const WithLongText = SingleNonInteractiveTemplate.bind({});
+export const WithLongText = Template.bind({});
 
 WithLongText.args = {
   ...WithActionButton.args,
   book: bookWithLongText,
-};
-
-const MultipleSingleNonInteractiveTemplate: ComponentStory<typeof BookCard> = (
-  args
-) => (
-  <Preview>
-    <BookCard {...args} />
-    <BookCard {...args} />
-    <BookCard {...args} />
-    <BookCard {...args} />
-  </Preview>
-);
-
-export const Multiple = MultipleSingleNonInteractiveTemplate.bind({});
-
-Multiple.args = {
-  ...WithActionButton.args,
 };
