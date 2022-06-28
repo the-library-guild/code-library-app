@@ -73,10 +73,6 @@ export function ReturnBookButton({ bookId }: { bookId: string }) {
     returnBook();
   };
 
-  useEffect(() => {
-    if (error) alert('Oh no... something went wrong');
-  }, [error]);
-
   return (
     <>
       <ReturnBookDialog loading={loading} error={error} />

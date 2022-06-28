@@ -30,12 +30,10 @@ export function BookLifeCycleContextProvider({
   const borrowBook = () => {
     if (hasReachedLimit) return;
     setNumberOfBooksBorrowed((prev) => prev + 1);
-    alert('Book borrowed!');
   };
   const returnBook = () => {
     if (numberOfBooksBorrowed === 0) return;
     setNumberOfBooksBorrowed((prev) => prev - 1);
-    alert('Book returned!');
   };
 
   const handlers = {

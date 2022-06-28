@@ -81,7 +81,7 @@ export function BorrowBookButton({ bookId }: { bookId: string }) {
 
   const {
     hasReachedLimit,
-    handlers: { borrowBook },
+    handlers: { borrowBook, returnBook },
   } = useBookLifeCycle();
 
   const onClick = async () => {
@@ -89,16 +89,12 @@ export function BorrowBookButton({ bookId }: { bookId: string }) {
     borrowBook();
   };
 
-  useEffect(() => {
-    if (error) alert('Oh no... something went wrong');
-  }, [error]);
-
   return (
     <>
       <BorrowBookDialog
         loading={loading}
         error={error}
-        onReturn={() => alert('returned')}
+        onReturn={() => returnBook()}
       />
       <Button
         variant={'outline'}
