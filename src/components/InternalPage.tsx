@@ -155,22 +155,22 @@ function ContentSection({ children }) {
 
   return (
     <GridItem
-      minH={'100vh'}
+      minH={'calc(100vh - var(--chakra-sizes-14))'}
       colSpan={{ base: 5, lg: 4 }}
       rowSpan={{ base: 11, lg: 11 }}
       bg={lightOrDark('gray.50', 'gray.800')}
-      scrollBehavior={'smooth'}
       overflowY={'scroll'}
+      overscrollBehaviorY={'contain'}
       css={{
         '&::-webkit-scrollbar': {
           width: '4px',
         },
         '&::-webkit-scrollbar-track': {
-          width: '6px',
+          width: '4px',
         },
         '&::-webkit-scrollbar-thumb': {
-          background: 'var(--chakra-colors-whiteAlpha-700)',
-          borderRadius: '12px',
+          background: 'gray',
+          borderRadius: '0',
         },
       }}
     >
@@ -237,10 +237,10 @@ export function InternalPage({
         </Header>
       </HeaderSection>
       <ContentSection>
-        {React.cloneElement(children, {
-          ...children.props,
-          user,
-        })}
+          {React.cloneElement(children, {
+            ...children.props,
+            user,
+          })}
       </ContentSection>
     </InternalPageLayout>
   );

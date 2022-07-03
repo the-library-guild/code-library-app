@@ -42,21 +42,13 @@ function ShelfScreen({ loading, error, books }: ShelfScreenProps) {
               text={search.searchTerm ? 'Results' : 'Books in the shelf'}
             />
           )}
-          <Stack
-            spacing={{ base: 4, md: 6 }}
-            wordBreak="break-all"
-            width="100%"
-          >
-            <InfiniteScroll results={results} loading={loading}>
-              {({ booksToRender }) => {
-                return (
-                  <BooksContainer
-                    {...{ loading, error, books: booksToRender }}
-                  />
-                );
-              }}
-            </InfiniteScroll>
-          </Stack>
+          <InfiniteScroll results={results} loading={loading}>
+            {({ booksToRender }) => {
+              return (
+                <BooksContainer {...{ loading, error, books: booksToRender }} />
+              );
+            }}
+          </InfiniteScroll>
         </Stack>
       </Stack>
     </>

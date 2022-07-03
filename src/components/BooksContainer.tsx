@@ -2,7 +2,7 @@ import React from 'react';
 
 import { BookCard } from './BookCard/BookCard';
 import { Suspense } from './Suspense';
-import { Flex, Spinner, useColorModeValue } from '@chakra-ui/react';
+import { Box, Flex, Spinner, Stack, useColorModeValue } from '@chakra-ui/react';
 
 import { Book } from '@/services/code-library-server/books';
 
@@ -28,10 +28,23 @@ export const BooksContainer = React.memo(function BooksContainer({
       onErrorMessage={error?.message}
       fallback={<LocalSpinner />}
     >
-      {books.map((book) => (
-        <BookCard key={book?.id} book={book} isExpanded={withActions} />
-      ))}
-      {noBooksOnShelf && <EmptyShelf />}
+      <Stack
+        spacing={{ base: 4, md: 6 }}
+        wordBreak="break-all"
+        width="100%"
+        scrollBehavior={'smooth'}
+        overflowY={'scroll'}
+        css={{
+          '&::-webkit-scrollbar': {
+            appearance: 'none',
+          },
+        }}
+      >
+        {books.map((book) => (
+          <BookCard key={book?.id} book={book} isExpanded={withActions} />
+        ))}
+        {noBooksOnShelf && <EmptyShelf />}
+      </Stack>
     </Suspense>
   );
 });
