@@ -15,10 +15,10 @@ import {
   ModalBody,
   ModalFooter,
   ModalHeader,
-  Link,
   Spinner,
   Stack,
   Text,
+  Button,
 } from '@chakra-ui/react';
 import { useColorModeVariant } from '@/hooks/use-color-mode-variant.hook';
 import { WarningTwoIcon } from '@chakra-ui/icons';
@@ -60,27 +60,60 @@ const DefaultFallback = () => {
   );
 };
 
-const DefaultError = () => (
+const InternalServerErrorMessage = () => (
   <>
-    <ModalHeader textAlign={'center'}>Oh snap...</ModalHeader>
-    <ActionStatusDialog.Body>
-      <Stack spacing={2} align={'center'}>
-        <WarningTwoIcon w={12} h={12} color={'red.300'} />
-        <Text fontWeight={'semibold'}>
-          Something went wrong while trying to process your request 😢
-        </Text>
-      </Stack>
-    </ActionStatusDialog.Body>
-    <ActionStatusDialog.Footer>
-      <Text>
-        Please try again later or contact{' '}
-        <Link href="mailto:admin.library@code.berlin" color={'blue.300'}>
-          admin.library@code.berlin
-        </Link>
-      </Text>
-    </ActionStatusDialog.Footer>
+    <Text>Something went wrong while trying to process your request.</Text>
+    <Text alignContent={'center'}>Please try again later!</Text>
   </>
 );
+
+const InsufficientPermissionsErrorMessage = ({
+  description,
+}: {
+  description: string;
+}) => (
+  <>
+    <Text>
+      Unfortunately you do not have the rights to perform this operation.
+    </Text>
+    <Text fontWeight={'semibold'}>{description}</Text>
+  </>
+);
+
+const ErrorMessage = ({
+  error,
+}: {
+  error: { title: string; description: string };
+}) => {
+  if (error.title === 'Unauthorized') {
+    return (
+      <InsufficientPermissionsErrorMessage description={error.description} />
+    );
+  }
+
+  return <InternalServerErrorMessage />;
+};
+
+const DefaultError = () => {
+  const { onClose, error } = useActionStatusDialogContext();
+
+  return (
+    <>
+      <ActionStatusDialogBody>
+        <Stack spacing={4} align={'center'} my={8}>
+          <WarningTwoIcon w={14} h={14} color={'red.300'} />
+          <Text fontWeight={'semibold'}>Oh snap...</Text>
+          <ErrorMessage error={error} />
+        </Stack>
+      </ActionStatusDialogBody>
+      <ActionStatusDialogFooter>
+        <Button w={'100%'} onClick={onClose}>
+          Close
+        </Button>
+      </ActionStatusDialogFooter>
+    </>
+  );
+};
 
 type ActionStatusDialogProps = {
   loading: boolean;
@@ -111,12 +144,14 @@ export function ActionStatusDialog({
     onOpen,
     onClose,
     isOpen,
+    loading,
+    error,
   };
 
   return (
     <>
       <Modal
-        closeOnOverlayClick={true}
+        closeOnOverlayClick={false}
         blockScrollOnMount={false}
         isOpen={isOpen}
         onClose={onClose}

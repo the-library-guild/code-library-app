@@ -1,6 +1,4 @@
-import { useEffect } from 'react';
-
-import { ApolloError, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 
 import { CheckCircleIcon } from '@chakra-ui/icons';
 
@@ -13,12 +11,6 @@ import {
   useActionStatusDialogContext,
 } from './ActionStatusDialog';
 import { useBookLifeCycle } from './BookLifeCycleContext';
-
-type BorrowBookDialogProps = {
-  loading: boolean;
-  error: ApolloError | undefined;
-  onReturn: () => any;
-};
 
 const Success = ({ onReturn }) => {
   const { onClose } = useActionStatusDialogContext();
@@ -59,25 +51,13 @@ const Success = ({ onReturn }) => {
   );
 };
 
-export function BorrowBookDialog({
-  loading,
-  error,
-  onReturn,
-}: BorrowBookDialogProps) {
-  return (
-    <ActionStatusDialog
-      loading={loading}
-      error={error}
-      onSuccess={<Success onReturn={onReturn} />}
-    />
-  );
-}
-
 export function BorrowBookButton({ bookId }: { bookId: string }) {
-  const [dispatch, { loading, error }] = useMutation(RENT_BOOK, {
-    variables: { bookId },
-    refetchQueries: 'all',
-  });
+  const [dispatch, { loading, error: networkError, data }] = useMutation(
+    RENT_BOOK,
+    {
+      variables: { bookId },
+    }
+  );
 
   const {
     hasReachedLimit,
@@ -89,12 +69,41 @@ export function BorrowBookButton({ bookId }: { bookId: string }) {
     borrowBook();
   };
 
+  const onReturn = () => returnBook();
+
+  let error: any | undefined;
+  if (data) {
+    const { __typename: type, ...response } = data.rentBook;
+
+    switch (type) {
+      case 'MissingPermissionsError':
+        error = {
+          title: 'Unauthorized',
+          description: response.msg,
+        };
+        break;
+      case 'Error':
+        error = {
+          title: 'Internal Error',
+          description: response.msg,
+        };
+        break;
+    }
+  }
+
+  if (networkError) {
+    error = {
+      title: 'Server Error',
+      description: networkError.message,
+    };
+  }
+
   return (
     <>
-      <BorrowBookDialog
+      <ActionStatusDialog
         loading={loading}
         error={error}
-        onReturn={() => returnBook()}
+        onSuccess={<Success onReturn={onReturn} />}
       />
       <Button
         variant={'outline'}
