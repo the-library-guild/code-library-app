@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import { useRouter } from 'next/router';
 
@@ -17,21 +17,11 @@ function BookDetailedPage() {
 
   const bookId = query.id as string;
 
-  const { loading, error, data, refetch } = useQuery(GET_BOOK, {
+  const { loading, error, data } = useQuery(GET_BOOK, {
     variables: { bookId },
   });
 
   const book = toSchema(data?.getBook);
-
-  useEffect(() => {
-    function refetchBookList() {
-      refetch();
-    }
-
-    window.addEventListener('updateBookList', refetchBookList);
-
-    return () => window.removeEventListener('updateBookList', refetchBookList);
-  }, [refetch]);
 
   return (
     <BookDetailsScreen
