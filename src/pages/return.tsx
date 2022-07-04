@@ -22,6 +22,6 @@ function ReturnBoxPage() {
 }
 
 ReturnBoxPage.title = 'ReturnBox';
-ReturnBoxPage.permissions = Perm.MANAGE_BOOKS;
+ReturnBoxPage.permissions = Perm.VIEW_BOOKS;
 
 export default ReturnBoxPage;
