@@ -217,7 +217,7 @@ function QrCodePage() {
                     </option>
                   ))}
                 </Select>
-                <FormHelperText>i.e. A11Y01</FormHelperText>
+                <FormHelperText>Select which title to connect</FormHelperText>
               </FormControl>
               <PrimaryButton
                 type={'submit'}
