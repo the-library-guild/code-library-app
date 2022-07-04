@@ -52,8 +52,6 @@ export function BookCard({ book, isExpanded = false }: BookCardProps) {
 
   const { label, color, hasAction, action } = useBookState(book, userInfo);
 
-  const { bookingLimit } = userInfo.user;
-
   const { showInstructionsFor, setInstructionsFor, setError, error, cleanup } =
     useActionInstructions();
 
@@ -67,20 +65,23 @@ export function BookCard({ book, isExpanded = false }: BookCardProps) {
       spacing={'2'}
     >
       <Flex justify={'space-between'} align={'center'}>
-        <Heading fontSize={'xl'} noOfLines={1}>
-          <NavigationLink
-            href={{
-              pathname: '/books/[id]',
-              query: { id: book?.id },
-            }}
-          >
-            {book.title}
-          </NavigationLink>
-        </Heading>
-        <Badge colorScheme={'green'} variant={'outline'}>
+        <Text noOfLines={1} fontSize={'xs'} maxW={'30%'}>
+          {book.authors}
+        </Text>
+        <Badge colorScheme={'green'} variant={'outline'} fontSize={'md'}>
           {book.designation}
         </Badge>
       </Flex>
+      <Heading fontSize={'xl'} noOfLines={1}>
+        <NavigationLink
+          href={{
+            pathname: '/books/[id]',
+            query: { id: book?.id },
+          }}
+        >
+          {book.title}
+        </NavigationLink>
+      </Heading>
       <Text noOfLines={[2, 1]} fontSize={'medium'}>
         {book.subTitle}
       </Text>
