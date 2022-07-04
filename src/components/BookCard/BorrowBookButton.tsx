@@ -8,7 +8,7 @@ import {
   Text,
   ModalCloseButton,
   Popover,
-  PopoverTrigger,
+  PopoverTrigger as OrigPopoverTrigger,
   PopoverContent,
   PopoverArrow,
   PopoverCloseButton,
@@ -27,6 +27,9 @@ import {
 
 import { dueDateFromNow } from './BookCard.helpers';
 import { useAccount } from '../AccountManagementContext';
+
+export const PopoverTrigger: React.FC<{ children: React.ReactNode }> =
+  OrigPopoverTrigger;
 
 function Overbooked() {
   return (
