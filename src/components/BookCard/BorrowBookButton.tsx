@@ -1,13 +1,18 @@
 import { useMutation } from '@apollo/client';
 
-import { CheckCircleIcon } from '@chakra-ui/icons';
+import { CheckCircleIcon, InfoIcon, NotAllowedIcon } from '@chakra-ui/icons';
 
 import {
   Stack,
-  Divider,
   Button,
   Text,
   ModalCloseButton,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverBody,
 } from '@chakra-ui/react';
 
 import {
@@ -21,6 +26,33 @@ import {
 } from './ActionStatusDialog';
 
 import { dueDateFromNow } from './BookCard.helpers';
+import { useAccount } from '../AccountManagementContext';
+
+function Overbooked() {
+  return (
+    <Popover>
+      <PopoverTrigger>
+        <Button leftIcon={<InfoIcon />}>Overbooked</Button>
+      </PopoverTrigger>
+      <PopoverContent>
+        <PopoverArrow />
+        <PopoverCloseButton size={'md'} />
+        <PopoverBody p={8} textAlign={'center'}>
+          <NotAllowedIcon
+            w={12}
+            h={12}
+            alignSelf={'center'}
+            color={'red.300'}
+          />
+          <Text mt={4} fontWeight={'semibold'}>
+            You have reached the limit of books one can borrow.
+          </Text>
+          <Text>Please return one of your books before getting a new one.</Text>
+        </PopoverBody>
+      </PopoverContent>
+    </Popover>
+  );
+}
 
 export const BorrowingInstructions = () => {
   const { onCompleted } = useActionStatusContext();
@@ -92,6 +124,10 @@ export function BorrowBookButton({
     },
   });
 
+  const { numberOfBooksBorrowed } = useAccount();
+
+  const hasReachedLimit = numberOfBooksBorrowed >= 2;
+
   const onClick = () => {
     dispatch();
   };
@@ -103,18 +139,19 @@ export function BorrowBookButton({
     });
   }
 
-  const hasReachedLimit = false;
-
   return (
     <>
-      <Button
-        variant={'outline'}
-        onClick={onClick}
-        isLoading={loading}
-        isDisabled={hasReachedLimit}
-      >
-        Borrow
-      </Button>
+      {hasReachedLimit && <Overbooked />}
+      {!hasReachedLimit && (
+        <Button
+          variant={'outline'}
+          onClick={onClick}
+          isLoading={loading}
+          isDisabled={hasReachedLimit}
+        >
+          Borrow
+        </Button>
+      )}
     </>
   );
 }

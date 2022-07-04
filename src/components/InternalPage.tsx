@@ -36,6 +36,8 @@ import { BORROWED, RETURN_BOX, SHELF } from '@/helpers/routes';
 
 import { useColorModeVariant } from '@/hooks/use-color-mode-variant.hook';
 import { AppUser, LIBRARIAN_ROLE } from '@/hooks/use-user-info.hook';
+import { AccountManagementContextProvider } from './AccountManagementContext';
+import { ActionStatusContextProvider } from './BookCard/ActionStatusDialog';
 
 interface SidebarOptionsProps {
   onClose: () => void;
@@ -237,10 +239,14 @@ export function InternalPage({
         </Header>
       </HeaderSection>
       <ContentSection>
-          {React.cloneElement(children, {
-            ...children.props,
-            user,
-          })}
+        <ActionStatusContextProvider>
+          <AccountManagementContextProvider email={user.email}>
+            {React.cloneElement(children, {
+              ...children.props,
+              user,
+            })}
+          </AccountManagementContextProvider>
+        </ActionStatusContextProvider>
       </ContentSection>
     </InternalPageLayout>
   );
