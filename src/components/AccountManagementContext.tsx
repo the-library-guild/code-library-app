@@ -1,20 +1,8 @@
 import { BookResource, fromResponse } from '@/services/code-library-server';
 import { gql, useQuery } from '@apollo/client';
 import { createContext, useContext, useEffect } from 'react';
-import { Spinner, useColorModeValue } from '@chakra-ui/react';
-import { PermissionDeniedWidget } from './PermissionDeniedWidget';
 
-function Loading() {
-  return (
-    <Spinner
-      alignSelf={'center'}
-      thickness="4px"
-      speed="0.65s"
-      color={useColorModeValue('gray.600', 'gray.300')}
-      size="xl"
-    />
-  );
-}
+import { PermissionDeniedWidget } from './PermissionDeniedWidget';
 
 const AccountManagementContext = createContext({} as any);
 
@@ -29,7 +17,7 @@ export function AccountManagementContextProvider({ email, children }) {
   };
 
   if (loading) {
-    return <Loading />;
+    return null;
   }
 
   if (error) {
