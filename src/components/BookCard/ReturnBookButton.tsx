@@ -1,32 +1,29 @@
-import { useEffect } from 'react';
+import { useMutation } from '@apollo/client';
 
-import { ApolloError, useMutation } from '@apollo/client';
+import { CheckCircleIcon } from '@chakra-ui/icons';
+import { Stack, Button, Text, ModalCloseButton } from '@chakra-ui/react';
 
-import { InfoIcon } from '@chakra-ui/icons';
-import { Stack, Button, Text } from '@chakra-ui/react';
-
-import { RETURN_BOOK } from '@/services/code-library-server';
+import {
+  checkMutationContainErrors,
+  RETURN_BOOK,
+} from '@/services/code-library-server';
 
 import {
   ActionStatusDialog,
-  useActionStatusDialogContext,
+  useActionStatusContext,
 } from './ActionStatusDialog';
 
-import { useBookLifeCycle } from './BookLifeCycleContext';
-import { PrimaryButton } from '../PrimaryButton';
-
-const Success = () => {
-  const { onClose } = useActionStatusDialogContext();
+export const ReturnInstructions = () => {
+  const { onCompleted } = useActionStatusContext();
 
   return (
     <>
-      <ActionStatusDialog.Header>
-        Request successfully handled
-      </ActionStatusDialog.Header>
+      <ModalCloseButton onClick={onCompleted} />
       <ActionStatusDialog.Body>
-        <Stack spacing={2} align={'center'}>
-          <InfoIcon w={12} h={12} />
-          <Text fontWeight={'semibold'}>
+        <Stack spacing={2} align={'center'} mt={8} p={8}>
+          <CheckCircleIcon w={12} h={12} color={'green.300'} />
+          <Text fontWeight={'semibold'}>Book successfully returned</Text>
+          <Text>
             {`Now please put the book back into the "Return Box",
             next to the library shelves on campus. 📚`}
           </Text>
@@ -34,49 +31,67 @@ const Success = () => {
       </ActionStatusDialog.Body>
       <ActionStatusDialog.Footer>
         <Stack w={'100%'} direction={'row'} justify={'space-evenly'}>
-          <PrimaryButton onClick={onClose} w={'100%'}>
+          <Button onClick={onCompleted} w={'100%'} p={6}>
             Done
-          </PrimaryButton>
+          </Button>
         </Stack>
       </ActionStatusDialog.Footer>
     </>
   );
 };
 
-type ReturnBookDialogProps = {
-  loading: boolean;
-  error: ApolloError | undefined;
+type ReturnBookButtonProps = {
+  bookId: string;
+  onError: (error: { title: string; description: string }) => any;
+  onCompleted: () => any;
 };
 
-export function ReturnBookDialog({ loading, error }: ReturnBookDialogProps) {
-  return (
-    <ActionStatusDialog
-      loading={loading}
-      error={error}
-      onSuccess={<Success />}
-    />
-  );
-}
-
-export function ReturnBookButton({ bookId }: { bookId: string }) {
+export function ReturnBookButton({
+  bookId,
+  onError,
+  onCompleted,
+}: ReturnBookButtonProps) {
   const [dispatch, { loading, error }] = useMutation(RETURN_BOOK, {
     variables: { bookId },
-    refetchQueries: 'all',
+    update(cache, { data: { returnBook } }) {
+      if (returnBook.__typename != 'Success') return;
+
+      cache.modify({
+        id: `Item:${returnBook.id}`,
+        fields: {
+          rentable(currentValue = {}) {
+            return {
+              ...currentValue,
+              stateTags: ['Processing'],
+            };
+          },
+        },
+      });
+    },
+    onCompleted: ({ returnBook }) => {
+      const error = checkMutationContainErrors(returnBook);
+      if (error) {
+        onError(error);
+      } else {
+        onCompleted();
+      }
+    },
   });
 
-  const {
-    handlers: { returnBook },
-  } = useBookLifeCycle();
+  if (error) {
+    onError({
+      title: 'Internal Server Error',
+      description: error.message,
+    });
+  }
 
-  const onClick = async () => {
-    await dispatch();
-    returnBook();
+  const onClick = () => {
+    dispatch();
   };
 
   return (
     <>
-      <ReturnBookDialog loading={loading} error={error} />
-      <Button variant={'outline'} onClick={onClick} isDisabled={loading}>
+      <Button variant={'outline'} onClick={onClick} isLoading={loading}>
         Return
       </Button>
     </>

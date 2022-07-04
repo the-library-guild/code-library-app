@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from 'react';
+import React, { PropsWithChildren, useState } from 'react';
 
 import NextLink from 'next/link';
 
@@ -17,14 +17,34 @@ import {
 import { useUserInfo } from '@/hooks/use-user-info.hook';
 import { Book } from '@/services/code-library-server/books';
 import { useBookState } from '.';
-import { BorrowBookButton } from './BorrowBookButton';
-import { BookLifeCycleContextProvider } from './BookLifeCycleContext';
-import { ReturnBookButton } from './ReturnBookButton';
-import { SortBookButton } from './SortBookButton';
+import { BorrowBookButton, BorrowingInstructions } from './BorrowBookButton';
+import { ReturnBookButton, ReturnInstructions } from './ReturnBookButton';
+import { BookSortedConfirmation, SortBookButton } from './SortBookButton';
+import { ActionStatusDialog } from './ActionStatusDialog';
 
 interface BookCardProps {
   book: Book;
   isExpanded?: boolean;
+}
+
+type Error = { title: string; description: string };
+
+function useActionInstructions() {
+  const [showInstructionsFor, setShowInstructionsFor] = useState<string | null>(
+    null
+  );
+  const [error, setError] = useState<Error | undefined>(undefined);
+
+  const setInstructionsFor = (action: string) => () => {
+    setShowInstructionsFor(action);
+  };
+
+  const cleanup = () => {
+    setShowInstructionsFor(null);
+    setError(undefined);
+  };
+
+  return { showInstructionsFor, setInstructionsFor, setError, error, cleanup };
 }
 
 export function BookCard({ book, isExpanded = false }: BookCardProps) {
@@ -33,6 +53,9 @@ export function BookCard({ book, isExpanded = false }: BookCardProps) {
   const { label, color, hasAction, action } = useBookState(book, userInfo);
 
   const { bookingLimit } = userInfo.user;
+
+  const { showInstructionsFor, setInstructionsFor, setError, error, cleanup } =
+    useActionInstructions();
 
   return (
     <Stack
@@ -65,11 +88,19 @@ export function BookCard({ book, isExpanded = false }: BookCardProps) {
         <Text py={2} color={color} fontWeight={'semibold'}>
           {label}
         </Text>
+        <ActionInstructions
+          showInstructionsFor={showInstructionsFor}
+          error={error}
+          cleanup={cleanup}
+        />
         {isExpanded && hasAction && (
           <>
-            <BookLifeCycleContextProvider bookingLimit={bookingLimit}>
-              <ActionButton action={action} bookId={book?.id} />
-            </BookLifeCycleContextProvider>
+            <ActionButton
+              action={action}
+              bookId={book?.id}
+              setError={setError}
+              setInstructionsFor={setInstructionsFor}
+            />
           </>
         )}
       </Flex>
@@ -90,17 +121,103 @@ function NavigationLink({
   );
 }
 
-function ActionButton({ action, bookId }: { action: string; bookId: string }) {
+function ActionButton({
+  action,
+  bookId,
+  setInstructionsFor,
+  setError,
+}: {
+  action: string;
+  bookId: string;
+  setInstructionsFor: (action: string) => () => any;
+  setError: (error: Error) => any;
+}) {
   if (action === 'Borrow') {
-    return <BorrowBookButton bookId={bookId} />;
+    return (
+      <>
+        <BorrowBookButton
+          bookId={bookId}
+          onError={setError}
+          onCompleted={setInstructionsFor('Borrow')}
+        />
+      </>
+    );
   }
 
   if (action === 'Return') {
-    return <ReturnBookButton bookId={bookId} />;
+    return (
+      <>
+        <ReturnBookButton
+          bookId={bookId}
+          onError={setError}
+          onCompleted={setInstructionsFor('Return')}
+        />
+      </>
+    );
   }
 
   if (action === 'Return to Shelf') {
-    return <SortBookButton bookId={bookId} />;
+    return (
+      <>
+        <SortBookButton
+          bookId={bookId}
+          onError={setError}
+          onCompleted={setInstructionsFor('Return to Shelf')}
+        />
+      </>
+    );
+  }
+
+  return null;
+}
+
+function ActionInstructions({ showInstructionsFor, error, cleanup }) {
+  if (error) {
+    return (
+      <ActionStatusDialog
+        show={true}
+        loading={false}
+        error={error}
+        onEnd={cleanup}
+        onSuccess={<></>}
+      />
+    );
+  }
+
+  if (showInstructionsFor === 'Borrow') {
+    return (
+      <ActionStatusDialog
+        show={showInstructionsFor === 'Borrow'}
+        loading={false}
+        error={false}
+        onEnd={cleanup}
+        onSuccess={<BorrowingInstructions />}
+      />
+    );
+  }
+
+  if (showInstructionsFor === 'Return') {
+    return (
+      <ActionStatusDialog
+        show={showInstructionsFor === 'Return'}
+        loading={false}
+        error={false}
+        onEnd={cleanup}
+        onSuccess={<ReturnInstructions />}
+      />
+    );
+  }
+
+  if (showInstructionsFor === 'Return to Shelf') {
+    return (
+      <ActionStatusDialog
+        show={showInstructionsFor === 'Return to Shelf'}
+        loading={false}
+        error={false}
+        onEnd={cleanup}
+        onSuccess={<BookSortedConfirmation />}
+      />
+    );
   }
 
   return null;

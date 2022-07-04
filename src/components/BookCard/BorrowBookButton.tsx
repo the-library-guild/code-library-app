@@ -2,48 +2,49 @@ import { useMutation } from '@apollo/client';
 
 import { CheckCircleIcon } from '@chakra-ui/icons';
 
-import { Stack, Divider, Button, Text } from '@chakra-ui/react';
+import {
+  Stack,
+  Divider,
+  Button,
+  Text,
+  ModalCloseButton,
+} from '@chakra-ui/react';
 
-import { RENT_BOOK } from '@/services/code-library-server';
+import {
+  checkMutationContainErrors,
+  RENT_BOOK,
+} from '@/services/code-library-server';
 
 import {
   ActionStatusDialog,
-  useActionStatusDialogContext,
+  useActionStatusContext,
 } from './ActionStatusDialog';
-import { useBookLifeCycle } from './BookLifeCycleContext';
 
-const Success = ({ onReturn }) => {
-  const { onClose } = useActionStatusDialogContext();
+import { dueDateFromNow } from './BookCard.helpers';
 
-  const onClick = () => {
-    onReturn();
-    onClose();
-  };
+export const BorrowingInstructions = () => {
+  const { onCompleted } = useActionStatusContext();
+
+  const [, dueDate] = dueDateFromNow();
 
   return (
     <>
-      <ActionStatusDialog.Header>
-        Title borrowed successfully
-      </ActionStatusDialog.Header>
+      <ModalCloseButton onClick={onCompleted} />
       <ActionStatusDialog.Body>
-        <Stack spacing={2} align={'center'}>
+        <Stack spacing={2} align={'center'} mt={8} p={8}>
           <CheckCircleIcon w={12} h={12} color={'green.300'} />
-          <Text fontWeight={'semibold'}>We hope you enjoy your reading 🎉</Text>
+          <Text fontWeight={'semibold'}>Book successfully borrowed 🎉</Text>
           <Stack spacing={0}>
+            <Text>We hope you enjoy your reading.</Text>
             <Text>Please make sure to return it until</Text>
-            <Text fontWeight={'bold'}>March 24th 2022</Text>
+            <Text fontWeight={'bold'}>{new Date(dueDate).toDateString()}</Text>
           </Stack>
         </Stack>
       </ActionStatusDialog.Body>
       <ActionStatusDialog.Footer>
-        <Stack w={'100%'}>
-          <Stack direction={'row'} justify={'space-evenly'} align={'center'}>
-            <Divider />
-            <Text fontSize={'smaller'}>or</Text>
-            <Divider />
-          </Stack>
-          <Button w={'100%'} onClick={onClick}>
-            Return this book now
+        <Stack w={'100%'} direction={'row'} justify={'space-evenly'}>
+          <Button w={'100%'} onClick={onCompleted} p={6}>
+            Okay
           </Button>
         </Stack>
       </ActionStatusDialog.Footer>
@@ -51,64 +52,66 @@ const Success = ({ onReturn }) => {
   );
 };
 
-export function BorrowBookButton({ bookId }: { bookId: string }) {
-  const [dispatch, { loading, error: networkError, data }] = useMutation(
-    RENT_BOOK,
-    {
-      variables: { bookId },
-    }
-  );
+type BorrowBookButtonProps = {
+  bookId: string;
+  onError: (error: { title: string; description: string }) => any;
+  onCompleted: () => any;
+};
 
-  const {
-    hasReachedLimit,
-    handlers: { borrowBook, returnBook },
-  } = useBookLifeCycle();
+export function BorrowBookButton({
+  bookId,
+  onError,
+  onCompleted,
+}: BorrowBookButtonProps) {
+  const [dispatch, { loading, error }] = useMutation(RENT_BOOK, {
+    variables: { bookId },
+    update(cache, { data: { rentBook } }) {
+      if (rentBook.__typename != 'Success') return;
 
-  const onClick = async () => {
-    await dispatch();
-    borrowBook();
+      cache.modify({
+        id: `Item:${rentBook.id}`,
+        fields: {
+          rentable() {
+            const [rentedDate, dueDate] = dueDateFromNow();
+            return {
+              dueDate,
+              rentedDate,
+              stateTags: ['Borrowed'],
+            };
+          },
+        },
+      });
+    },
+    onCompleted: ({ rentBook }) => {
+      const error = checkMutationContainErrors(rentBook);
+      if (error) {
+        onError(error);
+      } else {
+        onCompleted();
+      }
+    },
+  });
+
+  const onClick = () => {
+    dispatch();
   };
 
-  const onReturn = () => returnBook();
-
-  let error: any | undefined;
-  if (data) {
-    const { __typename: type, ...response } = data.rentBook;
-
-    switch (type) {
-      case 'MissingPermissionsError':
-        error = {
-          title: 'Unauthorized',
-          description: response.msg,
-        };
-        break;
-      case 'Error':
-        error = {
-          title: 'Internal Error',
-          description: response.msg,
-        };
-        break;
-    }
-  }
-
-  if (networkError) {
-    error = {
+  if (error) {
+    onError({
       title: 'Server Error',
-      description: networkError.message,
-    };
+      description: error.message,
+    });
   }
+
+  const hasReachedLimit = false;
 
   return (
     <>
-      <ActionStatusDialog
-        loading={loading}
-        error={error}
-        onSuccess={<Success onReturn={onReturn} />}
-      />
       <Button
         variant={'outline'}
         onClick={onClick}
-        isDisabled={loading || hasReachedLimit}
+        isLoading={loading}
+        isDisabled={hasReachedLimit}
       >
         Borrow
       </Button>

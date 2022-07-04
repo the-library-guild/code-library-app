@@ -3,7 +3,6 @@ import {
   PropsWithChildren,
   ReactElement,
   useContext,
-  useEffect,
 } from 'react';
 
 import {
@@ -20,13 +19,15 @@ import {
   Text,
   Button,
 } from '@chakra-ui/react';
+
 import { useColorModeVariant } from '@/hooks/use-color-mode-variant.hook';
 import { WarningTwoIcon } from '@chakra-ui/icons';
+import CodeLibraryServer from '@/services/code-library-server';
 
-const ActionStatusDialogContext = createContext({} as any);
+const ActionStatusContext = createContext({} as any);
 
-export function useActionStatusDialogContext() {
-  return useContext(ActionStatusDialogContext);
+export function useActionStatusContext() {
+  return useContext(ActionStatusContext);
 }
 
 export function ActionStatusDialogHeader({ children }: PropsWithChildren) {
@@ -95,7 +96,7 @@ const ErrorMessage = ({
 };
 
 const DefaultError = () => {
-  const { onClose, error } = useActionStatusDialogContext();
+  const { error, onCompleted } = useActionStatusContext();
 
   return (
     <>
@@ -107,7 +108,7 @@ const DefaultError = () => {
         </Stack>
       </ActionStatusDialogBody>
       <ActionStatusDialogFooter>
-        <Button w={'100%'} onClick={onClose}>
+        <Button w={'100%'} onClick={onCompleted}>
           Close
         </Button>
       </ActionStatusDialogFooter>
@@ -121,29 +122,56 @@ type ActionStatusDialogProps = {
   fallback?: ReactElement;
   onSuccess: ReactElement;
   onError?: ReactElement;
+  onEnd: () => any;
+  show?: boolean;
 };
+
+const ActionStatusDialogContext = createContext({} as any);
+
+export function useActionStatusDialogContext() {
+  return useContext(ActionStatusDialogContext);
+}
+
+export function ActionStatusContextProvider({ children }: PropsWithChildren) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const value = {
+    onOpen,
+    onClose,
+    isOpen,
+  };
+
+  return (
+    <ActionStatusDialogContext.Provider value={value}>
+      {children}
+    </ActionStatusDialogContext.Provider>
+  );
+}
 
 export function ActionStatusDialog({
   loading,
   error,
+  show = false,
   fallback = <DefaultFallback />,
   onSuccess,
   onError = <DefaultError />,
+  onEnd,
 }: ActionStatusDialogProps) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useActionStatusDialogContext();
 
-  useEffect(() => {
-    if (loading) {
-      onOpen();
-    }
-  }, [loading, onOpen]);
+  const onCompleted = () => {
+    onEnd();
+    onClose();
+    CodeLibraryServer.refetchQueries({ include: ['GetUserBooks'] });
+  };
 
   const modalSize = useBreakpointValue({ base: 'xs', md: 'lg' });
 
   const value = {
     onOpen,
     onClose,
-    isOpen,
+    onCompleted,
+    isOpen: isOpen || show,
     loading,
     error,
   };
@@ -153,16 +181,17 @@ export function ActionStatusDialog({
       <Modal
         closeOnOverlayClick={false}
         blockScrollOnMount={false}
-        isOpen={isOpen}
+        closeOnEsc={false}
+        isOpen={value.isOpen}
         onClose={onClose}
         isCentered
         size={modalSize}
       >
         <ModalOverlay />
         <ModalContent>
-          <ActionStatusDialogContext.Provider value={value}>
+          <ActionStatusContext.Provider value={value}>
             {error ? onError : loading ? fallback : onSuccess}
-          </ActionStatusDialogContext.Provider>
+          </ActionStatusContext.Provider>
         </ModalContent>
       </Modal>
     </>

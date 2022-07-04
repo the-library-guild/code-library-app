@@ -27,6 +27,25 @@ export const CodeLibraryServer = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
+export const checkMutationContainErrors = (response) => {
+  const { __typename: type, ...context } = response;
+
+  switch (type) {
+    case 'MissingPermissionsError':
+      return {
+        title: 'Unauthorized',
+        description: context.msg,
+      };
+    case 'Error':
+      return {
+        title: 'Internal Error',
+        description: context.msg,
+      };
+    default:
+      return undefined;
+  }
+};
+
 export * from './queries';
 export * from './mutations';
 export * from './books';
