@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 
 import Link from 'next/link';
 
@@ -27,6 +27,10 @@ import { useColorModeVariant } from '@/hooks/use-color-mode-variant.hook';
 import { WarningTwoIcon } from '@chakra-ui/icons';
 import { DividerWithText } from '@/components/DividerWithText';
 import { useShelf } from '@/hooks/use-shelf.hook';
+import {
+  Book,
+  checkMutationContainErrors,
+} from '@/services/code-library-server';
 
 const GET_BOOK_BY_QR_CODE = gql`
   query GetBookByQR($qrId: ID!) {
@@ -55,13 +59,34 @@ const CONNECT_BOOK_VIA_QR_CODE = gql`
   }
 `;
 
+type Error =
+  | {
+      title: string;
+      description: string;
+    }
+  | undefined;
+
 function useQrConnection(): [
   (options: any) => any,
-  { loading: boolean; data: any }
+  { loading: boolean; data: any; error: Error }
 ] {
-  const [connect, { loading, data }] = useMutation(CONNECT_BOOK_VIA_QR_CODE);
+  const [connect, { loading, data, error }] = useMutation(
+    CONNECT_BOOK_VIA_QR_CODE
+  );
 
-  return [connect, { loading, data: data?.linkQr }];
+  let allErrors: Error;
+  if (data?.linkQr?.__typename) {
+    allErrors = checkMutationContainErrors(data?.linkQr);
+  }
+
+  if (error) {
+    allErrors = {
+      title: 'Internal Server Error',
+      description: error.message,
+    };
+  }
+
+  return [connect, { loading, data: data?.linkQr, error: allErrors }];
 }
 
 function Loading() {
@@ -100,10 +125,72 @@ function Loading() {
   );
 }
 
-function Error() {
+const InternalServerErrorMessage = () => (
+  <>
+    <Text>Something went wrong while trying to process your request.</Text>
+    <Text alignContent={'center'}>Please try again later!</Text>
+  </>
+);
+
+const InsufficientPermissionsErrorMessage = ({
+  description,
+}: {
+  description: string;
+}) => (
+  <>
+    <Text>
+      Unfortunately you do not have the rights to perform this operation.
+    </Text>
+    <Text fontWeight={'semibold'}>{description}</Text>
+  </>
+);
+
+const ApplicationErrorMessage = ({
+  description,
+  selectedBookTitle,
+}: {
+  description: string;
+  selectedBookTitle: string;
+}) => (
+  <>
+    <Text fontWeight={'semibold'}>{description}</Text>
+    <Text textAlign={'center'} fontSize={'small'}>
+      {`"${selectedBookTitle}"`}
+    </Text>
+  </>
+);
+
+const ErrorMessage = ({
+  error,
+  selectedBookTitle,
+}: {
+  error: { title: string; description: string };
+  selectedBookTitle: string;
+}) => {
+  if (error.title === 'Unauthorized') {
+    return (
+      <InsufficientPermissionsErrorMessage description={error.description} />
+    );
+  }
+
+  if (error.title === 'Internal Error') {
+    return (
+      <ApplicationErrorMessage
+        description={error.description}
+        selectedBookTitle={selectedBookTitle}
+      />
+    );
+  }
+
+  return <InternalServerErrorMessage />;
+};
+
+function Error({ error, selectedBookTitle }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => onOpen(), [onOpen]);
+
+  const notFatal = error.title !== 'Internal Server Error';
 
   return (
     <Modal
@@ -120,17 +207,21 @@ function Error() {
         <Stack spacing={4} align={'center'} my={8} p={6}>
           <WarningTwoIcon w={14} h={14} color={'red.300'} />
           <Text fontWeight={'semibold'}>Oh snap...</Text>
-          <Text>
-            Something went wrong while trying to process your request.
-          </Text>
-          <Text alignContent={'center'}>Please try again later!</Text>
+          <ErrorMessage error={error} selectedBookTitle={selectedBookTitle} />
         </Stack>
         <ModalFooter textAlign={'center'}>
           <Stack w={'100%'}>
+            {notFatal && (
+              <Button variant={'outline'} onClick={onClose}>
+                Close
+              </Button>
+            )}
             <DividerWithText>or</DividerWithText>
-            <Link href={'/shelf'} passHref>
-              <Button w={'100%'}>Meanwhile, explore our shelf</Button>
-            </Link>
+            <Stack direction={'row'} justify={'space-between'}>
+              <Link href={'/shelf'} passHref>
+                <Button w={'100%'}>Explore our shelf</Button>
+              </Link>
+            </Stack>
           </Stack>
         </ModalFooter>
       </ModalContent>
@@ -139,11 +230,15 @@ function Error() {
 }
 
 function QrCodePage() {
-  const { query, push, reload } = useRouter();
+  const { query, push, replace } = useRouter();
 
   const qrId = query.code as string;
 
-  const { loading, error, data } = useQuery(GET_BOOK_BY_QR_CODE, {
+  const {
+    loading,
+    error: queryBookByQrError,
+    data,
+  } = useQuery(GET_BOOK_BY_QR_CODE, {
     variables: { qrId },
   });
 
@@ -151,15 +246,24 @@ function QrCodePage() {
 
   const [bookId, setBookId] = useState('');
 
+  const [selectedBookTitle, setSelectedBookTitle] = useState('');
+
+  const [errors, setErrors] = useState<Error>(undefined);
+
   const [connect, { ...qrConnectionStatus }] = useQrConnection();
 
-  if (loading) {
-    return <Loading />;
-  }
+  useEffect(() => {
+    if (queryBookByQrError) {
+      setErrors({
+        title: 'Internal Server Error',
+        description: queryBookByQrError.message,
+      });
+    }
 
-  if (error) {
-    return <Error />;
-  }
+    if (qrConnectionStatus.error) {
+      setErrors(qrConnectionStatus.error);
+    }
+  }, [queryBookByQrError, qrConnectionStatus.error]);
 
   if (data?.getBookByQr) {
     push({
@@ -169,7 +273,10 @@ function QrCodePage() {
   }
 
   if (qrConnectionStatus.data?.__typename === 'Success') {
-    reload();
+    replace({
+      pathname: '/books/[id]',
+      query: { id: bookId },
+    });
   }
 
   const onSubmit = (e) => {
@@ -182,10 +289,22 @@ function QrCodePage() {
     });
   };
 
+  if (loading) {
+    return null;
+  }
+
+  const onChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const newBookId = e.target.value;
+    const selectedBook = books.find((book) => book.id === newBookId) as Book;
+    setBookId(newBookId);
+    setSelectedBookTitle(selectedBook?.title);
+  };
+
   const yo = data?.getBookByQr === null && !optionsAreLoading;
 
   return (
     <>
+      {errors && <Error error={errors} selectedBookTitle={selectedBookTitle} />}
       {yo && (
         <Stack spacing={6} width="100%">
           <Stack
@@ -208,7 +327,7 @@ function QrCodePage() {
                 <FormLabel htmlFor="text">Book ID</FormLabel>
                 <Select
                   placeholder="Select option"
-                  onChange={(e) => setBookId(e.target.value)}
+                  onChange={onChange}
                   value={bookId}
                 >
                   {books.map((book) => (
