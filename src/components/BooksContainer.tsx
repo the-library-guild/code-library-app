@@ -2,7 +2,7 @@ import React from 'react';
 
 import { BookCard } from './BookCard/BookCard';
 import { Suspense } from './Suspense';
-import { Box, Flex, Spinner, Stack, useColorModeValue } from '@chakra-ui/react';
+import { Flex, Spinner, Stack, useColorModeValue } from '@chakra-ui/react';
 
 import { Book } from '@/services/code-library-server/books';
 

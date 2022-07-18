@@ -13,17 +13,14 @@ import {
   Modal,
   ModalContent,
   ModalFooter,
-  ModalHeader,
   ModalOverlay,
   Select,
-  Spinner,
   Stack,
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
 import { PrimaryButton } from '@/components/PrimaryButton';
 import { gql, useMutation, useQuery } from '@apollo/client';
-import { useColorModeVariant } from '@/hooks/use-color-mode-variant.hook';
 import { WarningTwoIcon } from '@chakra-ui/icons';
 import { DividerWithText } from '@/components/DividerWithText';
 import { useShelf } from '@/hooks/use-shelf.hook';
@@ -87,42 +84,6 @@ function useQrConnection(): [
   }
 
   return [connect, { loading, data: data?.linkQr, error: allErrors }];
-}
-
-function Loading() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const lightOrDark = useColorModeVariant();
-
-  useEffect(() => onOpen(), [onOpen]);
-
-  return (
-    <Modal
-      closeOnOverlayClick={false}
-      blockScrollOnMount={false}
-      closeOnEsc={false}
-      isOpen={isOpen}
-      onClose={onClose}
-      isCentered
-      size={'sm'}
-    >
-      <ModalOverlay />
-      <ModalHeader textAlign={'center'}>Hold tight!</ModalHeader>
-      <ModalContent>
-        <Stack justify={'center'} align={'center'} height={240} spacing={8}>
-          <Spinner
-            thickness="4px"
-            speed="0.65s"
-            color={lightOrDark('gray.600', 'gray.300')}
-            size="xl"
-          />
-          <Text fontSize={'xs'}>
-            We are searching for this book in our database...
-          </Text>
-        </Stack>
-      </ModalContent>
-    </Modal>
-  );
 }
 
 const InternalServerErrorMessage = () => (

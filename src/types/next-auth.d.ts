@@ -1,5 +1,3 @@
-import NextAuth from 'next-auth';
-
 import { JWT } from 'next-auth/jwt';
 
 // https://next-auth.js.org/getting-started/typescript/
