@@ -15,7 +15,7 @@ function App({ Component, pageProps }: LibraryAppProps) {
     <SessionProvider session={pageProps.session} refetchInterval={0}>
       <ApolloProvider client={CodeLibraryServer}>
         <Head>
-          <title>Treedom Library</title>
+          <title>Treedome Library</title>
           <meta
             name="description"
             content="CODE University of Applied Sciences Library Management System"

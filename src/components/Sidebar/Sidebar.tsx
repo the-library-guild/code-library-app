@@ -71,7 +71,7 @@ function SidebarContent({ children, ...rest }: SidebarContentProps) {
             <Flex as={'h2'} gap={'2'} align={'center'}>
               <LibraryLogo height={'24'} />
               <Text fontSize={'2xl'} fontWeight={'semibold'}>
-                Treedom Library
+                Treedome Library
               </Text>
             </Flex>
           </Link>

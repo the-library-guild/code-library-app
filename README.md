@@ -11,7 +11,7 @@
 
 This is the UI of CODE's Library Management App.
 It's an ongoing development taken by students at CODE University of Applied Sciences.
-The library is named after the famous Treedom of SpongeBob SquarePants, which portraits the small size of our physical installation.
+The library is named after the famous Treedome of SpongeBob SquarePants, which portraits the small size of our physical installation.
 
 ## Table of Contents
 

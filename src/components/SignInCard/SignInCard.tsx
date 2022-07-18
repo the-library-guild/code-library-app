@@ -19,7 +19,7 @@ export function SignInCard() {
     >
       <Stack align={'center'}>
         <LibraryLogo width={'70%'} />
-        <Heading fontSize={'4xl'}>Treedom Library</Heading>
+        <Heading fontSize={'4xl'}>Treedome Library</Heading>
       </Stack>
       <SignInButton maxW={400} />
       <Flex align="end" justify={'center'}>
