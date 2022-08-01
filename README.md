@@ -3,7 +3,7 @@
     href="https://code-library-client-swguw3y6sa-ey.a.run.app/"
     target="_blank"
   >
-    <img src="assets/logo.png" alt="Treesome Library logo">
+    <img src="assets/logo.png" alt="Treedome Library logo">
   </a>
 </p>
 
@@ -13,9 +13,10 @@ This is the UI of CODE's Library Management App.
 It's an ongoing development taken by students at CODE University of Applied Sciences.
 The library is named after the famous Treedome of SpongeBob SquarePants, which portraits the small size of our physical installation.
 
+You can watch a short demo of the application [on YouTube](https://youtu.be/GnAkbk2cvq8).
+
 ## Table of Contents
 
-- [Demo](#demo)
 - [Technologies](#technologies)
 - [System Requirements](#system-requirements)
 - [Installation Instructions](#installation-instructions)
@@ -25,7 +26,14 @@ The library is named after the famous Treedome of SpongeBob SquarePants, which p
 
 ## Demo
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/GnAkbk2cvq8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<p align="center">
+  <a
+    href="https://youtu.be/GnAkbk2cvq8"
+    target="_blank"
+  >
+    <img src="assets/demo-thumbnail.png" alt="Treedome Library App Demo">
+  </a>
+</p>
 
 ## Technologies
 
