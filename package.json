@@ -44,6 +44,7 @@
     "@chakra-ui/react": "^1.8.8",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
+    "@storybook/addon-a11y": "^6.5.9",
     "chalk": "^5.0.1",
     "code-library-perms": "git+https://git@github.com/the-library-guild/code-library-perms.git",
     "dotenv": "^16.0.0",

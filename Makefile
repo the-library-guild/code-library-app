@@ -2,7 +2,7 @@
 start: .env.local npm-install clean
 	docker-compose up -d
 
-.PHONY: start
+.PHONY: rebuild
 rebuild:
 	docker-compose build --no-cache
 
