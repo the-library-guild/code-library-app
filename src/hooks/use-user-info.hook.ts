@@ -74,6 +74,9 @@ export function useUserInfo(): UserInfoValue {
     role: roleFromPermissions(infoFromToken?.permsInt),
   };
 
+  // eslint-disable-next-line no-console
+  console.dir(user);
+
   return {
     user,
     status,
