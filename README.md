@@ -3,7 +3,7 @@
     href="https://code-library-client-swguw3y6sa-ey.a.run.app/"
     target="_blank"
   >
-    <img src="./logo.png" alt="Treesome Library logo">
+    <img src="assets/logo.png" alt="Treesome Library logo">
   </a>
 </p>
 
@@ -85,6 +85,17 @@ For a more detailed exaplanation, navigate to the most relevant section.
 - [Services](./src/services/README.md)
 
 ## Architecture Overview
+
+Please click on the diagram below to access the full interactive diagram.
+
+<p align="center">
+  <a
+    href="https://miro.com/app/board/uXjVOiWfulk=/?share_link_id=628581242894"
+    target="_blank"
+  >
+    <img src="assets/architecture-diagram.png" alt="App Architecture Diagram">
+  </a>
+</p>
 
 ## Deployment workflows
 
