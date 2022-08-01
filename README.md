@@ -1,15 +1,8 @@
-<p align="center">
-  <a
-    href="https://code-library-client-swguw3y6sa-ey.a.run.app/"
-    target="_blank"
-  >
-    <img src="assets/logo.png" alt="Treedome Library logo">
-  </a>
-</p>
+# The Treedome Library App
 
 ![GitHub Workflow Status](https://github.com/the-library-guild/code-library-app/actions/workflows/validation.yml/badge.svg)
 
-This is the UI of CODE's Library Management App.
+This is the UI of CODE's Library Management App (AKA Treedome Library).
 It's an ongoing development taken by students at CODE University of Applied Sciences.
 The library is named after the famous Treedome of SpongeBob SquarePants, which portraits the small size of our physical installation.
 
