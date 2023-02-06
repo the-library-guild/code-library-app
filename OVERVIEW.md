@@ -1,19 +1,22 @@
 # Overview
 
-The aim of this project is to reduce the amount of books getting lost and increase the amount of readers.
+This project aims to provide a great experience for students and staff members interacting with services provided by the Treedome Library. We expect to measure that by the rate of new patrons we get monthly and the number of books borrowed during the official semester period.
 
-We want to achieve that by putting a QR-Code on every book, that links to a website where users can log in using their google code account.
-On the websites books can be borrowed and returned.
+The first interaction with the website would be done via a QR Code attached to every book in our catalog, which links to an individual page with additional information on the book and functionalities to borrow, pin, or return to/from the shelf and users are logged in using their @code.berlin accounts.
+
+The front-end application of the library system is the scope of this project. Backoffice tasks are supported by an open-source backend called [Koha](https://koha-community.org/), maintained by the IT Management and Operations team, and available to the front-end application via a REST API. Therefore, the majority of the work for this project involves designing and implementing the user interfaces and developing an SDK for programmatically communicating with the REST API.
+
+You can find the current codebase of the project on GitHub under [The Library Guild organization](https://github.com/the-library-guild).
 
 # Technical Architecture
 
-**Frontend**: React and next.js
+The app is going to be a standalone [Next.js](https://nextjs.org/) application powered by the open-source library management system [Koha](https://koha-community.org/).
 
-**API**: GraphQL
+**Frontend**: Next.js, TypeScript, NextAuth.
 
-**Backend**: TypeScript, MongoDB and Google Auth
+**API**: Koha.
 
-# Objectives
+# Features breakdown
 
 ## Already implemented
 - Students can borrow books
